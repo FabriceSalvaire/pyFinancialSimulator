@@ -7,7 +7,6 @@
   :numbered:
 
   api/FinancialSimulator.rst
-  design/design.rst
 
 =========
  Indexes

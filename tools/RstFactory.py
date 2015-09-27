@@ -42,18 +42,18 @@ class RstFactory(object):
 
         self._rst_directory = os.path.realpath(rst_directory)
         self._root_module_path = os.path.realpath(module_path)
-
+        
         self._excluded_directory = [os.path.join(self._root_module_path, x) for x in excluded_directory]
         self._root_module_name = os.path.basename(self._root_module_path)
-
+        
         print("RST API Path:    ", self._rst_directory)
         print("Root Module Path:", self._root_module_path)
         print("Root Module Name:", self._root_module_name)
         print('Exclude:', '\n  '.join(self._excluded_directory))
-
+        
         if not os.path.exists(self._rst_directory):
             os.mkdir(self._rst_directory)
-
+            
         self._process_recursively()
 
     ##############################################
@@ -61,7 +61,7 @@ class RstFactory(object):
     def _process_recursively(self):
 
         """ Process recursively the inner Python files and directories. """
-        
+
         for module_path, sub_directories, files in os.walk(self._root_module_path, followlinks=True):
             for sub_directory in list(sub_directories):
                 if os.path.join(module_path, sub_directory) in self._excluded_directory:
@@ -87,7 +87,7 @@ class RstFactory(object):
         print("Directory Module Name:", directory_module_name)
         print("Directory Module Python Path:", directory_module_python_path)
         print("Dest Path:", dst_directory)
-
+        
         if not os.path.exists(dst_directory):
             os.mkdir(dst_directory)
         
@@ -112,7 +112,7 @@ class RstFactory(object):
 
     @staticmethod
     def is_python_directory_module(path):
-        
+
         return os.path.exists(os.path.join(path, RstFactory.init_file_name))
 
     ##############################################
@@ -121,7 +121,7 @@ class RstFactory(object):
     def is_python_file(file_name):
 
         return (file_name.endswith('.py') and
-                file_name != RstFactory.init_file_name and
+                # file_name != RstFactory.init_file_name and
                 'flymake'not in file_name)
 
     ##############################################
@@ -162,7 +162,7 @@ class RstFactory(object):
     def _generate_title(self, module_name):
 
         mod_rst = ' :mod:`'
-
+        
         template = """
 %(header_line)s
 %(mod)s%(module_name)s`
@@ -173,7 +173,7 @@ class RstFactory(object):
             mod=mod_rst,
             header_line='*'*(len(module_name) + len(mod_rst) +2),
             )
-
+        
         return rst
 
     ##############################################
@@ -184,18 +184,18 @@ class RstFactory(object):
 
 .. toctree::
 """
-    
+        
         rst = template.lstrip() % dict(
             title=self._generate_title(directory_module_name),
             )
-
+        
         for module_name in module_names:
             rst += ' '*2 + os.path.join(directory_module_name, module_name) + '\n'
-
+        
         rst += """
 .. End
 """
-
+        
         return rst
 
     ##############################################

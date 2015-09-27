@@ -18,6 +18,16 @@
 #
 ####################################################################################################
 
+####################################################################################################
+
+import logging
+
+####################################################################################################
+
+_module_logger = logging.getLogger(__name__)
+
+####################################################################################################
+
 class Transaction(object):
 
     ##############################################
@@ -73,6 +83,13 @@ class SimpleTransaction(Transaction):
     def is_credit_for(self, account):
         return self._destination is account
 
+    ##############################################
+
+    def __str__(self):
+
+        # Fixme: devise
+        return '{} -> {} {} €'.format(self._source, self._destination, self._amount)
+
 ####################################################################################################
 
 class TransactionDistribution(object):
@@ -102,45 +119,63 @@ class DistributedTransaction(Transaction):
 
     ##############################################
 
-    def __init__(self, source, description='', *args):
+    def __init__(self, source, pairs, description=''):
 
         super(DistributedTransaction, self).__init__(source, description)
-        self._distribution = args
+        # pairs = [(args[i], args[i+1]) for i in range(len(args -1))]
+        self._distribution = [TransactionDistribution(destination, amount)
+                              for destination, amount in pairs]
+
+    ##############################################
+
+    def __len__(self):
+
+        return len(self._distribution)
 
     ##############################################
 
     def __iter__(self):
 
-        for item in self._distribution:
-            yield SimpleTransaction(self._source, item.destination, item.amount, self._description)
+        for sub_transaction in self._distribution:
+            yield SimpleTransaction(self._source, sub_transaction.destination,
+                                    sub_transaction.amount, self._description)
 
     ##############################################
 
     @property
     def amount(self):
         # Fixme: cache ?
-        return sum([item.amount for item in self._distribution])
+        return sum([sub_transaction.amount for sub_transaction in self._distribution])
 
 ####################################################################################################
 
 class Account(object):
 
+    _logger = _module_logger.getChild('Account')
+
     ##############################################
 
-    def __init__(self, code, name, parent = None, initial_balance=0):
+    def __init__(self, code, name, parent = None, initial_balance=0, devise='€'):
 
         self._name = name
         self._code = code
         
         self._parent = parent
         self._childs = set()
-        parent.add_child(self)
+        if parent is not None:
+            parent.add_child(self)
         
-        self._journal = []
         self._initial_balance = initial_balance
+        self._devise = devise
         
-        self._inner_credit = None
-        self._inner_debit = None
+        self.reset()
+        
+    ##############################################
+
+    def reset(self):
+
+        self._inner_credit = 0
+        self._inner_debit = 0
         self._inner_balance = None
         
         self._credit = None
@@ -160,6 +195,12 @@ class Account(object):
     def code(self):
 
         return self._code
+
+    ##############################################
+
+    def __str__(self):
+
+        return '#' + self._code
 
     ##############################################
 
@@ -186,7 +227,7 @@ class Account(object):
     def inner_balance_is_dirty(self):
 
         self._inner_balance = None
-        self.balance_is_dirty()
+        self._balance = None
 
     ##############################################
 
@@ -200,10 +241,6 @@ class Account(object):
     def _compute_balance(self):
 
         if self._inner_balance is None:
-            self._inner_credit = 0
-            self._inner_debit = 0
-            for transaction in self._journal:
-                self._run_transaction(transaction)
             self._inner_balance = self._inner_credit - self._inner_debit
         
         if self._balance is None:
@@ -243,58 +280,38 @@ class Account(object):
 
     ##############################################
 
-    def _run_simple_transaction(self, transaction):
+    def run_transaction(self, transaction):
 
+        if isinstance(transaction, DistributedTransaction):
+            raise NameError('An account cannot run a distributed transaction')
+        
+        self.inner_balance_is_dirty()
         if transaction.is_debit_for(self):
+            sign = '+'
             self._inner_debit += transaction.amount
         elif transaction.is_credit_for(self):
+            sign = '-'
             self._inner_credit += transaction.amount
         else:
             raise NameError("transaction don't involve the account")
-
-    ##############################################
-
-    def _run_transaction(self, transaction):
-
-        self._parent_is_dirty()
-        if isinstance(transaction, DistributedTransaction):
-            for item in transaction:
-                self._run_simple_transaction(item)
-        else:
-            self._run_simple_transaction(transaction)
-
-    ##############################################
-
-    def log_transaction(self, transaction):
-
-        self._journal.append(transaction)
-        self._run_transaction(transaction)
-
-    ##############################################
-
-    def log_debit(self, destination, amount, description=''):
-
-        transaction = SimpleTransaction(self, destination, amount, description)
-        self.log_transaction(transaction)
-        destination.log_transaction(transaction)
-
-    ##############################################
-
-    def log_credit(self, source, amount, description=''):
-
-        transaction = SimpleTransaction(source, self, amount, description)
-        self.log_transaction(transaction)
-        source.log_transaction(transaction)
+        message = 'Run transaction {} -> {} {}{} {}'.format(transaction.source,
+                                                            transaction.destination,
+                                                            sign,
+                                                            transaction.amount,
+                                                            self._devise
+        )
+        self._logger.info(message)
 
 ####################################################################################################
 
-class Journal(object):
+class AccountChart(object):
 
     ##############################################
 
     def __init__(self, name):
 
         self._name = name
+        self._accounts = {}
 
     ##############################################
 
@@ -302,6 +319,82 @@ class Journal(object):
     def name(self):
 
         return self._name
+
+    ##############################################
+
+    def add_account(self, account):
+
+        self._accounts[account.code] = account
+
+    ##############################################
+
+    def __getitem__(self, code):
+
+        return self._accounts[code]
+
+    ##############################################
+
+    def __iter__(self):
+
+        return iter(self._accounts.values())
+
+####################################################################################################
+
+class Journal(object):
+
+    ##############################################
+
+    def __init__(self, name, account_chart):
+
+        self._name = name
+        self._account_chart = account_chart
+        self._transactions = []
+
+    ##############################################
+
+    @property
+    def name(self):
+
+        return self._name
+
+    ##############################################
+
+    def run(self):
+
+        for account in self._account_chart:
+            account.reset()
+        for transaction in self._transactions:
+            self._run_transaction(transaction)
+
+    ##############################################
+
+    def _run_transaction(self, transaction):
+
+        source = transaction.source
+        if isinstance(transaction, DistributedTransaction):
+            for sub_transaction in transaction:
+                source.run_transaction(sub_transaction)
+                sub_transaction.destination.run_transaction(sub_transaction)
+        else:
+            source.run_transaction(transaction)
+            transaction.destination.run_transaction(transaction)
+
+    ##############################################
+
+    def log_transaction_object(self, transaction):
+
+        self._transactions.append(transaction)
+        self._run_transaction(transaction)
+
+    ##############################################
+
+    def log_transaction(self, source, kwargs, description=''):
+
+        pairs = [(self._account_chart[destination], amount)
+                  for destination, amount in kwargs.items()]
+        transaction = DistributedTransaction(self._account_chart[source], pairs,
+                                             description=description)
+        self.log_transaction_object(transaction)
 
 ####################################################################################################
 #
