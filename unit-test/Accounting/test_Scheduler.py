@@ -29,13 +29,12 @@ logger = Logging.setup_logging('financial-simulator')
 
 ####################################################################################################
 
+import datetime
 import unittest
 
 ####################################################################################################
 
-from FinancialSimulator.Accounting import (AccountChart, Account, Journal,
-                                           SimpleTransaction, DistributedTransaction
-)
+from FinancialSimulator.Scheduler import (SingleAction, ReccurentAction, Scheduler)
 
 ####################################################################################################
 
@@ -43,34 +42,15 @@ class TestAccounting(unittest.TestCase):
 
     def test(self):
 
-        # Plan comptable Français :
-        #  44571 TVA collectée
-        #  701 Ventes de produits finis
-        #  702 Ventes de produits intermédiaires
-        #  703 Ventes de produits résiduels
-        #  706 Prestations de services
-        #  707 Ventes de marchandises
+        year = 2016
+        start_day = datetime.date(year, 1, 1)
+        stop_day = datetime.date(year +1, 1, 1)
+        day_timedelta = datetime.timedelta(1)
         
-        # Enregistrement d'une vente
-        #  débit 512 Banques
-        #  crédit 7 Ventes
-        #  crédit 44571 TVA collectée
-        
-        account_chart = AccountChart('Plan Comptable Général Français')
-        account_chart.add_account(Account('512', 'Banques'))
-        account_chart.add_account(Account('706', 'Ventes de marchandises'))
-        account_chart.add_account(Account('44571', 'TVA collectée'))
-        
-        journal_ventes = Journal('Ventes', account_chart)
-        
-        journal_ventes.log_transaction('512',
-                                       {'706':80, '44571':20},
-                                       description='vente'
-        )
-        
-        for account in account_chart:
-            # print('{.code} {.name} {.balance}'.format(account))
-            print('{}-{} : {} €'.format(account.code, account.name, account.balance))
+        scheduler = Scheduler()
+        scheduler.add_action(SingleAction(datetime.date(year, 2, 1), label='action 1'))
+        scheduler.add_action(SingleAction(datetime.date(year, 2, 10), label='action 2'))
+        scheduler.run(start_day, stop_day)
 
 ####################################################################################################
 

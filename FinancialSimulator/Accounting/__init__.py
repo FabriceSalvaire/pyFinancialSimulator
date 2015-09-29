@@ -21,6 +21,7 @@
 ####################################################################################################
 
 import logging
+import os
 
 ####################################################################################################
 
@@ -155,7 +156,7 @@ class Account(object):
 
     ##############################################
 
-    def __init__(self, code, name, parent = None, initial_balance=0, devise='€'):
+    def __init__(self, code, name, parent=None, initial_balance=0, devise='€'):
 
         self._name = name
         self._code = code
@@ -169,7 +170,7 @@ class Account(object):
         self._devise = devise
         
         self.reset()
-        
+
     ##############################################
 
     def reset(self):
@@ -395,6 +396,44 @@ class Journal(object):
         transaction = DistributedTransaction(self._account_chart[source], pairs,
                                              description=description)
         self.log_transaction_object(transaction)
+
+####################################################################################################
+
+_account_charts = {
+    'FR': 'plan-comptable-français.txt',
+}
+
+def load_account_chart(country_code):
+
+    txt_file = os.path.join(os.path.dirname(__file__), _account_charts[country_code])
+    with open(txt_file) as f:
+        lines = f.readlines()
+        
+    kwargs = {}
+    i = 0
+    while not lines[i].startswith('#'):
+        name, value = [x.strip() for x in lines[i].split(':')]
+        kwargs[name] = value
+        i += 1
+    account_chart = AccountChart(**kwargs)
+    
+    previous = None
+    parent = [None]
+    current_level = 1
+    for line in lines[i+1:]:
+        code, name = [x.strip() for x in line.split('|')]
+        item_level = len(code)
+        if item_level > current_level:
+            parent.append(previous)
+            current_level = item_level
+        elif item_level < current_level:
+            parent = parent[:item_level-current_level]
+            current_level = item_level
+        account = Account(code, name, parent=parent[-1])
+        account_chart.add_account(account)
+        previous = account
+    
+    return account_chart
 
 ####################################################################################################
 #
