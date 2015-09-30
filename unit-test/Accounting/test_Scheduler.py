@@ -34,7 +34,7 @@ import unittest
 
 ####################################################################################################
 
-from FinancialSimulator.Scheduler import (SingleAction, ReccurentAction, Scheduler)
+from FinancialSimulator.Scheduler import (SingleAction, ReccurentAction, MonthlyAction, Scheduler)
 
 ####################################################################################################
 
@@ -43,13 +43,19 @@ class TestAccounting(unittest.TestCase):
     def test(self):
 
         year = 2016
-        start_day = datetime.date(year, 1, 1)
-        stop_day = datetime.date(year +1, 1, 1)
+        start_day = datetime.date(year, 3, 1)
+        stop_day = datetime.date(year +1, 6, 1)
         day_timedelta = datetime.timedelta(1)
         
         scheduler = Scheduler()
         scheduler.add_action(SingleAction(datetime.date(year, 2, 1), label='action 1'))
         scheduler.add_action(SingleAction(datetime.date(year, 2, 10), label='action 2'))
+        # scheduler.add_action(ReccurentAction(datetime.date(year, 1, 1),
+        #                                      datetime.timedelta(30),
+        #                                      label='reccurent action 1'))
+        scheduler.add_action(MonthlyAction(datetime.date(year, 1, 1),
+                                           5,
+                                           label='monthly action 1'))
         scheduler.run(start_day, stop_day)
 
 ####################################################################################################

@@ -47,15 +47,24 @@ class Action(object):
 
     ##############################################
 
+    @property
+    def label(self):
+
+        return self._label
+
+    ##############################################
+
     def next_dates(self, start_date, stop_date):
 
         raise NotImplementedError
 
     ##############################################
 
-    def run(self):
+    def run(self, date):
 
-        raise NotImplementedError
+        # self._logger.info(str(self))
+        # raise NotImplementedError
+        pass
 
 ####################################################################################################
 
@@ -85,17 +94,11 @@ class SingleAction(Action):
         else:
             raise StopIteration
 
-    ##############################################
-
-    def run(self):
-
-        self._logger.info(str(self))
-
 ####################################################################################################
 
 class ReccurentAction(Action):
 
-    _logger = _module_logger.getChild('SingleAction')
+    _logger = _module_logger.getChild('ReccurentAction')
 
     ##############################################
 
@@ -110,42 +113,99 @@ class ReccurentAction(Action):
     def next_dates(self, start_date, stop_date):
 
         date = self._start_date
-        while start_date <= date <= stop_date:
-            yield date
+        while date <= stop_date:
+            if start_date <= date:
+                yield date
             date += self._period
+
+####################################################################################################
+
+class MonthlyAction(Action):
+
+    _logger = _module_logger.getChild('MonthlyAction')
 
     ##############################################
 
-    def run(self):
+    def __init__(self, start_date, day_number, label=''):
 
-        self._logger.info(str(self))
+        super(MonthlyAction, self).__init__(label)
+        self._start_date = start_date
+        self._day_number = day_number
+
+    ##############################################
+
+    def next_dates(self, start_date, stop_date):
+
+        date = datetime.date(start_date.year, start_date.month, self._day_number)
+        while date <= stop_date:
+            if start_date <= date:
+                yield date
+            if date.month == 12:
+                date = datetime.date(date.year +1, 1, self._day_number)
+            else:
+                date = datetime.date(date.year, date.month +1, self._day_number)
+
+####################################################################################################
+
+class RandomAction(Action):
+
+    _logger = _module_logger.getChild('RandomAction')
+
+    ##############################################
+
+    def __init__(self, start_date, label=''):
+
+        super(RandomAction, self).__init__(label)
+        self._start_date = start_date
+
+    ##############################################
+
+    def next_dates(self, start_date, stop_date):
+
+        # slope:
+        #   flat
+        #   increasing
+        #   decreasing
+        #   increasing -> decreasing
+        # Gaussian noise
+        
+        pass
+        # date = datetime.date(start_date.year, start_date.month, self._day_number)
+        # while date <= stop_date:
+        #     if start_date <= date:
+        #         yield date
 
 ####################################################################################################
 
 class PlannedAction(object):
 
+    _logger = _module_logger.getChild('PlannedAction')
+
     ##############################################
 
     def __init__(self, action, date):
 
-        self.action = action
-        self.date = date
+        self._action = action
+        self._date = date
 
     ##############################################
 
     def __lt__(self, other):
 
-        return self.date < other.date
+        return self._date < other._date
 
     ##############################################
 
     def run(self):
 
-        self.action.run()
+        self._logger.info('Run {} @{}'.format(self._action.label, self._date))
+        self._action.run(self._date)
 
 ####################################################################################################
 
 class PlannedActions(dict):
+
+    _logger = _module_logger.getChild('SingleAction')
 
     ##############################################
 
@@ -162,9 +222,9 @@ class PlannedActions(dict):
         delta_day = (date - self._start_date).days
         planned_action = PlannedAction(action, date)
         if delta_day in self:
-            self[delta_day].append(action)
+            self[delta_day].append(planned_action)
         else:
-            self[delta_day] = [action]
+            self[delta_day] = [planned_action]
 
     ##############################################
 
@@ -200,11 +260,9 @@ class Scheduler(object):
             for next_date in action.next_dates(start_date, stop_date):
                 planned_actions.add_action(action, next_date)
         planned_actions.sort()
-        print(planned_actions)
-
+        
         number_of_days = (stop_date - start_date).days +1
         for delta_day in range(number_of_days):
-            # self._logger.info(delta_day)
             if delta_day in planned_actions:
                 day_planned_actions = planned_actions[delta_day]
                 for planned_action in day_planned_actions:
