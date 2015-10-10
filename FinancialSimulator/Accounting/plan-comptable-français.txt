@@ -342,11 +342,11 @@ name: Plan Comptable Général Français
 3581   | Déchets
 3585   | Rebuts
 3586   | Matières de récupération
-36     | (compte à ouvrir, le cas échéant, sous l'intitulé "Stocks provenant d'immobilisations")
+36     | Stocks provenant d'immobilisations
 37     | Stocks de marchandises
 371    | Marchandises (ou groupe) A
 372    | Marchandises (ou groupe) B
-38     | (lorsque l'entité tient un inventaire permanent en comptabilité générale, le compte 38 peut être utilisé pour comptabiliser les stocks en voie d'acheminement, mis en dépôt ou donnés en consignation)
+38     | Stocks en voie d'acheminement, mis en dépôt ou donnés en consignation
 39     | Dépréciations des stocks et en-cours
 391    | Dépréciations des matières premières (et fournitures)
 3911   | Matières (ou groupe) A
