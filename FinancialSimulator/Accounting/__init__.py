@@ -162,7 +162,7 @@ class Account(object):
         self._code = code
         
         self._parent = parent
-        self._childs = set()
+        self._siblings = set()
         if parent is not None:
             parent.add_child(self)
         
@@ -208,7 +208,7 @@ class Account(object):
     def add_child(self, child):
 
         self.balance_is_dirty()
-        self._childs.add(child)
+        self._siblings.add(child)
 
     ##############################################
 
@@ -216,6 +216,13 @@ class Account(object):
     def parent(self):
 
         return self._parent
+
+    ##############################################
+
+    @property
+    def siblings(self):
+
+        return self._siblings
 
     ##############################################
 
@@ -247,7 +254,7 @@ class Account(object):
         if self._balance is None:
             self._credit = self._inner_credit
             self._debit = self._inner_debit
-            for child in self._childs:
+            for child in self._siblings:
                 self._credit += child.credit
                 self._debit += child.debit
             self._balance = self._credit - self._debit
@@ -313,6 +320,7 @@ class AccountChart(object):
 
         self._name = name
         self._accounts = {}
+        self._flat_hierarchy = None
 
     ##############################################
 
@@ -337,7 +345,36 @@ class AccountChart(object):
 
     def __iter__(self):
 
-        return iter(self._accounts.values())
+        if self._flat_hierarchy is None:
+            self._build_hierarchy()
+        return iter(self._flat_hierarchy)
+
+    ##############################################
+
+    def _build_sibling_hierarchy(self, account):
+
+        siblings = list(account.siblings)
+        siblings.sort(key=lambda x: x.code)
+        for sibling in siblings:
+            yield sibling
+            yield from self._build_sibling_hierarchy(sibling)
+
+    ##############################################
+
+    def _build_hierarchy(self):
+
+        root_accounts = []
+        for account in self._accounts.values():
+            if account.parent is None:
+                root_accounts.append(account)
+        root_accounts.sort(key=lambda x: x.code)
+        
+        flat_hierarchy = []
+        for account in root_accounts:
+            flat_hierarchy.append(account)
+            for item in self._build_sibling_hierarchy(account):
+                flat_hierarchy.append(item)
+        self._flat_hierarchy = flat_hierarchy
 
 ####################################################################################################
 
@@ -400,7 +437,7 @@ class Journal(object):
 ####################################################################################################
 
 _account_charts = {
-    'FR': 'plan-comptable-français.txt',
+    'fr': 'plan-comptable-français.txt',
 }
 
 def load_account_chart(country_code):
@@ -408,7 +445,7 @@ def load_account_chart(country_code):
     txt_file = os.path.join(os.path.dirname(__file__), _account_charts[country_code])
     with open(txt_file) as f:
         lines = f.readlines()
-        
+    
     kwargs = {}
     i = 0
     while not lines[i].startswith('#'):
