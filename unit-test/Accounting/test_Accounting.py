@@ -33,9 +33,7 @@ import unittest
 
 ####################################################################################################
 
-from FinancialSimulator.Accounting import (AccountChart, Account, Journal,
-                                           SimpleTransaction, DistributedTransaction
-)
+from FinancialSimulator.Accounting import AccountChart, Account, Journal
 
 ####################################################################################################
 
@@ -63,8 +61,8 @@ class TestAccounting(unittest.TestCase):
         
         journal_ventes = Journal('Ventes', account_chart)
         
-        journal_ventes.log_transaction('512',
-                                       {'706':80, '44571':20},
+        journal_ventes.log_transaction(debit={'706':80, '44571':20},
+                                       credit={'512':100},
                                        description='vente'
         )
         

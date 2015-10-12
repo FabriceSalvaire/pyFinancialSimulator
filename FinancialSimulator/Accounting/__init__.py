@@ -29,124 +29,91 @@ _module_logger = logging.getLogger(__name__)
 
 ####################################################################################################
 
-class Transaction(object):
+class Imputation(object):
 
     ##############################################
 
-    def __init__(self, source, description=''):
+    def __init__(self, transaction, account_code, amount):
 
-        self._source = source
-        self._description = description
+        self._transaction = transaction
+        self._account_code = account_code
+        self._amount = amount
 
     ##############################################
 
     @property
-    def source(self):
-        return self._source
+    def account_code(self):
+        return self._account_code
+
+    @property
+    def amount(self):
+        return self._amount
+
+    @property
+    def description(self):
+        return self._transaction.description
+
+####################################################################################################
+
+class DebitImputation(Imputation):
+    pass
+
+class CreditImputation(Imputation):
+    pass
+
+####################################################################################################
+
+class Transaction(object):
+
+    ##############################################
+
+    def __init__(self, debit, credit, description=''):
+
+        self._description = description
+        
+        # Fixme: keep ?
+        self._debit = {account_code:DebitImputation(self, account_code, amount)
+                       for account_code, amount in debit.items()}
+        self._credit = {account_code:CreditImputation(self, account_code, amount)
+                       for account_code, amount in credit.items()}
+        self._imputations = dict(self._debit)
+        self._imputations.update(self._credit)
+
+        if self.sum_of_debits() != self.sum_of_credits():
+            raise NameError("Transaction is not balanced")
+
+    ##############################################
+
+    def _sum_of_imputations(self, imputations):
+        return sum([imputation.amount for imputation in imputations.values()])
+
+    ##############################################
+
+    def sum_of_debits(self):
+        return self._sum_of_imputations(self._debit)
+
+    ##############################################
+
+    def sum_of_credits(self):
+        return self._sum_of_imputations(self._credit)
+
+    ##############################################
+
+    def __iter__(self):
+
+        return iter(self._imputations.values())
+
+    ##############################################
+
+    def __getitem__(self, account):
+
+        return self._imputations[account.code]
 
     ##############################################
 
     @property
     def description(self):
         return self._description
-
-####################################################################################################
-
-class SimpleTransaction(Transaction):
-
-    ##############################################
-
-    def __init__(self, source, destination, amount, description=''):
-
-        super(SimpleTransaction, self).__init__(source, description)
-        self._destination = destination
-        self._amount = amount
-
-    ##############################################
-
-    @property
-    def destination(self):
-        return self._destination
-
-    ##############################################
-
-    @property
-    def amount(self):
-        return self._amount
-
-    ##############################################
-
-    def is_debit_for(self, account):
-        return self._source is account
-
-    ##############################################
-
-    def is_credit_for(self, account):
-        return self._destination is account
-
-    ##############################################
-
-    def __str__(self):
-
-        # Fixme: devise
-        return '{} -> {} {} €'.format(self._source, self._destination, self._amount)
-
-####################################################################################################
-
-class TransactionDistribution(object):
-
-    ##############################################
-
-    def __init__(self, destination, amount):
-
-        self._destination = destination
-        self._amount = amount
-
-    ##############################################
-
-    @property
-    def destination(self):
-        return self._destination
-
-    ##############################################
-
-    @property
-    def amount(self):
-        return self._amount
-
-####################################################################################################
-
-class DistributedTransaction(Transaction):
-
-    ##############################################
-
-    def __init__(self, source, pairs, description=''):
-
-        super(DistributedTransaction, self).__init__(source, description)
-        # pairs = [(args[i], args[i+1]) for i in range(len(args -1))]
-        self._distribution = [TransactionDistribution(destination, amount)
-                              for destination, amount in pairs]
-
-    ##############################################
-
-    def __len__(self):
-
-        return len(self._distribution)
-
-    ##############################################
-
-    def __iter__(self):
-
-        for sub_transaction in self._distribution:
-            yield SimpleTransaction(self._source, sub_transaction.destination,
-                                    sub_transaction.amount, self._description)
-
-    ##############################################
-
-    @property
-    def amount(self):
-        # Fixme: cache ?
-        return sum([sub_transaction.amount for sub_transaction in self._distribution])
 
 ####################################################################################################
 
@@ -288,25 +255,25 @@ class Account(object):
 
     ##############################################
 
-    def run_transaction(self, transaction):
+    def run_imputation(self, imputation):
 
-        if isinstance(transaction, DistributedTransaction):
-            raise NameError('An account cannot run a distributed transaction')
-        
+        # Fixme:
+        # check account
+        # -> debit/credit function
+        # move code to imputation ?
+
         self.inner_balance_is_dirty()
-        if transaction.is_debit_for(self):
-            sign = '+'
-            self._inner_debit += transaction.amount
-        elif transaction.is_credit_for(self):
-            sign = '-'
-            self._inner_credit += transaction.amount
+        if isinstance(imputation, DebitImputation):
+            operation = 'D'
+            self._inner_debit += imputation.amount
         else:
-            raise NameError("transaction don't involve the account")
-        message = 'Run transaction {} -> {} {}{} {}'.format(transaction.source,
-                                                            transaction.destination,
-                                                            sign,
-                                                            transaction.amount,
-                                                            self._devise
+            operation = 'C'
+            self._inner_credit += imputation.amount
+        message = 'Run imputation {} {} {} {} {}'.format(self._code,
+                                                         imputation.description,
+                                                         operation,
+                                                         imputation.amount,
+                                                         self._devise,
         )
         self._logger.info(message)
 
@@ -408,14 +375,9 @@ class Journal(object):
 
     def _run_transaction(self, transaction):
 
-        source = transaction.source
-        if isinstance(transaction, DistributedTransaction):
-            for sub_transaction in transaction:
-                source.run_transaction(sub_transaction)
-                sub_transaction.destination.run_transaction(sub_transaction)
-        else:
-            source.run_transaction(transaction)
-            transaction.destination.run_transaction(transaction)
+        for imputation in transaction:
+            account = self._account_chart[imputation.account_code]
+            account.run_imputation(imputation)
 
     ##############################################
 
@@ -426,12 +388,9 @@ class Journal(object):
 
     ##############################################
 
-    def log_transaction(self, source, kwargs, description=''):
+    def log_transaction(self, debit, credit, description=''):
 
-        pairs = [(self._account_chart[destination], amount)
-                  for destination, amount in kwargs.items()]
-        transaction = DistributedTransaction(self._account_chart[source], pairs,
-                                             description=description)
+        transaction = Transaction(debit, credit, description)
         self.log_transaction_object(transaction)
 
 ####################################################################################################
