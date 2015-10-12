@@ -20,7 +20,6 @@
 
 ####################################################################################################
 
-
 import yaml
 import logging
 
@@ -34,6 +33,10 @@ _module_logger = logging.getLogger(__name__)
 
 ####################################################################################################
 
+_value_parser = ValueParser()
+
+####################################################################################################
+
 class Parameters(dict):
 
     _logger = _module_logger.getChild('Parameters')
@@ -44,10 +47,8 @@ class Parameters(dict):
 
         super(Parameters, self).__init__()
         
-        value_parser = ValueParser()
-        
         for name, value_string in definitions.items():
-            value = value_parser.parse(value_string)
+            value = _value_parser.parse(value_string)
             self[name] = value
             self._logger.info('{} = {}'.format(name, value))
 
@@ -119,30 +120,40 @@ class TransactionDefinition(object):
 
 ####################################################################################################
 
-class Transactions(object):
+class YamlUnit(object):
 
-    _logger = _module_logger.getChild('Transactions')
+    _logger = _module_logger.getChild('YamlUnit')
 
     ##############################################
 
-    def __init__(self, transactions, variables):
+    def __init__(self, path):
 
-        self._local_variables = dict(variables)
-
-        self._value_parser = ValueParser()
-        self._transactions = [] # Fixme:
-        for transaction in transactions:
-            self._parse_transaction(transaction)
+        self._path = path
+        
+        self._logger.info('load {}'.format(path))
+        with open(path, 'r') as f:
+            data = yaml.load(f.read())
+        if data is not None:
+            self._parameters = Parameters(data.get('parameters', {}))
+            self._variables = Variables(data.get('variables', {}), self._parameters)
+            transactions = data.get('transactions', [])
+            self._transactions = [self._parse_transaction(transaction)
+                                  for transaction in transactions
+                                  if not transaction.get('skip', False)]
+        else:
+            self._parameters = None
+            self._variables = None
+            self._transactions = []
 
     ##############################################
 
     def _parse_transaction(self, transaction):
 
-        local_variables = dict(self._local_variables)
+        local_variables = dict(self._variables)
         for key, value_string in transaction.items():
             if key.startswith('local '):
                 name = key[len('local_'):]
-                value = self._value_parser.parse(value_string)
+                value = _value_parser.parse(value_string)
                 local_variables[name] = value
                 self._logger.info('{} = {}'.format(name, value))
         
@@ -153,34 +164,35 @@ class Transactions(object):
                 transaction[key] = value
                 self._logger.info('{} = {}'.format(key, value))
         
-        transaction = TransactionDefinition(transaction)
-        self._transactions.append(transaction)
+        return TransactionDefinition(transaction)
 
     ##############################################
 
     def __iter__(self):
+
         return iter(self._transactions)
 
 ####################################################################################################
 
 class YamlLoader(object):
 
-    _logger = _module_logger.getChild('YamlLoader')
+    ##############################################
+
+    def __init__(self):
+
+        self._yaml_units = []
 
     ##############################################
 
     def load(self, path):
 
-        self._logger.info('load {}'.format(path))
-        with open(path, 'r') as f:
-            data = yaml.load(f.read())
-        if data is not None:
-            parameters = Parameters(data.get('parameters', {}))
-            variables = Variables(data.get('variables', {}), parameters)
-            transactions = Transactions(data.get('transactions', {}), variables)
-            return transactions
-        else:
-            return None
+        self._yaml_units.append(YamlUnit(path))
+
+    ##############################################
+
+    def __iter__(self):
+
+        return iter(self._yaml_units)
 
 ####################################################################################################
 #
