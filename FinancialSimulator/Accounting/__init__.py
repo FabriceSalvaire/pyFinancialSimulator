@@ -33,25 +33,31 @@ class Imputation(object):
 
     ##############################################
 
-    def __init__(self, transaction, account_code, amount):
+    def __init__(self, transaction, account, amount):
 
         self._transaction = transaction
-        self._account_code = account_code
+        self._account = account
         self._amount = amount
 
     ##############################################
 
     @property
-    def account_code(self):
-        return self._account_code
+    def description(self):
+        return self._transaction.description
+
+    @property
+    def account(self):
+        return self._account
 
     @property
     def amount(self):
         return self._amount
 
-    @property
-    def description(self):
-        return self._transaction.description
+    ##############################################
+
+    def run(self):
+
+        self._account.run_imputation(self)
 
 ####################################################################################################
 
@@ -67,20 +73,26 @@ class Transaction(object):
 
     ##############################################
 
-    def __init__(self, debit, credit, description=''):
+    def __init__(self, debit_pairs, credit_pairs, description=''):
 
         self._description = description
         
-        # Fixme: keep ?
-        self._debit = {account_code:DebitImputation(self, account_code, amount)
-                       for account_code, amount in debit.items()}
-        self._credit = {account_code:CreditImputation(self, account_code, amount)
-                       for account_code, amount in credit.items()}
+        # Fixme: keep debit/credit ?
+        self._debit = {account.code:DebitImputation(self, account, amount)
+                       for account, amount in debit_pairs}
+        self._credit = {account.code:CreditImputation(self, account, amount)
+                       for account, amount in credit_pairs}
         self._imputations = dict(self._debit)
         self._imputations.update(self._credit)
 
         if self.sum_of_debits() != self.sum_of_credits():
             raise NameError("Transaction is not balanced")
+
+    ##############################################
+
+    @property
+    def description(self):
+        return self._description
 
     ##############################################
 
@@ -111,9 +123,10 @@ class Transaction(object):
 
     ##############################################
 
-    @property
-    def description(self):
-        return self._description
+    def run(self):
+
+        for imputation in self._imputations.values():
+            imputation.run()
 
 ####################################################################################################
 
@@ -258,22 +271,25 @@ class Account(object):
     def run_imputation(self, imputation):
 
         # Fixme:
-        # check account
+        # imputation: (account, type, amount) -> update
         # -> debit/credit function
         # move code to imputation ?
 
+        if imputation.account is not self:
+            raise NameError("Account mismatch")
+        
         self.inner_balance_is_dirty()
         if isinstance(imputation, DebitImputation):
-            operation = 'D'
+            operation = 'Debit'
             self._inner_debit += imputation.amount
         else:
-            operation = 'C'
+            operation = 'Credit'
             self._inner_credit += imputation.amount
-        message = 'Run imputation {} {} {} {} {}'.format(self._code,
-                                                         imputation.description,
-                                                         operation,
-                                                         imputation.amount,
-                                                         self._devise,
+        message = '{} on {}: {} {} ({})'.format(operation,
+                                                self._code,
+                                                imputation.amount,
+                                                self._devise,
+                                                imputation.description,
         )
         self._logger.info(message)
 
@@ -343,6 +359,13 @@ class AccountChart(object):
                 flat_hierarchy.append(item)
         self._flat_hierarchy = flat_hierarchy
 
+    ##############################################
+
+    def reset(self):
+
+        for account in self._flat_hierarchy:
+            account.reset()
+
 ####################################################################################################
 
 class Journal(object):
@@ -366,31 +389,35 @@ class Journal(object):
 
     def run(self):
 
-        for account in self._account_chart:
-            account.reset()
+        self._account_chart.reset()
         for transaction in self._transactions:
-            self._run_transaction(transaction)
-
-    ##############################################
-
-    def _run_transaction(self, transaction):
-
-        for imputation in transaction:
-            account = self._account_chart[imputation.account_code]
-            account.run_imputation(imputation)
+            transaction.run()
 
     ##############################################
 
     def log_transaction_object(self, transaction):
 
         self._transactions.append(transaction)
-        self._run_transaction(transaction)
+        transaction.run()
+
+    ##############################################
+
+    def _make_imputation_pairs(self, imputations):
+
+        return [(self._account_chart[account_code], amount)
+                for account_code, amount in imputations.items()]
 
     ##############################################
 
     def log_transaction(self, debit, credit, description=''):
 
-        transaction = Transaction(debit, credit, description)
+        # Fixme:
+        #  DebitImputation(account, amount)
+        #  DebitImputation(account_code, amount)
+
+        transaction = Transaction(self._make_imputation_pairs(debit),
+                                  self._make_imputation_pairs(credit),
+                                  description)
         self.log_transaction_object(transaction)
 
 ####################################################################################################
