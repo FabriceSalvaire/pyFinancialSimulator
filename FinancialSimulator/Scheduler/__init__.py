@@ -68,8 +68,7 @@ class Action(object):
 
     def run(self, date):
 
-        pass
-        # raise NotImplementedError
+        raise NotImplementedError
 
 ####################################################################################################
 
@@ -359,7 +358,7 @@ class Scheduler(object):
 
     def run(self, start_date, stop_date):
 
-        for planned_action in self.run(start_date, stop_date):
+        for planned_action in self.iter(start_date, stop_date):
             planned_action.run()
 
 ####################################################################################################

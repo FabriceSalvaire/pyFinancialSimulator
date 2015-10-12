@@ -85,8 +85,13 @@ class Transaction(object):
         self._imputations = dict(self._debit)
         self._imputations.update(self._credit)
 
-        if self.sum_of_debits() != self.sum_of_credits():
-            raise NameError("Transaction is not balanced")
+        sum_of_debits = self.sum_of_debits()
+        sum_of_credits = self.sum_of_credits()
+        if sum_of_debits != sum_of_credits:
+            message = "Transaction '{}' is not balanced D{} C{}"
+            raise NameError(message.format(self._description,
+                                           sum_of_debits,
+                                           sum_of_credits))
 
     ##############################################
 
@@ -185,6 +190,12 @@ class Account(object):
 
     ##############################################
 
+    def __repr__(self):
+
+        return str(self)
+
+    ##############################################
+
     def add_child(self, child):
 
         self.balance_is_dirty()
@@ -253,6 +264,7 @@ class Account(object):
     @property
     def credit(self):
 
+        # Fxime: solde créditeur
         if self._balance is None:
             self._compute_balance()
         return self._credit
