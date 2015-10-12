@@ -20,6 +20,11 @@
 
 ####################################################################################################
 
+def round_currency(x):
+    return round(x, 2)
+
+####################################################################################################
+
 class AmountValue(object):
 
     ##############################################
@@ -31,9 +36,8 @@ class AmountValue(object):
         self._is_inclusive = is_inclusive
         
         if is_inclusive:
-            self._value = value / (1 + vat_rate / 100)
-        else:
-            self._value = value
+            value = value / (1 + vat_rate / 100)
+        self._value = round_currency(value)
 
     ##############################################
 
@@ -93,7 +97,7 @@ class AmountValue(object):
     ##############################################
 
     def to_inclusive(self):
-        return self._value * (1 + self._vat_rate / 100)
+        return round_currency(self._value * (1 + self._vat_rate / 100))
 
     ##############################################
 

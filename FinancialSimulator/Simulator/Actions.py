@@ -41,7 +41,7 @@ class TransactionActionMixin(object):
 
     def run(self, date):
 
-        self._journal.log_transaction_object(self._transaction)
+        self._journal.log_transaction_object(self._transaction.plan(date))
 
 ####################################################################################################
 

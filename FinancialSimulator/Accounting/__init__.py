@@ -21,7 +21,10 @@
 ####################################################################################################
 
 import logging
-import os
+
+####################################################################################################
+
+from FinancialSimulator.Units import round_currency
 
 ####################################################################################################
 
@@ -30,6 +33,8 @@ _module_logger = logging.getLogger(__name__)
 ####################################################################################################
 
 class Imputation(object):
+
+    __letter__ = ''
 
     ##############################################
 
@@ -59,32 +64,41 @@ class Imputation(object):
 
         self._account.run_imputation(self)
 
+    ##############################################
+
+    def __str__(self):
+
+        return '{} {}: {} {}'.format(self.__letter__, self._account.code,
+                                     self._amount, self._account.devise)
+
 ####################################################################################################
 
 class DebitImputation(Imputation):
-    pass
-
-class CreditImputation(Imputation):
-    pass
+    __letter__ = 'D'
 
 ####################################################################################################
 
-class Transaction(object):
+class CreditImputation(Imputation):
+    __letter__ = 'C'
+
+####################################################################################################
+
+class UnplannedTransaction(object):
 
     ##############################################
 
-    def __init__(self, debit_pairs, credit_pairs, description=''):
+    def __init__(self, debit_pairs, credit_pairs, description):
 
         self._description = description
         
         # Fixme: keep debit/credit ?
-        self._debit = {account.code:DebitImputation(self, account, amount)
+        self._debit = {account.code:DebitImputation(self, account, float(amount))
                        for account, amount in debit_pairs}
-        self._credit = {account.code:CreditImputation(self, account, amount)
+        self._credit = {account.code:CreditImputation(self, account, float(amount))
                        for account, amount in credit_pairs}
         self._imputations = dict(self._debit)
         self._imputations.update(self._credit)
-
+        
         sum_of_debits = self.sum_of_debits()
         sum_of_credits = self.sum_of_credits()
         if sum_of_debits != sum_of_credits:
@@ -102,7 +116,7 @@ class Transaction(object):
     ##############################################
 
     def _sum_of_imputations(self, imputations):
-        return sum([imputation.amount for imputation in imputations.values()])
+        return round_currency(sum([imputation.amount for imputation in imputations.values()]))
 
     ##############################################
 
@@ -132,6 +146,44 @@ class Transaction(object):
 
         for imputation in self._imputations.values():
             imputation.run()
+
+    # ##############################################
+
+    def plan(self, date):
+
+        obj = Transaction.__new__(Transaction)
+        obj.__dict__.update(self.__dict__)
+        obj._date = date
+        
+        return obj
+
+####################################################################################################
+
+class Transaction(UnplannedTransaction):
+
+    ##############################################
+
+    def __init__(self, date, debit_pairs, credit_pairs, description):
+
+        super(Transaction, self).__init__(debit_pairs, credit_pairs, description)
+
+        self._date = date
+
+    ##############################################
+
+    @property
+    def date(self):
+        return self._date
+
+    ##############################################
+
+    def __str__(self):
+
+        message = 'Transaction on {}: {}\n'.format(self._date, self._description)
+        for imputations in self._debit, self._credit:
+            message += '\n'.join([str(imputation) for imputation in imputations.values()])
+            message += '\n'
+        return message
 
 ####################################################################################################
 
@@ -172,26 +224,28 @@ class Account(object):
 
     @property
     def name(self):
-
         return self._name
 
     ##############################################
 
     @property
     def code(self):
-
         return self._code
 
     ##############################################
 
-    def __str__(self):
+    @property
+    def devise(self):
+        return self._devise
 
+    ##############################################
+
+    def __str__(self):
         return '#' + self._code
 
     ##############################################
 
     def __repr__(self):
-
         return str(self)
 
     ##############################################
@@ -205,20 +259,17 @@ class Account(object):
 
     @property
     def parent(self):
-
         return self._parent
 
     ##############################################
 
     @property
     def siblings(self):
-
         return self._siblings
 
     ##############################################
 
     def balance_is_dirty(self):
-
         self._balance = None
 
     ##############################################
@@ -421,54 +472,17 @@ class Journal(object):
 
     ##############################################
 
-    def log_transaction(self, debit, credit, description=''):
+    def log_transaction(self, date, debit, credit, description):
 
         # Fixme:
         #  DebitImputation(account, amount)
         #  DebitImputation(account_code, amount)
 
-        transaction = Transaction(self._make_imputation_pairs(debit),
+        transaction = Transaction(date,
+                                  self._make_imputation_pairs(debit),
                                   self._make_imputation_pairs(credit),
                                   description)
         self.log_transaction_object(transaction)
-
-####################################################################################################
-
-_account_charts = {
-    'fr': 'plan-comptable-français.txt',
-}
-
-def load_account_chart(country_code):
-
-    txt_file = os.path.join(os.path.dirname(__file__), _account_charts[country_code])
-    with open(txt_file) as f:
-        lines = f.readlines()
-    
-    kwargs = {}
-    i = 0
-    while not lines[i].startswith('#'):
-        name, value = [x.strip() for x in lines[i].split(':')]
-        kwargs[name] = value
-        i += 1
-    account_chart = AccountChart(**kwargs)
-    
-    previous = None
-    parent = [None]
-    current_level = 1
-    for line in lines[i+1:]:
-        code, name = [x.strip() for x in line.split('|')]
-        item_level = len(code)
-        if item_level > current_level:
-            parent.append(previous)
-            current_level = item_level
-        elif item_level < current_level:
-            parent = parent[:item_level-current_level]
-            current_level = item_level
-        account = Account(code, name, parent=parent[-1])
-        account_chart.add_account(account)
-        previous = account
-    
-    return account_chart
 
 ####################################################################################################
 #

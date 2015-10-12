@@ -20,7 +20,7 @@
 
 ####################################################################################################
 
-from FinancialSimulator.Accounting import Transaction
+from FinancialSimulator.Accounting import UnplannedTransaction
 from .Actions import (SingleTransactionAction,
                       MonthlyTransactionAction,
                       QuaterlyTransactionAction,
@@ -66,7 +66,7 @@ class TransactionActionFactory(object):
         # Fixme:
         debit = journal._make_imputation_pairs(transaction_definition.debit)
         credit = journal._make_imputation_pairs(transaction_definition.credit)
-        transaction = Transaction(debit, credit, transaction_definition.description)
+        transaction = UnplannedTransaction(debit, credit, transaction_definition.description)
 
         return  class_action(journal, transaction_definition.date, transaction)
 

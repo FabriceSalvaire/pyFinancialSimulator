@@ -278,13 +278,13 @@ class PlannedAction(object):
 
     def __str__(self):
 
-        return 'Planned Action {} @{}'.format(self._action.label, self._date)
+        return 'Planned Action on {}: {} '.format(self._date, self._action.label)
 
     ##############################################
 
     def run(self):
 
-        self._logger.info('Run {} @{}'.format(self._action.label, self._date))
+        self._logger.info('Run ' + str(self))
         self._action.run(self._date)
 
 ####################################################################################################

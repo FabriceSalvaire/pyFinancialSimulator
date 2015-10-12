@@ -87,10 +87,10 @@ class TransactionDefinition(object):
         for key, value in self._definition.items():
             if key.startswith('debit'):
                 account_code = key[len('debit '):]
-                self._debit[account_code] = float(value)
+                self._debit[account_code] = value
             elif key.startswith('credit'):
                 account_code = key[len('credit '):]
-                self._credit[account_code] = float(value)
+                self._credit[account_code] = value
 
     ##############################################
 
