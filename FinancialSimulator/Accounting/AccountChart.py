@@ -21,6 +21,7 @@
 ####################################################################################################
 
 import os
+import yaml
 
 ####################################################################################################
 
@@ -29,28 +30,26 @@ from FinancialSimulator.Accounting import Account, AccountChart
 ####################################################################################################
 
 _account_charts = {
-    'fr': 'plan-comptable-français.txt',
+    'fr': 'plan-comptable-francais.yml',
 }
 
 def load_account_chart(country_code):
 
-    txt_file = os.path.join(os.path.dirname(__file__), _account_charts[country_code])
-    with open(txt_file) as f:
-        lines = f.readlines()
-    
-    kwargs = {}
-    i = 0
-    while not lines[i].startswith('#'):
-        name, value = [x.strip() for x in lines[i].split(':')]
-        kwargs[name] = value
-        i += 1
-    account_chart = AccountChart(**kwargs)
+    yml_file = os.path.join(os.path.dirname(__file__), _account_charts[country_code])
+    with open(yml_file, 'r') as f:
+        data = yaml.load(f.read())
+
+    metadata = data['metadata']
+    account_chart = AccountChart(name=metadata['name'])
     
     previous = None
     parent = [None]
     current_level = 1
-    for line in lines[i+1:]:
-        code, name = [x.strip() for x in line.split('|')]
+    for account_definition in data['plan']:
+        code = str(account_definition['code'])
+        name = account_definition['description']
+        comment = account_definition.get('commentaire', '')
+        system = account_definition['système']
         item_level = len(code)
         if item_level > current_level:
             parent.append(previous)
@@ -58,7 +57,7 @@ def load_account_chart(country_code):
         elif item_level < current_level:
             parent = parent[:item_level-current_level]
             current_level = item_level
-        account = Account(code, name, parent=parent[-1])
+        account = Account(code, name, parent=parent[-1], comment=comment, system=system)
         account_chart.add_account(account)
         previous = account
     

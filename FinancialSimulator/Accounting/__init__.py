@@ -58,18 +58,22 @@ class Imputation(object):
     def amount(self):
         return self._amount
 
-    ##############################################
-
-    def run(self):
-
-        self._account.run_imputation(self)
+    @property
+    def devise(self):
+        return self._account.devise
 
     ##############################################
 
     def __str__(self):
 
-        return '{} {}: {} {}'.format(self.__letter__, self._account.code,
-                                     self._amount, self._account.devise)
+        return '{} {:>10}: {:>10} {}'.format(self.__letter__, self._account.code,
+                                             self._amount, self._account.devise)
+
+    ##############################################
+
+    def run(self):
+
+        self._account.run_imputation(self)
 
 ####################################################################################################
 
@@ -102,7 +106,7 @@ class UnplannedTransaction(object):
         sum_of_debits = self.sum_of_debits()
         sum_of_credits = self.sum_of_credits()
         if sum_of_debits != sum_of_credits:
-            message = "Transaction '{}' is not balanced D{} C{}"
+            message = "Transaction '{}' is not balanced D {} != C {}"
             raise NameError(message.format(self._description,
                                            sum_of_debits,
                                            sum_of_credits))
@@ -193,10 +197,17 @@ class Account(object):
 
     ##############################################
 
-    def __init__(self, code, name, parent=None, initial_balance=0, devise='€'):
+    def __init__(self, code, name,
+                 parent=None,
+                 devise='€',
+                 comment='',
+                 system='',
+                 initial_balance=0):
 
         self._name = name
         self._code = code
+        self._comment = comment
+        self._system = system
         
         self._parent = parent
         self._siblings = set()
@@ -231,6 +242,18 @@ class Account(object):
     @property
     def code(self):
         return self._code
+
+    ##############################################
+
+    @property
+    def comment(self):
+        return self._comment
+
+    ##############################################
+
+    @property
+    def system(self):
+        return self._system
 
     ##############################################
 

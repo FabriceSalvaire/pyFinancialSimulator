@@ -1,0 +1,3057 @@
+metadata:
+  name: "Plan Comptable Général Français"
+  ref: "ANC / N° 2014-03 du 5 juin 2014 / Art. 932-1"
+plan:
+ - code: 1
+   description: "Comptes de capitaux"
+   système: classe
+ - code: 10
+   description: "Capital et réserves"
+   système: base
+ - code: 101
+   description: "Capital"
+   système: abrégé
+ - code: 1011
+   description: "Capital souscrit - non appelé"
+   système: développé
+ - code: 1012
+   description: "Capital souscrit - appelé, non versé"
+   système: développé
+ - code: 1013
+   description: "Capital souscrit - appelé, versé"
+   système: développé
+ - code: 10131
+   description: "Capital non amorti"
+   système: développé
+ - code: 10132
+   description: "Capital amorti"
+   système: développé
+ - code: 1018
+   description: "Capital souscrit soumis à des réglementations particulières"
+   système: développé
+ - code: 102
+   description: "Fonds fiduciaires"
+   système: base
+ - code: 104
+   description: "Primes liées au capital social"
+   système: base
+ - code: 1041
+   description: "Primes d'émission"
+   système: développé
+ - code: 1042
+   description: "Primes de fusion"
+   système: développé
+ - code: 1043
+   description: "Primes d'apport"
+   système: développé
+ - code: 1044
+   description: "Primes de conversion d'obligations en actions"
+   système: développé
+ - code: 1045
+   description: "Bons de souscription d'actions"
+   système: développé
+ - code: 105
+   description: "Écarts de réévaluation"
+   système: abrégé
+ - code: 1051
+   description: "Réserve spéciale de réévaluation"
+   système: développé
+ - code: 1052
+   description: "Écart de réévaluation libre"
+   système: développé
+ - code: 1053
+   description: "Réserve de réévaluation"
+   système: développé
+ - code: 1055
+   description: "Écarts de réévaluation"
+   système: développé
+   commentaire: "autres opérations légales"
+ - code: 1057
+   description: "Autres écarts de réévaluation en France"
+   système: développé
+ - code: 1058
+   description: "Autres écarts de réévaluation à l'étranger"
+   système: développé
+ - code: 106
+   description: "Réserves"
+   système: base
+ - code: 1061
+   description: "Réserve légale"
+   système: abrégé
+ - code: 10611
+   description: "Réserve légale proprement dite"
+   système: développé
+ - code: 10612
+   description: "Plus-values nettes à long terme"
+   système: développé
+ - code: 1062
+   description: "Réserves indisponibles"
+   système: base
+ - code: 1063
+   description: "Réserves statutaires ou contractuelles"
+   système: abrégé
+ - code: 1064
+   description: "Réserves réglementées"
+   système: abrégé
+ - code: 10641
+   description: "Plus-values nettes à long terme"
+   système: développé
+ - code: 10643
+   description: "Réserves consécutives à l'octroi de subventions d'investissement"
+   système: développé
+ - code: 10648
+   description: "Autres réserves réglementées"
+   système: développé
+ - code: 1068
+   description: "Autres réserves"
+   système: abrégé
+ - code: 10681
+   description: "Réserve de propre assureur"
+   système: développé
+ - code: 10688
+   description: "Réserves diverses"
+   système: développé
+ - code: 107
+   description: "Écart d'équivalence"
+   système: base
+ - code: 108
+   description: "Compte de l'exploitant"
+   système: abrégé
+ - code: 109
+   description: "Actionnaires : Capital souscrit - non appelé"
+   système: base
+ - code: 11
+   description: "Report à nouveau"
+   système: base
+   commentaire: "solde créditeur ou débiteur"
+ - code: 110
+   description: "Report à nouveau"
+   système: développé
+   commentaire: "solde créditeur"
+ - code: 119
+   description: "Report à nouveau"
+   système: développé
+   commentaire: "solde débiteur"
+ - code: 12
+   description: "Résultat de l'exercice"
+   système: abrégé
+   commentaire: "bénéfice ou perte"
+ - code: 120
+   description: "Résultat de l'exercice"
+   système: développé
+   commentaire: "bénéfice"
+ - code: 129
+   description: "Résultat de l'exercice"
+   système: développé
+   commentaire: "perte"
+ - code: 13
+   description: "Subventions d'investissement"
+   système: base
+ - code: 131
+   description: "Subventions d'équipement"
+   système: base
+ - code: 1311
+   description: "État"
+   système: développé
+ - code: 1312
+   description: "Régions"
+   système: développé
+ - code: 1313
+   description: "Départements"
+   système: développé
+ - code: 1314
+   description: "Communes"
+   système: développé
+ - code: 1315
+   description: "Collectivités publiques"
+   système: développé
+ - code: 1316
+   description: "Entreprises publiques"
+   système: développé
+ - code: 1317
+   description: "Entreprises et organismes privés"
+   système: développé
+ - code: 1318
+   description: "Autres"
+   système: développé
+ - code: 138
+   description: "Autres subventions d’investissement"
+   système: base
+   commentaire: "même ventilation que celle du compte 131"
+ - code: 139
+   description: "Subventions d'investissement inscrites au compte de résultat"
+   système: base
+ - code: 1391
+   description: "Subventions d'équipement"
+   système: base
+ - code: 13911
+   description: "État"
+   système: développé
+ - code: 13912
+   description: "Régions"
+   système: développé
+ - code: 13913
+   description: "Départements"
+   système: développé
+ - code: 13914
+   description: "Communes"
+   système: développé
+ - code: 13915
+   description: "Collectivités publiques"
+   système: développé
+ - code: 13916
+   description: "Entreprises publiques"
+   système: développé
+ - code: 13917
+   description: "Entreprises et organismes privés"
+   système: développé
+ - code: 13918
+   description: "Autres"
+   système: développé
+ - code: 1398
+   description: "Autres subventions d’investissement"
+   système: base
+   commentaire: "même ventilation que celle du compte 1391"
+ - code: 14
+   description: "Provisions réglementées"
+   système: base
+ - code: 142
+   description: "Provisions réglementées relatives aux immobilisations"
+   système: base
+ - code: 1423
+   description: "Provisions pour reconstitution des gisements miniers et pétroliers"
+   système: développé
+ - code: 1424
+   description: "Provisions pour investissement"
+   système: développé
+   commentaire: "participation des salariés"
+ - code: 143
+   description: "Provisions réglementées relatives aux stocks"
+   système: base
+ - code: 1431
+   description: "Hausse des prix"
+   système: développé
+ - code: 1432
+   description: "Fluctuation des cours"
+   système: développé
+ - code: 144
+   description: "Provisions réglementées relatives aux autres éléments de l'actif"
+   système: base
+ - code: 145
+   description: "Amortissements dérogatoires"
+   système: abrégé
+ - code: 146
+   description: "Provision spéciale de réévaluation"
+   système: abrégé
+ - code: 147
+   description: "Plus-values réinvesties"
+   système: abrégé
+ - code: 148
+   description: "Autres provisions réglementées"
+   système: abrégé
+ - code: 15
+   description: "Provisions"
+   système: abrégé
+ - code: 151
+   description: "Provisions pour risques"
+   système: base
+ - code: 1511
+   description: "Provisions pour litiges"
+   système: développé
+ - code: 1512
+   description: "Provisions pour garanties données aux clients"
+   système: développé
+ - code: 1513
+   description: "Provisions pour pertes sur marchés à terme"
+   système: développé
+ - code: 1514
+   description: "Provisions pour amendes et pénalités"
+   système: développé
+ - code: 1515
+   description: "Provisions pour pertes de change"
+   système: développé
+ - code: 1516
+   description: "Provisions pour pertes sur contrats"
+   système: développé
+ - code: 1518
+   description: "Autres provisions pour risques"
+   système: développé
+ - code: 153
+   description: "Provisions pour pensions et obligations similaires"
+   système: base
+ - code: 154
+   description: "Provisions pour restructurations"
+   système: base
+ - code: 155
+   description: "Provisions pour impôts"
+   système: base
+ - code: 156
+   description: "Provisions pour renouvellement des immobilisations"
+   système: base
+   commentaire: "entreprises concessionnaires"
+ - code: 157
+   description: "Provisions pour charges à répartir sur plusieurs exercices"
+   système: base
+ - code: 1572
+   description: "Provisions pour gros entretien ou grandes révisions"
+   système: développé
+ - code: 158
+   description: "Autres provisions pour charges"
+   système: base
+ - code: 1581
+   description: "Provisions pour remises en état"
+   système: développé
+ - code: 16
+   description: "Emprunts et dettes assimilées"
+   système: abrégé
+ - code: 161
+   description: "Emprunts obligataires convertibles"
+   système: base
+ - code: 162
+   description: "Obligations représentatives de passifs nets remis en fiducie"
+   système: base
+ - code: 163
+   description: "Autres emprunts obligataires"
+   système: base
+ - code: 164
+   description: "Emprunts auprès des établissements de crédit"
+   système: base
+ - code: 165
+   description: "Dépôts et cautionnements reçus"
+   système: base
+ - code: 1651
+   description: "Dépôts"
+   système: développé
+ - code: 1655
+   description: "Cautionnements"
+   système: développé
+ - code: 166
+   description: "Participation des salariés aux résultats"
+   système: base
+ - code: 1661
+   description: "Comptes bloqués"
+   système: développé
+ - code: 1662
+   description: "Fonds de participation"
+   système: développé
+ - code: 167
+   description: "Emprunts et dettes assortis de conditions particulières"
+   système: base
+ - code: 1671
+   description: "Émissions de titres participatifs"
+   système: base
+ - code: 1674
+   description: "Avances conditionnées de l'état"
+   système: base
+ - code: 1675
+   description: "Emprunts participatifs"
+   système: base
+ - code: 168
+   description: "Autres emprunts et dettes assimilées"
+   système: base
+ - code: 1681
+   description: "Autres emprunts"
+   système: développé
+ - code: 1685
+   description: "Rentes viagères capitalisées"
+   système: développé
+ - code: 1687
+   description: "Autres dettes"
+   système: développé
+ - code: 1688
+   description: "Intérêts courus"
+   système: développé
+ - code: 16881
+   description: "sur emprunts obligataires convertibles"
+   système: développé
+ - code: 16883
+   description: "sur autres emprunts obligataires"
+   système: développé
+ - code: 16884
+   description: "sur emprunts auprès des établissements de crédit"
+   système: développé
+ - code: 16885
+   description: "sur dépôts et cautionnements reçus"
+   système: développé
+ - code: 16886
+   description: "sur participation des salariés aux résultats"
+   système: développé
+ - code: 16887
+   description: "sur emprunts et dettes assortis de conditions particulières"
+   système: développé
+ - code: 16888
+   description: "sur autres emprunts et dettes assimilées"
+   système: développé
+ - code: 169
+   description: "Primes de remboursement des obligations"
+   système: base
+ - code: 17
+   description: "Dettes rattachées à des participations"
+   système: base
+ - code: 171
+   description: "Dettes rattachées à des participations"
+   système: base
+   commentaire: "groupe"
+ - code: 174
+   description: "Dettes rattachées à des participations"
+   système: base
+   commentaire: "hors groupe"
+ - code: 178
+   description: "Dettes rattachées à des sociétés en participation"
+   système: base
+ - code: 1781
+   description: "Principal"
+   système: développé
+ - code: 1788
+   description: "Intérêts courus"
+   système: développé
+ - code: 18
+   description: "Comptes de liaison des établissements et sociétés en participation"
+   système: base
+ - code: 181
+   description: "Comptes de liaison des établissements"
+   système: développé
+ - code: 186
+   description: "Biens et prestations de services échangés entre établissements"
+   système: développé
+   commentaire: "charges"
+ - code: 187
+   description: "Biens et prestations de services échangés entre établissements"
+   système: développé
+   commentaire: "produits"
+ - code: 188
+   description: "Comptes de liaison des sociétés en participation"
+   système: développé
+ - code: 2
+   description: "Comptes d’immobilisations"
+   système: classe
+ - code: 20
+   description: "Immobilisations incorporelles"
+   système: abrégé
+ - code: 201
+   description: "Frais d'établissement"
+   système: abrégé
+ - code: 2011
+   description: "Frais de constitution"
+   système: développé
+ - code: 2012
+   description: "Frais de premier établissement"
+   système: développé
+ - code: 20121
+   description: "Frais de prospection"
+   système: développé
+ - code: 20122
+   description: "Frais de publicité"
+   système: développé
+ - code: 2013
+   description: "Frais d'augmentation de capital et d'opérations diverses"
+   système: développé
+   commentaire: "fusions, scissions, transformations"
+ - code: 203
+   description: "Frais de recherche et de développement"
+   système: base
+ - code: 205
+   description: "Concessions et droits similaires, brevets, licences, marques, procédés, logiciels, droits et valeurs similaires"
+   système: base
+ - code: 206
+   description: "Droit au bail"
+   système: abrégé
+ - code: 207
+   description: "Fonds commercial"
+   système: abrégé
+ - code: 208
+   description: "Autres immobilisations incorporelles"
+   système: abrégé
+ - code: 21
+   description: "Immobilisations corporelles"
+   système: abrégé
+ - code: 211
+   description: "Terrains"
+   système: base
+ - code: 2111
+   description: "Terrains nus"
+   système: base
+ - code: 2112
+   description: "Terrains aménagés"
+   système: base
+ - code: 2113
+   description: "Sous - sols et sursols"
+   système: base
+ - code: 2114
+   description: "Terrains de gisement"
+   système: base
+ - code: 21141
+   description: "Carrières"
+   système: développé
+ - code: 2115
+   description: "Terrains bâtis"
+   système: base
+ - code: 21151
+   description: "Ensembles immobiliers industriels"
+   système: développé
+   commentaire: "A, B"
+ - code: 21155
+   description: "Ensembles immobiliers administratifs et commerciaux"
+   système: développé
+   commentaire: "A, B"
+ - code: 21158
+   description: "Autres ensembles immobiliers"
+   système: développé
+ - code: 211581
+   description: "affectés aux opérations professionnelles"
+   système: développé
+   commentaire: "A, B"
+ - code: 211588
+   description: "affectés aux opérations non professionnelles"
+   système: développé
+   commentaire: "A, B"
+ - code: 2116
+   description: "Compte d'ordre sur immobilisations"
+   système: base
+ - code: 212
+   description: "Agencements et aménagements de terrains"
+   système: base
+   commentaire: "même ventilation que celle du compte 211"
+ - code: 213
+   description: "Constructions"
+   système: base
+ - code: 2131
+   description: "Bâtiments"
+   système: base
+ - code: 21311
+   description: "Ensembles immobiliers industriels"
+   système: développé
+   commentaire: "A, B"
+ - code: 21315
+   description: "Ensembles immobiliers administratifs et commerciaux"
+   système: développé
+   commentaire: "A, B"
+ - code: 21318
+   description: "Autres ensembles immobiliers"
+   système: développé
+ - code: 213181
+   description: "affectés aux opérations professionnelles"
+   système: développé
+   commentaire: "A, B"
+ - code: 213188
+   description: "affectés aux opérations non professionnelles"
+   système: développé
+   commentaire: "A, B"
+ - code: 2135
+   description: "Installations générales - agencements - aménagements des constructions"
+   système: base
+ - code: 21351
+   description: "Ensembles immobiliers industriels"
+   système: développé
+   commentaire: "A, B"
+ - code: 21355
+   description: "Ensembles immobiliers administratifs et commerciaux"
+   système: développé
+   commentaire: "A, B"
+ - code: 21358
+   description: "Autres ensembles immobiliers"
+   système: développé
+ - code: 213581
+   description: "affectés aux opérations professionnelles"
+   système: développé
+   commentaire: "A, B"
+ - code: 213588
+   description: "affectés aux opérations non professionnelles"
+   système: développé
+   commentaire: "A, B"
+ - code: 2138
+   description: "Ouvrages d'infrastructure"
+   système: base
+ - code: 21381
+   description: "Voies de terre"
+   système: développé
+ - code: 21382
+   description: "Voies de fer"
+   système: développé
+ - code: 21383
+   description: "Voies d'eau"
+   système: développé
+ - code: 21384
+   description: "Barrages"
+   système: développé
+ - code: 21385
+   description: "Pistes d'aérodromes"
+   système: développé
+ - code: 214
+   description: "Constructions sur sol d'autrui"
+   système: base
+   commentaire: "même ventilation que celle du compte 213"
+ - code: 215
+   description: "Installations techniques, matériels et outillage industriels"
+   système: base
+ - code: 2151
+   description: "Installations complexes spécialisées"
+   système: base
+ - code: 21511
+   description: "sur sol propre"
+   système: développé
+ - code: 21514
+   description: "sur sol d'autrui"
+   système: développé
+ - code: 2153
+   description: "Installations à caractère spécifique"
+   système: base
+ - code: 21531
+   description: "sur sol propre"
+   système: développé
+ - code: 21534
+   description: "sur sol d'autrui"
+   système: développé
+ - code: 2154
+   description: "Matériel industriel"
+   système: base
+ - code: 2155
+   description: "Outillage industriel"
+   système: base
+ - code: 2157
+   description: "Agencements et aménagements du matériel et outillage industriels"
+   système: base
+ - code: 218
+   description: "Autres immobilisations corporelles"
+   système: base
+ - code: 2181
+   description: "Installations générales, agencements, aménagements divers"
+   système: base
+ - code: 2182
+   description: "Matériel de transport"
+   système: base
+ - code: 2183
+   description: "Matériel de bureau et matériel informatique"
+   système: base
+ - code: 2184
+   description: "Mobilier"
+   système: base
+ - code: 2185
+   description: "Cheptel"
+   système: base
+ - code: 2186
+   description: "Emballages récupérables"
+   système: base
+ - code: 22
+   description: "Immobilisations mises en concession"
+   système: base
+ - code: 23
+   description: "Immobilisations en cours"
+   système: abrégé
+ - code: 231
+   description: "Immobilisations corporelles en cours"
+   système: base
+ - code: 2312
+   description: "Terrains"
+   système: développé
+ - code: 2313
+   description: "Constructions"
+   système: développé
+ - code: 2315
+   description: "Installations techniques, matériel et outillage industriels"
+   système: développé
+ - code: 2318
+   description: "Autres immobilisations corporelles"
+   système: développé
+ - code: 232
+   description: "Immobilisations incorporelles en cours"
+   système: base
+ - code: 237
+   description: "Avances et acomptes versés sur immobilisations incorporelles"
+   système: base
+ - code: 238
+   description: "Avances et acomptes versés sur commandes d'immobilisations corporelles"
+   système: base
+ - code: 2382
+   description: "Terrains"
+   système: développé
+ - code: 2383
+   description: "Constructions"
+   système: développé
+ - code: 2385
+   description: "Installations techniques, matériel et outillage industriels"
+   système: développé
+ - code: 2388
+   description: "Autres immobilisations corporelles"
+   système: développé
+ - code: 25
+   description: "Parts dans des entreprises liées et créances sur des entreprises liées"
+   système: base
+ - code: 26
+   description: "Participations et créances rattachées à des participations"
+   système: base
+ - code: 261
+   description: "Titres de participation"
+   système: base
+ - code: 2611
+   description: "Actions"
+   système: développé
+ - code: 2618
+   description: "Autres titres"
+   système: développé
+ - code: 266
+   description: "Autres formes de participation"
+   système: base
+ - code: 2661
+   description: "Droits représentatifs d’actifs nets remis en fiducie"
+   système: développé
+ - code: 267
+   description: "Créances rattachées à des participations"
+   système: base
+ - code: 2671
+   description: "Créances rattachées à des participations"
+   système: développé
+   commentaire: "groupe"
+ - code: 2674
+   description: "Créances rattachées à des participations"
+   système: développé
+   commentaire: "hors groupe"
+ - code: 2675
+   description: "Versements représentatifs d'apports non capitalisés"
+   système: développé
+   commentaire: "appel de fonds"
+ - code: 2676
+   description: "Avances consolidables"
+   système: développé
+ - code: 2677
+   description: "Autres créances rattachées à des participations"
+   système: développé
+ - code: 2678
+   description: "Intérêts courus"
+   système: développé
+ - code: 268
+   description: "Créances rattachées à des sociétés en participation"
+   système: base
+ - code: 2681
+   description: "Principal"
+   système: développé
+ - code: 2688
+   description: "Intérêts courus"
+   système: développé
+ - code: 269
+   description: "Versements restant à effectuer sur titres de participation non libérés"
+   système: base
+ - code: 27
+   description: "Autres immobilisations financières"
+   système: abrégé
+ - code: 271
+   description: "Titres immobilisés autres que les titres immobilisés de l'activité de portefeuille"
+   système: base
+   commentaire: "droit de propriété"
+ - code: 2711
+   description: "Actions"
+   système: développé
+ - code: 2718
+   description: "Autres titres"
+   système: développé
+ - code: 272
+   description: "Titres immobilisés"
+   système: base
+   commentaire: "droit de créance"
+ - code: 2721
+   description: "Obligations"
+   système: développé
+ - code: 2722
+   description: "Bons"
+   système: développé
+ - code: 273
+   description: "Titres immobilisés de l'activité de portefeuille"
+   système: base
+ - code: 274
+   description: "Prêts"
+   système: base
+ - code: 2741
+   description: "Prêts participatifs"
+   système: développé
+ - code: 2742
+   description: "Prêts aux associés"
+   système: développé
+ - code: 2743
+   description: "Prêts au personnel"
+   système: développé
+ - code: 2748
+   description: "Autres prêts"
+   système: développé
+ - code: 275
+   description: "Dépôts et cautionnements versés"
+   système: base
+ - code: 2751
+   description: "Dépôts"
+   système: développé
+ - code: 2755
+   description: "Cautionnements"
+   système: développé
+ - code: 276
+   description: "Autres créances immobilisées"
+   système: base
+ - code: 2761
+   description: "Créances diverses"
+   système: développé
+ - code: 2768
+   description: "Intérêts courus"
+   système: développé
+ - code: 27682
+   description: "sur titres immobilisés"
+   système: développé
+   commentaire: "droit de créance"
+ - code: 27684
+   description: "sur prêts"
+   système: développé
+ - code: 27685
+   description: "sur dépôts et cautionnements"
+   système: développé
+ - code: 27688
+   description: "sur créances diverses"
+   système: développé
+ - code: 277
+   description: "Actions propres ou parts propres"
+   système: base
+ - code: 2771
+   description: "Actions propres ou parts propres"
+   système: développé
+ - code: 2772
+   description: "Actions propres ou parts propres en voie d’annulation"
+   système: développé
+ - code: 279
+   description: "Versements restant à effectuer sur titres immobilisés non libérés"
+   système: base
+ - code: 28
+   description: "Amortissements des immobilisations"
+   système: base
+ - code: 280
+   description: "Amortissements des immobilisations incorporelles"
+   système: abrégé
+ - code: 2801
+   description: "Frais d'établissement"
+   système: base
+   commentaire: "même ventilation que celle du compte 201"
+ - code: 2803
+   description: "Frais de recherche et de développement"
+   système: base
+ - code: 2805
+   description: "Concessions et droits similaires, brevets, licences, logiciels, droits et valeurs similaires"
+   système: base
+ - code: 2807
+   description: "Fonds commercial"
+   système: base
+ - code: 2808
+   description: "Autres immobilisations incorporelles"
+   système: base
+ - code: 281
+   description: "Amortissements des immobilisations corporelles"
+   système: abrégé
+ - code: 2811
+   description: "Terrains de gisement"
+   système: base
+ - code: 2812
+   description: "Agencements, aménagements de terrains"
+   système: base
+   commentaire: "même ventilation que celle du compte 212"
+ - code: 2813
+   description: "Constructions"
+   système: base
+   commentaire: "même ventilation que celle du compte 213"
+ - code: 2814
+   description: "Constructions sur sol d'autrui"
+   système: base
+   commentaire: "même ventilation que celle du compte 214"
+ - code: 2815
+   description: "Installations, matériel et outillage industriels"
+   système: base
+   commentaire: "même ventilation que celle du compte 215"
+ - code: 2818
+   description: "Autres immobilisations corporelles"
+   système: base
+   commentaire: "même ventilation que celle du compte 218"
+ - code: 282
+   description: "Amortissements des immobilisations mises en concession"
+   système: base
+ - code: 29
+   description: "Dépréciations des immobilisations"
+   système: base
+ - code: 290
+   description: "Dépréciations des immobilisations incorporelles"
+   système: abrégé
+ - code: 2905
+   description: "Marques, procédés, droits et valeurs similaires"
+   système: base
+ - code: 2906
+   description: "Droit au bail"
+   système: base
+ - code: 2907
+   description: "Fonds commercial"
+   système: base
+ - code: 2908
+   description: "Autres immobilisations incorporelles"
+   système: base
+ - code: 291
+   description: "Dépréciations des immobilisations corporelles"
+   système: abrégé
+   commentaire: "même ventilation que celle du compte 21"
+ - code: 2911
+   description: "Terrains"
+   système: base
+   commentaire: "autres que terrains de gisement"
+ - code: 292
+   description: "Dépréciations des immobilisations mises en concession"
+   système: base
+ - code: 293
+   description: "Dépréciations des immobilisations en cours"
+   système: base
+ - code: 2931
+   description: "Immobilisations corporelles en cours"
+   système: base
+ - code: 2932
+   description: "Immobilisations incorporelles en cours"
+   système: base
+ - code: 296
+   description: "Dépréciations des participations et créances rattachées à des participations"
+   système: base
+ - code: 2961
+   description: "Titres de participation"
+   système: base
+ - code: 2966
+   description: "Autres formes de participation"
+   système: base
+ - code: 2967
+   description: "Créances rattachées à des participations"
+   système: base
+   commentaire: "même ventilation que celle du compte 267"
+ - code: 2968
+   description: "Créances rattachées à des sociétés en participation"
+   système: base
+   commentaire: "même ventilation que celle du compte 268"
+ - code: 297
+   description: "Dépréciations des autres immobilisations financières"
+   système: abrégé
+ - code: 2971
+   description: "Titres immobilisés autres que les titres immobilisés de l'activité de portefeuille - droit de propriété"
+   système: base
+   commentaire: "même ventilation que celle du compte 271"
+ - code: 2972
+   description: "Droit de créance"
+   système: base
+   commentaire: "même ventilation que celle du compte 272"
+ - code: 2973
+   description: "Titres immobilisés de l'activité de portefeuille"
+   système: base
+ - code: 2974
+   description: "Prêts"
+   système: base
+   commentaire: "même ventilation que celle du compte 274"
+ - code: 2975
+   description: "Dépôts et cautionnements versés"
+   système: base
+   commentaire: "même ventilation que celle du compte 275"
+ - code: 2976
+   description: "Autres créances immobilisées"
+   système: base
+   commentaire: "même ventilation que celle du compte 276"
+ - code: 3
+   description: "Comptes de stocks et en-cours"
+   système: classe
+ - code: 31
+   description: "Matières premières"
+   système: abrégé
+   commentaire: "et fournitures"
+ - code: 311
+   description: "Matières A"
+   système: base
+   commentaire: "ou groupe"
+ - code: 312
+   description: "Matières B"
+   système: base
+   commentaire: "ou groupe"
+ - code: 317
+   description: "Fournitures A, B, C,"
+   système: base
+ - code: 32
+   description: "Autres approvisionnements"
+   système: abrégé
+ - code: 321
+   description: "Matières consommables"
+   système: base
+ - code: 3211
+   description: "Matières C"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 3212
+   description: "Matières D"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 322
+   description: "Fournitures consommables"
+   système: base
+ - code: 3221
+   description: "Combustibles"
+   système: développé
+ - code: 3222
+   description: "Produits d'entretien"
+   système: développé
+ - code: 3223
+   description: "Fournitures d'atelier et d'usine"
+   système: développé
+ - code: 3224
+   description: "Fournitures de magasin"
+   système: développé
+ - code: 3225
+   description: "Fournitures de bureau"
+   système: développé
+ - code: 326
+   description: "Emballages"
+   système: base
+ - code: 3261
+   description: "Emballages perdus"
+   système: développé
+ - code: 3265
+   description: "Emballages récupérables non identifiables"
+   système: développé
+ - code: 3267
+   description: "Emballages à usage mixte"
+   système: développé
+ - code: 33
+   description: "En-cours de production de biens"
+   système: abrégé
+ - code: 331
+   description: "Produits en cours"
+   système: base
+ - code: 3311
+   description: "Produits en cours P1"
+   système: développé
+ - code: 3312
+   description: "Produits en cours P2"
+   système: développé
+ - code: 335
+   description: "Travaux en cours"
+   système: base
+ - code: 3351
+   description: "Travaux en cours T1"
+   système: développé
+ - code: 3352
+   description: "Travaux en cours T2"
+   système: développé
+ - code: 34
+   description: "En-cours de production de services"
+   système: abrégé
+ - code: 341
+   description: "Études en cours"
+   système: base
+ - code: 3411
+   description: "Études en cours E1"
+   système: développé
+ - code: 3412
+   description: "Études en cours E2"
+   système: développé
+ - code: 345
+   description: "Prestations de services en cours"
+   système: base
+ - code: 3451
+   description: "Prestations de services S1"
+   système: développé
+ - code: 3452
+   description: "Prestations de services S2"
+   système: développé
+ - code: 35
+   description: "Stocks de produits"
+   système: abrégé
+ - code: 351
+   description: "Produits intermédiaires"
+   système: base
+ - code: 3511
+   description: "Produits intermédiaires A"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 3512
+   description: "Produits intermédiaires B"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 355
+   description: "Produits finis"
+   système: base
+ - code: 3551
+   description: "Produits finis A"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 3552
+   description: "Produits finis B"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 358
+   description: "Produits résiduels"
+   système: base
+   commentaire: "ou matières de récupération"
+ - code: 3581
+   description: "Déchets"
+   système: développé
+ - code: 3585
+   description: "Rebuts"
+   système: développé
+ - code: 3586
+   description: "Matières de récupération"
+   système: développé
+ - code: 36
+   description: "Stocks provenant d'immobilisations"
+   système: base
+   commentaire: "compte à ouvrir, le cas échéant, sous l'intitulé « Stocks provenant d'immobilisations »"
+ - code: 37
+   description: "Stocks de marchandises"
+   système: abrégé
+ - code: 371
+   description: "Marchandises A"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 372
+   description: "Marchandises B"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 38
+   description: "Stocks en voie d'acheminement, mis en dépôt ou donnés en consignation"
+   système: base
+   commentaire: "lorsque l'entité tient un inventaire permanent en comptabilité générale, le compte 38 peut être utilisé pour comptabiliser les stocks en voie d'acheminement, mis en dépôt ou donnés en consignation"
+ - code: 39
+   description: "Dépréciations des stocks et en-cours"
+   système: base
+ - code: 391
+   description: "Dépréciations des matières premières"
+   système: abrégé
+   commentaire: "et fournitures"
+ - code: 3911
+   description: "Matières A"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 3912
+   description: "Matières B"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 3917
+   description: "Fournitures A, B, C,"
+   système: développé
+ - code: 392
+   description: "Dépréciations des autres approvisionnements"
+   système: abrégé
+ - code: 3921
+   description: "Matières consommables"
+   système: développé
+   commentaire: "même ventilation que celle du compte 321"
+ - code: 3922
+   description: "Fournitures consommables"
+   système: développé
+   commentaire: "même ventilation que celle du compte 322"
+ - code: 3926
+   description: "Emballages"
+   système: développé
+   commentaire: "même ventilation que celle du compte 326"
+ - code: 393
+   description: "Dépréciations des en-cours de production de biens"
+   système: abrégé
+ - code: 3931
+   description: "Produits en cours"
+   système: développé
+   commentaire: "même ventilation que celle du compte 331"
+ - code: 3935
+   description: "Travaux en cours"
+   système: développé
+   commentaire: "même ventilation que celle du compte 335"
+ - code: 394
+   description: "Dépréciations des en-cours de production de services"
+   système: abrégé
+ - code: 3941
+   description: "Études en cours"
+   système: développé
+   commentaire: "même ventilation que celle du compte 341"
+ - code: 3945
+   description: "Prestations de services en cours"
+   système: développé
+   commentaire: "même ventilation que celle du compte 345"
+ - code: 395
+   description: "Dépréciations des stocks de produits"
+   système: abrégé
+ - code: 3951
+   description: "Produits intermédiaires"
+   système: développé
+   commentaire: "même ventilation que celle du compte 351"
+ - code: 3955
+   description: "Produits finis"
+   système: développé
+   commentaire: "même ventilation que celle du compte 355"
+ - code: 397
+   description: "Dépréciations des stocks de marchandises"
+   système: abrégé
+ - code: 3971
+   description: "Marchandise A"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 3972
+   description: "Marchandise B"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 4
+   description: "Comptes de tiers"
+   système: classe
+ - code: 40
+   description: "Fournisseurs et comptes rattachés"
+   système: base
+ - code: 400
+   description: "Fournisseurs et comptes rattachés"
+   système: abrégé
+ - code: 401
+   description: "Fournisseurs"
+   système: base
+ - code: 4011
+   description: "Fournisseurs - Achats de biens et prestations de services"
+   système: développé
+ - code: 4017
+   description: "Fournisseurs - Retenues de garantie"
+   système: développé
+ - code: 403
+   description: "Fournisseurs - Effets à payer"
+   système: base
+ - code: 404
+   description: "Fournisseurs d'immobilisations"
+   système: base
+ - code: 4041
+   description: "Fournisseurs - Achats d'immobilisations"
+   système: développé
+ - code: 4047
+   description: "Fournisseurs d'immobilisations - Retenues de garantie"
+   système: développé
+ - code: 405
+   description: "Fournisseurs d'immobilisations - Effets à payer"
+   système: base
+ - code: 408
+   description: "Fournisseurs - Factures non parvenues"
+   système: base
+ - code: 4081
+   description: "Fournisseurs"
+   système: développé
+ - code: 4084
+   description: "Fournisseurs d'immobilisations"
+   système: développé
+ - code: 4088
+   description: "Fournisseurs - Intérêts courus"
+   système: développé
+ - code: 409
+   description: "Fournisseurs débiteurs"
+   système: abrégé
+ - code: 4091
+   description: "Fournisseurs - Avances et acomptes versés sur commandes"
+   système: base
+ - code: 4096
+   description: "Fournisseurs - Créances pour emballages et matériel à rendre"
+   système: base
+ - code: 4097
+   description: "Fournisseurs - Autres avoirs"
+   système: base
+ - code: 40971
+   description: "Fournisseurs d'exploitation"
+   système: développé
+ - code: 40974
+   description: "Fournisseurs d'immobilisations"
+   système: développé
+ - code: 4098
+   description: "Rabais, remises, ristournes à obtenir et autres avoirs non encore reçus"
+   système: base
+ - code: 41
+   description: "Clients et comptes rattachés"
+   système: base
+ - code: 410
+   description: "Clients et comptes rattachés"
+   système: abrégé
+ - code: 411
+   description: "Clients"
+   système: base
+ - code: 4111
+   description: "Clients - Ventes de biens ou de prestations de services"
+   système: développé
+ - code: 4117
+   description: "Clients - Retenues de garantie"
+   système: développé
+ - code: 413
+   description: "Clients - Effets à recevoir"
+   système: base
+ - code: 416
+   description: "Clients douteux ou litigieux"
+   système: base
+ - code: 418
+   description: "Clients - Produits non encore facturés"
+   système: base
+ - code: 4181
+   description: "Clients - Factures à établir"
+   système: développé
+ - code: 4188
+   description: "Clients - Intérêts courus"
+   système: développé
+ - code: 419
+   description: "Clients créditeurs"
+   système: abrégé
+ - code: 4191
+   description: "Clients - Avances et acomptes reçus sur commandes"
+   système: base
+ - code: 4196
+   description: "Clients - Dettes sur emballages et matériels consignés"
+   système: base
+ - code: 4197
+   description: "Clients - Autres avoirs"
+   système: base
+ - code: 4198
+   description: "Rabais, remises, ristournes à accorder et autres avoirs à établir"
+   système: base
+ - code: 42
+   description: "Personnel et comptes rattachés"
+   système: base
+ - code: 421
+   description: "Personnel - Rémunérations dues"
+   système: abrégé
+ - code: 422
+   description: "Comités d'entreprises, d'établissement, …"
+   système: base
+ - code: 424
+   description: "Participation des salariés aux résultats"
+   système: base
+ - code: 4246
+   description: "Réserve spéciale"
+   système: développé
+ - code: 4248
+   description: "Comptes courants"
+   système: développé
+ - code: 425
+   description: "Personnel - Avances et acomptes"
+   système: base
+ - code: 426
+   description: "Personnel - Dépôts"
+   système: base
+ - code: 427
+   description: "Personnel - Oppositions"
+   système: base
+ - code: 428
+   description: "Personnel - Charges à payer et produits à recevoir"
+   système: abrégé
+ - code: 4282
+   description: "Dettes provisionnées pour congés à payer"
+   système: développé
+ - code: 4284
+   description: "Dettes provisionnées pour participation des salariés aux résultats"
+   système: développé
+ - code: 4286
+   description: "Autres charges à payer"
+   système: développé
+ - code: 4287
+   description: "Produits à recevoir"
+   système: développé
+ - code: 43
+   description: "Sécurité sociale et autres organismes sociaux"
+   système: abrégé
+ - code: 431
+   description: "Sécurité sociale"
+   système: base
+ - code: 437
+   description: "Autres organismes sociaux"
+   système: base
+ - code: 438
+   description: "Organismes sociaux - Charges à payer et produits à recevoir"
+   système: base
+ - code: 4382
+   description: "Charges sociales sur congés à payer"
+   système: développé
+ - code: 4386
+   description: "Autres charges à payer"
+   système: développé
+ - code: 4387
+   description: "Produits à recevoir"
+   système: développé
+ - code: 44
+   description: "État et autres collectivités publiques"
+   système: base
+ - code: 441
+   description: "État - Subventions à recevoir"
+   système: base
+ - code: 4411
+   description: "Subventions d'investissement"
+   système: développé
+ - code: 4417
+   description: "Subventions d'exploitation"
+   système: développé
+ - code: 4418
+   description: "Subventions d'équilibre"
+   système: développé
+ - code: 4419
+   description: "Avances sur subventions"
+   système: développé
+ - code: 442
+   description: "État - Impôts et taxes recouvrables sur des tiers"
+   système: base
+ - code: 4424
+   description: "Obligataires"
+   système: développé
+ - code: 4425
+   description: "Associés"
+   système: développé
+ - code: 443
+   description: "Opérations particulières avec l'état les collectivités publiques, les organismes internationaux"
+   système: base
+ - code: 4431
+   description: "Créances sur l'état résultant de la suppression de la règle du décalage d'un mois en matière de TVA"
+   système: base
+ - code: 4438
+   description: "Intérêts courus sur créances figurant au 4431"
+   système: base
+ - code: 444
+   description: "État - Impôts sur les bénéfices"
+   système: abrégé
+ - code: 445
+   description: "État - Taxes sur le chiffre d'affaires"
+   système: abrégé
+ - code: 4452
+   description: "TVA due intracommunautaire"
+   système: base
+ - code: 4455
+   description: "Taxes sur le chiffre d'affaires à décaisser"
+   système: base
+ - code: 44551
+   description: "TVA à décaisser"
+   système: développé
+ - code: 44558
+   description: "Taxes assimilées à la TVA"
+   système: développé
+ - code: 4456
+   description: "Taxes sur le chiffre d'affaires déductibles"
+   système: base
+ - code: 44562
+   description: "TVA sur immobilisations"
+   système: développé
+ - code: 44563
+   description: "TVA transférée par d'autres entreprises"
+   système: développé
+ - code: 44566
+   description: "TVA sur autres biens et services"
+   système: développé
+ - code: 44567
+   description: "Crédit de TVA à reporter"
+   système: développé
+ - code: 44568
+   description: "Taxes assimilées à la TVA"
+   système: développé
+ - code: 4457
+   description: "Taxes sur le chiffre d'affaires collectées par l'entreprise"
+   système: base
+ - code: 44571
+   description: "TVA collectée"
+   système: développé
+ - code: 44578
+   description: "Taxes assimilées à la TVA"
+   système: développé
+ - code: 4458
+   description: "Taxes sur le chiffre d'affaires à régulariser ou en attente"
+   système: base
+ - code: 44581
+   description: "Acomptes - Régime simplifié d'imposition"
+   système: développé
+ - code: 44582
+   description: "Acomptes - Régime de forfait"
+   système: développé
+ - code: 44583
+   description: "Remboursement de taxes sur le chiffre d'affaires demandé"
+   système: développé
+ - code: 44584
+   description: "TVA récupérée d'avance"
+   système: développé
+ - code: 44586
+   description: "Taxes sur le chiffre d'affaires sur factures non parvenues"
+   système: développé
+ - code: 44587
+   description: "Taxes sur le chiffre d'affaires sur factures à établir"
+   système: développé
+ - code: 446
+   description: "Obligations cautionnées"
+   système: base
+ - code: 447
+   description: "Autres impôts, taxes et versements assimilés"
+   système: abrégé
+ - code: 448
+   description: "État - Charges à payer et produits à recevoir"
+   système: base
+ - code: 4482
+   description: "Charges fiscales sur congés à payer"
+   système: développé
+ - code: 4486
+   description: "Charges à payer"
+   système: développé
+ - code: 4487
+   description: "Produits à recevoir"
+   système: développé
+ - code: 449
+   description: "Quotas d’émission à acquérir"
+   système: base
+ - code: 45
+   description: "Groupe et associés"
+   système: abrégé
+ - code: 451
+   description: "Groupe"
+   système: base
+ - code: 455
+   description: "Associés - Comptes courants"
+   système: abrégé
+ - code: 4551
+   description: "Principal"
+   système: développé
+ - code: 4558
+   description: "Intérêts courus"
+   système: développé
+ - code: 456
+   description: "Associés - Opérations sur le capital"
+   système: base
+ - code: 4561
+   description: "Associés - Comptes d'apport en société"
+   système: développé
+ - code: 45611
+   description: "Apports en nature"
+   système: développé
+ - code: 45615
+   description: "Apports en numéraire"
+   système: développé
+ - code: 4562
+   description: "Apporteurs - Capital appelé, non versé"
+   système: développé
+ - code: 45621
+   description: "Actionnaires - Capital souscrit et appelé, non versé"
+   système: développé
+ - code: 45625
+   description: "Associés - Capital appelé, non versé"
+   système: développé
+ - code: 4563
+   description: "Associés - Versements reçus sur augmentation de capital"
+   système: développé
+ - code: 4564
+   description: "Associés - Versements anticipés"
+   système: développé
+ - code: 4566
+   description: "Actionnaires défaillants"
+   système: développé
+ - code: 4567
+   description: "Associés - Capital à rembourser"
+   système: développé
+ - code: 457
+   description: "Associés - Dividendes à payer"
+   système: base
+ - code: 458
+   description: "Associés - Opérations faites en commun et en GIE"
+   système: base
+ - code: 4581
+   description: "Opérations courantes"
+   système: développé
+ - code: 4588
+   description: "Intérêts courus"
+   système: développé
+ - code: 46
+   description: "Débiteurs divers et créditeurs divers"
+   système: abrégé
+ - code: 462
+   description: "Créances sur cessions d'immobilisations"
+   système: développé
+ - code: 464
+   description: "Dettes sur acquisitions de valeurs mobilières de placement"
+   système: développé
+ - code: 465
+   description: "Créances sur cessions de valeurs mobilières de placement"
+   système: développé
+ - code: 467
+   description: "Autres comptes débiteurs ou créditeurs"
+   système: développé
+ - code: 468
+   description: "Divers - Charges à payer et produits à recevoir"
+   système: développé
+ - code: 4686
+   description: "Charges à payer"
+   système: développé
+ - code: 4687
+   description: "Produits à recevoir"
+   système: développé
+ - code: 47
+   description: "Comptes transitoires ou d'attente"
+   système: abrégé
+ - code: 471
+   description: "Comptes d'attente"
+   système: base
+ - code: 472
+   description: "Comptes d'attente"
+   système: base
+ - code: 473
+   description: "Comptes d'attente"
+   système: base
+ - code: 474
+   description: "Comptes d'attente"
+   système: base
+ - code: 475
+   description: "Comptes d'attente"
+   système: base
+ - code: 476
+   description: "Différence de conversion - Actif"
+   système: base
+ - code: 4761
+   description: "Diminution des créances"
+   système: développé
+ - code: 4762
+   description: "Augmentation des dettes"
+   système: développé
+ - code: 4768
+   description: "Différences compensées par couverture de change"
+   système: développé
+ - code: 477
+   description: "Différences de conversion - Passif"
+   système: base
+ - code: 4771
+   description: "Augmentation des créances"
+   système: développé
+ - code: 4772
+   description: "Diminution des dettes"
+   système: développé
+ - code: 4778
+   description: "Différences compensées par couverture de change"
+   système: développé
+ - code: 478
+   description: "Autres comptes transitoires"
+   système: base
+ - code: 48
+   description: "Comptes de régularisation"
+   système: base
+ - code: 481
+   description: "Charges à répartir sur plusieurs exercices"
+   système: abrégé
+ - code: 4816
+   description: "Frais d'émission des emprunts"
+   système: développé
+ - code: 486
+   description: "Charges constatées d'avance"
+   système: abrégé
+ - code: 487
+   description: "Produits constatés d'avance"
+   système: abrégé
+ - code: 488
+   description: "Comptes de répartition périodique des charges et des produits"
+   système: base
+ - code: 4886
+   description: "Charges"
+   système: développé
+ - code: 4887
+   description: "Produits"
+   système: développé
+ - code: 49
+   description: "Dépréciations des comptes de tiers"
+   système: base
+ - code: 491
+   description: "Dépréciations des comptes de clients"
+   système: abrégé
+ - code: 495
+   description: "Dépréciations des comptes du groupe et des associés"
+   système: base
+ - code: 4951
+   description: "Comptes du groupe"
+   système: base
+ - code: 4955
+   description: "Comptes courants des associés"
+   système: base
+ - code: 4958
+   description: "Opérations faites en commun et en GIE"
+   système: base
+ - code: 496
+   description: "Dépréciations des comptes de débiteurs divers"
+   système: abrégé
+ - code: 4962
+   description: "Créances sur cessions d'immobilisations"
+   système: développé
+ - code: 4965
+   description: "Créances sur cessions de valeurs mobilières de placement"
+   système: développé
+ - code: 4967
+   description: "Autres comptes débiteurs"
+   système: développé
+ - code: 5
+   description: "Comptes financiers"
+   système: classe
+ - code: 50
+   description: "Valeurs mobilières de placement"
+   système: abrégé
+ - code: 501
+   description: "Parts dans des entreprises liées"
+   système: base
+ - code: 502
+   description: "Actions propres"
+   système: base
+ - code: 5021
+   description: "Actons destinées à être attribuées aux employés et affectées à des plans déterminés"
+   système: développé
+ - code: 5022
+   description: "Actons disponibles pour être attribuées aux employés ou pour la régularisation des cours de bourse"
+   système: développé
+ - code: 503
+   description: "Actions"
+   système: base
+ - code: 5031
+   description: "Titres cotés"
+   système: développé
+ - code: 5035
+   description: "Titres non cotés"
+   système: développé
+ - code: 504
+   description: "Autres titres conférant un droit de propriété"
+   système: base
+ - code: 505
+   description: "Obligations et bons émis par la société et rachetés par elle"
+   système: base
+ - code: 506
+   description: "Obligations"
+   système: base
+ - code: 5061
+   description: "Titres cotés"
+   système: développé
+ - code: 5065
+   description: "Titres non cotés"
+   système: développé
+ - code: 507
+   description: "Bons du Trésor et bons de caisse à court terme"
+   système: base
+ - code: 508
+   description: "Autres valeurs mobilières de placement et autres créances assimilées"
+   système: base
+ - code: 5081
+   description: "Autres valeurs mobilières"
+   système: développé
+ - code: 5082
+   description: "Bons de souscription"
+   système: développé
+ - code: 5088
+   description: "Intérêts courus sur obligations, bons et valeurs assimilés"
+   système: développé
+ - code: 509
+   description: "Versements restant à effectuer sur valeurs mobilières de placement non libérées"
+   système: base
+ - code: 51
+   description: "Banques, établissements financiers et assimilés"
+   système: abrégé
+ - code: 511
+   description: "Valeurs à l'encaissement"
+   système: base
+ - code: 5111
+   description: "Coupons échus à l'encaissement"
+   système: développé
+ - code: 5112
+   description: "Chèques à encaisser"
+   système: développé
+ - code: 5113
+   description: "Effets à l'encaissement"
+   système: développé
+ - code: 5114
+   description: "Effets à l'escompte"
+   système: développé
+ - code: 512
+   description: "Banques"
+   système: base
+ - code: 5121
+   description: "Comptes en monnaie nationale"
+   système: développé
+ - code: 5124
+   description: "Comptes en devises"
+   système: développé
+ - code: 514
+   description: "Chèques postaux"
+   système: base
+ - code: 515
+   description: "Caisses du Trésor et des établissements publics"
+   système: base
+ - code: 516
+   description: "Sociétés de bourse"
+   système: base
+ - code: 517
+   description: "Autres organismes financiers"
+   système: base
+ - code: 518
+   description: "Intérêts courus"
+   système: base
+ - code: 5181
+   description: "Intérêts courus à payer"
+   système: développé
+ - code: 5188
+   description: "Intérêts courus à recevoir"
+   système: développé
+ - code: 519
+   description: "Concours bancaires courants"
+   système: base
+ - code: 5191
+   description: "Crédit de mobilisation de créances commerciales"
+   système: développé
+ - code: 5193
+   description: "Mobilisation de créances nées à l'étranger"
+   système: développé
+ - code: 5198
+   description: "Intérêts courus sur concours bancaires courants"
+   système: développé
+ - code: 52
+   description: "Instruments de trésorerie"
+   système: base
+ - code: 53
+   description: "Caisse"
+   système: abrégé
+ - code: 531
+   description: "Caisse siège social"
+   système: base
+ - code: 5311
+   description: "Caisse en monnaie nationale"
+   système: développé
+ - code: 5314
+   description: "Caisse en devises"
+   système: développé
+ - code: 532
+   description: "Caisse succursale A"
+   système: développé
+   commentaire: "ou usine"
+ - code: 533
+   description: "Caisse succursale B"
+   système: développé
+   commentaire: "ou usine"
+ - code: 54
+   description: "Régies d'avance et accréditifs"
+   système: abrégé
+ - code: 58
+   description: "Virements internes"
+   système: abrégé
+ - code: 59
+   description: "Dépréciations des comptes financiers"
+   système: base
+ - code: 590
+   description: "Dépréciations des valeurs mobilières de placement"
+   système: abrégé
+ - code: 5903
+   description: "Actions"
+   système: base
+ - code: 5904
+   description: "Autres titres conférant un droit de propriété"
+   système: base
+ - code: 5906
+   description: "Obligations"
+   système: base
+ - code: 5908
+   description: "Autres valeurs mobilières de placement et créances assimilées"
+   système: base
+ - code: 6
+   description: "Comptes de charges"
+   système: classe
+ - code: 60
+   description: "Achats"
+   système: abrégé
+   commentaire: "sauf 603"
+ - code: 601
+   description: "Achats stockés - Matières premières"
+   système: base
+   commentaire: "et fournitures"
+ - code: 6011
+   description: "Matières A"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 6012
+   description: "Matières B"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 6017
+   description: "Fournitures A, B, C,"
+   système: développé
+ - code: 602
+   description: "Achats stockés - Autres approvisionnements"
+   système: base
+ - code: 6021
+   description: "Matières consommables"
+   système: base
+ - code: 60211
+   description: "Matières C"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 60212
+   description: "Matières D"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 6022
+   description: "Fournitures consommables"
+   système: base
+ - code: 60221
+   description: "Combustibles"
+   système: développé
+ - code: 60222
+   description: "Produits d'entretien"
+   système: développé
+ - code: 60223
+   description: "Fournitures d'atelier et d'usine"
+   système: développé
+ - code: 60224
+   description: "Fournitures de magasin"
+   système: développé
+ - code: 60225
+   description: "Fourniture de bureau"
+   système: développé
+ - code: 6026
+   description: "Emballages"
+   système: base
+ - code: 60261
+   description: "Emballages perdus"
+   système: développé
+ - code: 60265
+   description: "Emballages récupérables non identifiables"
+   système: développé
+ - code: 60267
+   description: "Emballages à usage mixte"
+   système: développé
+ - code: 604
+   description: "Achats d'études et prestations de services"
+   système: base
+ - code: 605
+   description: "Achats de matériel, équipements et travaux"
+   système: base
+ - code: 606
+   description: "Achats non stockés de matière et fournitures"
+   système: base
+ - code: 6061
+   description: "Fournitures non stockables"
+   système: développé
+   commentaire: "eau, énergie, …"
+ - code: 6063
+   description: "Fournitures d'entretien et de petit équipement"
+   système: développé
+ - code: 6064
+   description: "Fournitures administratives"
+   système: développé
+ - code: 6068
+   description: "Autres matières et fournitures"
+   système: développé
+ - code: 607
+   description: "Achats de marchandises"
+   système: base
+ - code: 6071
+   description: "Marchandise A"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 6072
+   description: "Marchandise B"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 608
+   description: "Frais accessoires incorporés aux achats"
+   système: base
+   commentaire: "Compte réservé, le cas échéant, à la récapitulation des frais accessoires incorporés aux achats"
+ - code: 609
+   description: "Rabais, remises et ristournes obtenus sur achats"
+   système: base
+ - code: 6091
+   description: "de matières premières"
+   système: développé
+   commentaire: "et fournitures"
+ - code: 6092
+   description: "d'autres approvisionnements stockés"
+   système: développé
+ - code: 6094
+   description: "d'études et prestations de services"
+   système: développé
+ - code: 6095
+   description: "de matériel, équipements et travaux"
+   système: développé
+ - code: 6096
+   description: "d'approvisionnements non stockés"
+   système: développé
+ - code: 6097
+   description: "de marchandises"
+   système: développé
+ - code: 6098
+   description: "Rabais, remises et ristournes non affectés"
+   système: développé
+ - code: 603
+   description: "Variations des stocks"
+   système: abrégé
+   commentaire: "approvisionnements et marchandises"
+ - code: 6031
+   description: "Variation des stocks de matières premières"
+   système: base
+   commentaire: "et fournitures"
+ - code: 6032
+   description: "Variation des stocks des autres approvisionnements"
+   système: base
+ - code: 6037
+   description: "Variation des stocks de marchandises"
+   système: base
+ - code: 61
+   description: "Autres charges externes - Services extérieurs"
+   système: abrégé
+ - code: 611
+   description: "Sous-traitance générale"
+   système: base
+ - code: 612
+   description: "Redevances de crédit-bail"
+   système: base
+ - code: 6122
+   description: "Crédit-bail mobilier"
+   système: base
+ - code: 6125
+   description: "Crédit-bail immobilier"
+   système: base
+ - code: 613
+   description: "Locations"
+   système: base
+ - code: 6132
+   description: "Locations immobilières"
+   système: développé
+ - code: 6135
+   description: "Locations mobilières"
+   système: développé
+ - code: 6136
+   description: "Malis sur emballages"
+   système: développé
+ - code: 614
+   description: "Charges locatives et de copropriété"
+   système: base
+ - code: 615
+   description: "Entretien et réparations"
+   système: base
+ - code: 6152
+   description: "sur biens immobiliers"
+   système: développé
+ - code: 6155
+   description: "sur biens mobiliers"
+   système: développé
+ - code: 6156
+   description: "Maintenance"
+   système: développé
+ - code: 616
+   description: "Primes d'assurances"
+   système: base
+ - code: 6161
+   description: "Multirisques"
+   système: développé
+ - code: 6162
+   description: "Assurance obligatoire dommage construction"
+   système: développé
+ - code: 6163
+   description: "Assurance - transport"
+   système: développé
+ - code: 61636
+   description: "sur achats"
+   système: développé
+ - code: 61637
+   description: "sur ventes"
+   système: développé
+ - code: 61638
+   description: "sur autres biens"
+   système: développé
+ - code: 6164
+   description: "Risques d'exploitation"
+   système: développé
+ - code: 6165
+   description: "Insolvabilité clients"
+   système: développé
+ - code: 617
+   description: "Études et recherches"
+   système: base
+ - code: 618
+   description: "Divers"
+   système: base
+ - code: 6181
+   description: "Documentation générale"
+   système: développé
+ - code: 6183
+   description: "Documentation technique"
+   système: développé
+ - code: 6185
+   description: "Frais de colloques, séminaires, conférences"
+   système: développé
+ - code: 619
+   description: "Rabais, remises et ristournes obtenus sur services extérieurs"
+   système: base
+ - code: 62
+   description: "Autres charges externes - Autres services extérieurs"
+   système: abrégé
+ - code: 621
+   description: "Personnel extérieur à l'entreprise"
+   système: base
+ - code: 6211
+   description: "Personnel intérimaire"
+   système: développé
+ - code: 6214
+   description: "Personnel détaché ou prêté à l'entreprise"
+   système: développé
+ - code: 622
+   description: "Rémunérations d'intermédiaires et honoraires"
+   système: base
+ - code: 6221
+   description: "Commissions et courtages sur achats"
+   système: développé
+ - code: 6222
+   description: "Commissions et courtages sur ventes"
+   système: développé
+ - code: 6224
+   description: "Rémunérations des transitaires"
+   système: développé
+ - code: 6225
+   description: "Rémunérations d'affacturage"
+   système: développé
+ - code: 6226
+   description: "Honoraires"
+   système: développé
+ - code: 6227
+   description: "Frais d'actes et de contentieux"
+   système: développé
+ - code: 6228
+   description: "Divers"
+   système: développé
+ - code: 623
+   description: "Publicité, publications, relations publiques"
+   système: base
+ - code: 6231
+   description: "Annonces et insertions"
+   système: développé
+ - code: 6232
+   description: "Échantillons"
+   système: développé
+ - code: 6233
+   description: "Foires et expositions"
+   système: développé
+ - code: 6234
+   description: "Cadeaux à la clientèle"
+   système: développé
+ - code: 6235
+   description: "Primes"
+   système: développé
+ - code: 6236
+   description: "Catalogues et imprimés"
+   système: développé
+ - code: 6237
+   description: "Publications"
+   système: développé
+ - code: 6238
+   description: "Divers"
+   système: développé
+   commentaire: "pourboires, dons courants, …"
+ - code: 624
+   description: "Transports de biens et transports collectifs du personnel"
+   système: base
+ - code: 6241
+   description: "Transports sur achats"
+   système: développé
+ - code: 6242
+   description: "Transports sur ventes"
+   système: développé
+ - code: 6243
+   description: "Transports entre établissements ou chantiers"
+   système: développé
+ - code: 6244
+   description: "Transports administratifs"
+   système: développé
+ - code: 6247
+   description: "Transports collectifs du personnel"
+   système: développé
+ - code: 6248
+   description: "Divers"
+   système: développé
+ - code: 625
+   description: "Déplacements, missions et réceptions"
+   système: base
+ - code: 6251
+   description: "Voyages et déplacements"
+   système: développé
+ - code: 6255
+   description: "Frais de déménagement"
+   système: développé
+ - code: 6256
+   description: "Missions"
+   système: développé
+ - code: 6257
+   description: "Réceptions"
+   système: développé
+ - code: 626
+   description: "Frais postaux et de télécommunications"
+   système: base
+ - code: 627
+   description: "Services bancaires et assimilés"
+   système: base
+ - code: 6271
+   description: "Frais sur titres"
+   système: développé
+   commentaire: "achat, vente, garde"
+ - code: 6272
+   description: "Commissions et frais sur émission d'emprunts"
+   système: développé
+ - code: 6275
+   description: "Frais sur effets"
+   système: développé
+ - code: 6276
+   description: "Location de coffres"
+   système: développé
+ - code: 6278
+   description: "Autres frais et commissions sur prestations de services"
+   système: développé
+ - code: 628
+   description: "Divers"
+   système: base
+ - code: 6281
+   description: "Concours divers"
+   système: développé
+   commentaire: "cotisations,"
+ - code: 6284
+   description: "Frais de recrutement de personnel"
+   système: développé
+ - code: 629
+   description: "Rabais, remises et ristournes obtenus sur autres services extérieurs"
+   système: base
+ - code: 63
+   description: "Impôts, taxes et versements assimilés"
+   système: abrégé
+ - code: 631
+   description: "Impôts, taxes et versements assimilés sur rémunérations"
+   système: base
+   commentaire: "administrations des impôts"
+ - code: 6311
+   description: "Taxe sur les salaires"
+   système: développé
+ - code: 6312
+   description: "Taxe d'apprentissage"
+   système: développé
+ - code: 6313
+   description: "Participation des employeurs à la formation professionnelle continue"
+   système: développé
+ - code: 6314
+   description: "Cotisation pour défaut d'investissement obligatoire dans la construction"
+   système: développé
+ - code: 6318
+   description: "Autres"
+   système: développé
+ - code: 633
+   description: "Impôts, taxes et versements assimilés sur rémunérations"
+   système: base
+   commentaire: "autres organismes"
+ - code: 6331
+   description: "Versement de transport"
+   système: développé
+ - code: 6332
+   description: "Allocations logement"
+   système: développé
+ - code: 6333
+   description: "Participation des employeurs à la formation professionnelle continue"
+   système: développé
+ - code: 6334
+   description: "Participation des employeurs à l'effort de construction"
+   système: développé
+ - code: 6335
+   description: "Versements libératoires ouvrant droit à l'exonération de la taxe d'apprentissage"
+   système: développé
+ - code: 6338
+   description: "Autres"
+   système: développé
+ - code: 635
+   description: "Autres impôts, taxes et versements assimilés"
+   système: base
+   commentaire: "administrations des impôts"
+ - code: 6351
+   description: "Impôts directs"
+   système: développé
+   commentaire: "sauf impôts sur les bénéfices"
+ - code: 63511
+   description: "Contribution économique territoriale"
+   système: développé
+ - code: 63512
+   description: "Taxes foncières"
+   système: développé
+ - code: 63513
+   description: "Autres impôts locaux"
+   système: développé
+ - code: 63514
+   description: "Taxe sur les véhicules des sociétés"
+   système: développé
+ - code: 6352
+   description: "Taxe sur le chiffre d'affaires non récupérables"
+   système: développé
+ - code: 6353
+   description: "Impôts indirects"
+   système: développé
+ - code: 6354
+   description: "Droits d'enregistrement et de timbre"
+   système: développé
+ - code: 63541
+   description: "Droits de mutation"
+   système: développé
+ - code: 6358
+   description: "Autres droits"
+   système: base
+ - code: 637
+   description: "Autres impôts, taxes et versements assimilés"
+   système: base
+   commentaire: "autres organismes"
+ - code: 6371
+   description: "Contribution sociale de solidarité à la charge des sociétés"
+   système: développé
+ - code: 6372
+   description: "Taxes perçues par les organismes publics internationaux"
+   système: développé
+ - code: 6374
+   description: "Impôts et taxes exigibles à l'étranger"
+   système: développé
+ - code: 6378
+   description: "Taxes diverses"
+   système: développé
+ - code: 64
+   description: "Charges de personnel"
+   système: base
+ - code: 641
+   description: "Rémunérations du personnel"
+   système: abrégé
+ - code: 6411
+   description: "Salaires, appointements"
+   système: développé
+ - code: 6412
+   description: "Congés payés"
+   système: développé
+ - code: 6413
+   description: "Primes et gratifications"
+   système: développé
+ - code: 6414
+   description: "Indemnités et avantages divers"
+   système: développé
+ - code: 6415
+   description: "Supplément familial"
+   système: développé
+ - code: 644
+   description: "Rémunération du travail de l'exploitant"
+   système: abrégé
+ - code: 645
+   description: "Charges de sécurité sociale et de prévoyance"
+   système: abrégé
+ - code: 6451
+   description: "Cotisations à l'URSSAF"
+   système: développé
+ - code: 6452
+   description: "Cotisations aux mutuelles"
+   système: développé
+ - code: 6453
+   description: "Cotisations aux caisses de retraites"
+   système: développé
+ - code: 6454
+   description: "Cotisations aux ASSEDIC"
+   système: développé
+ - code: 6458
+   description: "Cotisations aux autres organismes sociaux"
+   système: développé
+ - code: 646
+   description: "Cotisations sociales personnelles de l'exploitant"
+   système: abrégé
+ - code: 647
+   description: "Autres charges sociales"
+   système: base
+ - code: 6471
+   description: "Prestations directes"
+   système: développé
+ - code: 6472
+   description: "Versements aux comités d'entreprise et d'établissement"
+   système: développé
+ - code: 6473
+   description: "Versements aux comités d'hygiène et de sécurité"
+   système: développé
+ - code: 6474
+   description: "Versements aux autres œuvres sociales"
+   système: développé
+ - code: 6475
+   description: "Médecine du travail, pharmacie"
+   système: développé
+ - code: 648
+   description: "Autres charges de personnel"
+   système: base
+ - code: 65
+   description: "Autres charges de gestion courante"
+   système: abrégé
+ - code: 651
+   description: "Redevances pour concessions, brevets, licences, marques, procédés, logiciels, droits et valeurs similaires"
+   système: base
+ - code: 6511
+   description: "Redevances pour concessions, brevets, licences, marques, procédés, logiciels"
+   système: développé
+ - code: 6516
+   description: "Droits d'auteur et de reproduction"
+   système: développé
+ - code: 6518
+   description: "Autres droits et valeurs similaires"
+   système: développé
+ - code: 653
+   description: "Jetons de présence"
+   système: base
+ - code: 654
+   description: "Pertes sur créances irrécouvrables"
+   système: base
+ - code: 6541
+   description: "Créances de l'exercice"
+   système: développé
+ - code: 6544
+   description: "Créances des exercices antérieurs"
+   système: développé
+ - code: 655
+   description: "Quote-part de résultat sur opérations faites en commun"
+   système: base
+ - code: 6551
+   description: "Quote-part de bénéfice transférée"
+   système: développé
+   commentaire: "comptabilité du gérant"
+ - code: 6555
+   description: "Quote-part de perte supportée"
+   système: développé
+   commentaire: "comptabilité des associés non gérants"
+ - code: 658
+   description: "Charges diverses de gestion courante"
+   système: base
+ - code: 66
+   description: "Charges financières"
+   système: abrégé
+ - code: 661
+   description: "Charges d'intérêts"
+   système: base
+ - code: 6611
+   description: "Intérêts des emprunts et dettes"
+   système: développé
+ - code: 66116
+   description: "des emprunts et dettes assimilées"
+   système: développé
+ - code: 66117
+   description: "des dettes rattachées à des participations"
+   système: développé
+ - code: 6612
+   description: "Charges de la fiducie, résultat de la période"
+   système: développé
+ - code: 6615
+   description: "Intérêts des comptes courants et des dépôts créditeurs"
+   système: développé
+ - code: 6616
+   description: "Intérêts bancaires et sur opérations de financement"
+   système: développé
+   commentaire: "escompte, ..."
+ - code: 6617
+   description: "Intérêts des obligations cautionnées"
+   système: développé
+ - code: 6618
+   description: "Intérêts des autres dettes"
+   système: développé
+ - code: 66181
+   description: "des dettes commerciales"
+   système: développé
+ - code: 66188
+   description: "des dettes diverses"
+   système: développé
+ - code: 664
+   description: "Pertes sur créances liées à des participations"
+   système: base
+ - code: 665
+   description: "Escomptes accordés"
+   système: base
+ - code: 666
+   description: "Pertes de change"
+   système: base
+ - code: 667
+   description: "Charges nettes sur cessions de valeurs mobilières de placement"
+   système: base
+ - code: 668
+   description: "Autres charges financières"
+   système: base
+ - code: 67
+   description: "Charges exceptionnelles"
+   système: abrégé
+ - code: 671
+   description: "Charges exceptionnelles sur opérations de gestion"
+   système: base
+ - code: 6711
+   description: "Pénalités sur marchés"
+   système: développé
+   commentaire: "et dédits payés sur achats et ventes"
+ - code: 6712
+   description: "Pénalités, amendes fiscales et pénales"
+   système: développé
+ - code: 6713
+   description: "Dons, libéralités"
+   système: développé
+ - code: 6714
+   description: "Créances devenues irrécouvrables dans l'exercice"
+   système: développé
+ - code: 6715
+   description: "Subventions accordées"
+   système: développé
+ - code: 6717
+   description: "Rappel d'impôts"
+   système: développé
+   commentaire: "autres qu'impôts sur les bénéfices"
+ - code: 6718
+   description: "Autres charges exceptionnelles sur opérations de gestion"
+   système: développé
+ - code: 672
+   description: "Charges sur exercices antérieurs"
+   système: base
+   commentaire: "Compte à la disposition des entités pour enregistrer, en cours d'exercice, les charges sur exercices antérieurs"
+ - code: 674
+   description: "Opérations de constitution ou liquidation des fiducies"
+   système: base
+ - code: 6741
+   description: "Opérations liées à la constitution de fiducie - Transfert des éléments"
+   système: développé
+ - code: 6742
+   description: "Opérations liées à la liquidation de la fiducie"
+   système: développé
+ - code: 675
+   description: "Valeurs comptables des éléments d'actif cédés"
+   système: base
+ - code: 6751
+   description: "Immobilisations incorporelles"
+   système: développé
+ - code: 6752
+   description: "Immobilisations corporelles"
+   système: développé
+ - code: 6756
+   description: "Immobilisations financières"
+   système: développé
+ - code: 6758
+   description: "Autres éléments d'actif"
+   système: développé
+ - code: 678
+   description: "Autres charges exceptionnelles"
+   système: base
+ - code: 6781
+   description: "Malis provenant de clauses d'indexation"
+   système: développé
+ - code: 6782
+   description: "Lots"
+   système: développé
+ - code: 6783
+   description: "Malis provenant du rachat par l'entreprise d'actions et obligations émises par elle-même"
+   système: développé
+ - code: 6788
+   description: "Charges exceptionnelles diverses"
+   système: développé
+ - code: 68
+   description: "Dotations aux amortissements, aux dépréciations et aux provisions"
+   système: base
+ - code: 681
+   description: "Dotations aux amortissements, aux dépréciations et aux provisions - Charges d'exploitation"
+   système: abrégé
+ - code: 6811
+   description: "Dotations aux amortissements sur immobilisations incorporelles et corporelles"
+   système: base
+ - code: 68111
+   description: "Immobilisations incorporelles"
+   système: développé
+ - code: 68112
+   description: "Immobilisations corporelles"
+   système: développé
+ - code: 6812
+   description: "Dotations aux amortissements des charges d'exploitation à répartir"
+   système: base
+ - code: 6815
+   description: "Dotations aux provisions d'exploitation"
+   système: base
+ - code: 6816
+   description: "Dotations pour dépréciations des immobilisations incorporelles et corporelles"
+   système: base
+ - code: 68161
+   description: "Immobilisations incorporelles"
+   système: développé
+ - code: 68162
+   description: "Immobilisations corporelles"
+   système: développé
+ - code: 6817
+   description: "Dotations pour dépréciations des actifs circulants"
+   système: base
+ - code: 68173
+   description: "Stocks et en-cours"
+   système: développé
+ - code: 68174
+   description: "Créances"
+   système: développé
+ - code: 686
+   description: "Dotations aux amortissements, aux dépréciations et aux provisions - Charges financières"
+   système: abrégé
+ - code: 6861
+   description: "Dotations aux amortissements des primes de remboursement des obligations"
+   système: base
+ - code: 6865
+   description: "Dotations aux provisions financières"
+   système: base
+ - code: 6866
+   description: "Dotations pour dépréciations des éléments financiers"
+   système: base
+ - code: 68662
+   description: "Immobilisations financières"
+   système: développé
+ - code: 68665
+   description: "Valeurs mobilières de placement"
+   système: développé
+ - code: 6868
+   description: "Autres dotations"
+   système: base
+ - code: 687
+   description: "Dotations aux amortissements, aux dépréciations et aux provisions - Charges exceptionnelles"
+   système: abrégé
+ - code: 6871
+   description: "Dotations aux amortissements exceptionnels des immobilisations"
+   système: base
+ - code: 6872
+   description: "Dotations aux provisions réglementées"
+   système: base
+   commentaire: "immobilisations"
+ - code: 68725
+   description: "Amortissements dérogatoires"
+   système: développé
+ - code: 6873
+   description: "Dotations aux provisions réglementées"
+   système: base
+   commentaire: "stocks"
+ - code: 6874
+   description: "Dotations aux autres provisions réglementées"
+   système: base
+ - code: 6875
+   description: "Dotations aux provisions exceptionnelles"
+   système: base
+ - code: 6876
+   description: "Dotations pour dépréciations exceptionnelles"
+   système: base
+ - code: 69
+   description: "Participation des salariés - Impôts sur les bénéfices et assimilés"
+   système: base
+ - code: 691
+   description: "Participation des salariés aux résultats"
+   système: abrégé
+ - code: 695
+   description: "Impôts sur les bénéfices"
+   système: abrégé
+ - code: 6951
+   description: "Impôts dus en France"
+   système: développé
+ - code: 6952
+   description: "Contribution additionnelle à l'impôt sur les bénéfices"
+   système: développé
+ - code: 6954
+   description: "Impôts dus à l'étranger"
+   système: développé
+ - code: 696
+   description: "Suppléments d'impôt sur les sociétés liés aux distributions"
+   système: base
+ - code: 698
+   description: "Intégration fiscale"
+   système: base
+ - code: 6981
+   description: "Intégration fiscale - Charges"
+   système: base
+ - code: 6989
+   description: "Intégration fiscale - Produits"
+   système: base
+ - code: 699
+   description: "Produits - Reports en arrière des déficits"
+   système: abrégé
+ - code: 7
+   description: "Comptes de produits"
+   système: classe
+ - code: 70
+   description: "Ventes de produits fabriqués, prestations de services, marchandises"
+   système: base
+ - code: 701
+   description: "Ventes de produits finis"
+   système: abrégé
+ - code: 7011
+   description: "Produits finis A"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 7012
+   description: "Produits finis B"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 702
+   description: "Ventes de produits intermédiaires"
+   système: base
+ - code: 703
+   description: "Ventes de produits résiduels"
+   système: base
+ - code: 704
+   description: "Travaux"
+   système: base
+ - code: 7041
+   description: "Travaux de catégorie A"
+   système: développé
+   commentaire: "ou activité"
+ - code: 7042
+   description: "Travaux de catégorie B"
+   système: développé
+   commentaire: "ou activité"
+ - code: 705
+   description: "Études"
+   système: base
+ - code: 706
+   description: "Prestations de services"
+   système: abrégé
+ - code: 707
+   description: "Ventes de marchandises"
+   système: abrégé
+ - code: 7071
+   description: "Marchandises A"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 7072
+   description: "Marchandises B"
+   système: développé
+   commentaire: "ou groupe"
+ - code: 708
+   description: "Produits des activités annexes"
+   système: abrégé
+ - code: 7081
+   description: "Produits des services exploités dans l'intérêt du personnel"
+   système: développé
+ - code: 7082
+   description: "Commissions et courtages"
+   système: développé
+ - code: 7083
+   description: "Locations diverses"
+   système: développé
+ - code: 7084
+   description: "Mise à disposition de personnel facturée"
+   système: développé
+ - code: 7085
+   description: "Ports et frais accessoires facturés"
+   système: développé
+ - code: 7086
+   description: "Bonis sur reprises d'emballages consignés"
+   système: développé
+ - code: 7087
+   description: "Bonifications obtenues des clients et primes sur ventes"
+   système: développé
+ - code: 7088
+   description: "Autres produits d'activités annexes"
+   système: développé
+   commentaire: "cessions d'approvisionnements,"
+ - code: 709
+   description: "Rabais, remises et ristournes accordés par l'entreprise"
+   système: abrégé
+ - code: 7091
+   description: "sur ventes de produits finis"
+   système: développé
+ - code: 7092
+   description: "sur ventes de produits intermédiaires"
+   système: développé
+ - code: 7094
+   description: "sur travaux"
+   système: développé
+ - code: 7095
+   description: "sur études"
+   système: développé
+ - code: 7096
+   description: "sur prestations de services"
+   système: développé
+ - code: 7097
+   description: "sur ventes de marchandises"
+   système: développé
+ - code: 7098
+   description: "sur produits des activités annexes"
+   système: développé
+ - code: 71
+   description: "Production stockée"
+   système: base
+   commentaire: "ou déstockage"
+ - code: 713
+   description: "Variation des stocks"
+   système: abrégé
+   commentaire: "en-cours de production, produits"
+ - code: 7133
+   description: "Variation des en-cours de production de biens"
+   système: base
+ - code: 71331
+   description: "Produits en cours"
+   système: développé
+ - code: 71335
+   description: "Travaux en cours"
+   système: développé
+ - code: 7134
+   description: "Variation des en-cours de production de services"
+   système: base
+ - code: 71341
+   description: "Études en cours"
+   système: développé
+ - code: 71345
+   description: "Prestations de services en cours"
+   système: développé
+ - code: 7135
+   description: "Variation des stocks de produits"
+   système: base
+ - code: 71351
+   description: "Produits intermédiaires"
+   système: développé
+ - code: 71355
+   description: "Produits finis"
+   système: développé
+ - code: 71358
+   description: "Produits résiduels"
+   système: développé
+ - code: 72
+   description: "Production immobilisée"
+   système: abrégé
+ - code: 721
+   description: "Immobilisations incorporelles"
+   système: base
+ - code: 722
+   description: "Immobilisations corporelles"
+   système: base
+ - code: 74
+   description: "Subventions d'exploitation"
+   système: abrégé
+ - code: 75
+   description: "Autres produits de gestion courante"
+   système: abrégé
+ - code: 751
+   description: "Redevances pour concessions, brevets, licences, marques, procédés, logiciels, droits et valeurs similaires"
+   système: base
+ - code: 7511
+   description: "Redevances pour concessions, brevets, licences, marques, procédés, logiciels"
+   système: développé
+ - code: 7516
+   description: "Droits d'auteur et de reproduction"
+   système: développé
+ - code: 7518
+   description: "Autres droits et valeurs similaires"
+   système: développé
+ - code: 752
+   description: "Revenus des immeubles non affectés à des activités professionnelles"
+   système: base
+ - code: 753
+   description: "Jetons de présence et rémunérations d'administrateurs, gérants,"
+   système: abrégé
+ - code: 754
+   description: "Ristournes perçues des coopératives"
+   système: abrégé
+   commentaire: "provenant des excédents"
+ - code: 755
+   description: "Quote-parts de résultat sur opérations faites en commun"
+   système: abrégé
+ - code: 7551
+   description: "Quote-part de perte transférée"
+   système: développé
+   commentaire: "comptabilité du gérant"
+ - code: 7555
+   description: "Quote-part de bénéfice attribuée"
+   système: développé
+   commentaire: "comptabilité des associés non-gérants"
+ - code: 758
+   description: "Produits divers de gestion courante"
+   système: base
+ - code: 76
+   description: "Produits financiers"
+   système: abrégé
+ - code: 761
+   description: "Produits de participations"
+   système: base
+ - code: 7611
+   description: "Revenus des titres de participation"
+   système: développé
+ - code: 7612
+   description: "Produits de la fiducie, résultat de la période"
+   système: développé
+ - code: 7616
+   description: "Revenus sur autres formes de participation"
+   système: développé
+ - code: 7617
+   description: "Revenus des créances rattachées à des participations"
+   système: développé
+ - code: 762
+   description: "Produits des autres immobilisations financières"
+   système: base
+ - code: 7621
+   description: "Revenus des titres immobilisés"
+   système: développé
+ - code: 7626
+   description: "Revenus des prêts"
+   système: développé
+ - code: 7627
+   description: "Revenus des créances immobilisées"
+   système: développé
+ - code: 763
+   description: "Revenus des autres créances"
+   système: base
+ - code: 7631
+   description: "Revenus des créances commerciales"
+   système: développé
+ - code: 7638
+   description: "Revenus des créances diverses"
+   système: développé
+ - code: 764
+   description: "Revenus des valeurs mobilières de placement"
+   système: base
+ - code: 765
+   description: "Escomptes obtenus"
+   système: base
+ - code: 766
+   description: "Gains de change"
+   système: base
+ - code: 767
+   description: "Produits nets sur cessions de valeurs mobilières de placement"
+   système: base
+ - code: 768
+   description: "Autres produits financiers"
+   système: base
+ - code: 77
+   description: "Produits exceptionnels"
+   système: abrégé
+ - code: 771
+   description: "Produits exceptionnels sur opérations de gestion"
+   système: base
+ - code: 7711
+   description: "Dédits et pénalités perçus sur achats et sur ventes"
+   système: développé
+ - code: 7713
+   description: "Libéralités reçues"
+   système: développé
+ - code: 7714
+   description: "Rentrées sur créances amorties"
+   système: développé
+ - code: 7715
+   description: "Subventions d'équilibre"
+   système: développé
+ - code: 7717
+   description: "Dégrèvements d'impôts autres qu'impôts sur les bénéfices"
+   système: développé
+ - code: 7718
+   description: "Autres produits exceptionnels sur opérations de gestion"
+   système: développé
+ - code: 772
+   description: ""
+   système: base
+   commentaire: "Compte à la disposition des entités pour enregistrer, en cours d'exercice, les produits sur exercices antérieurs"
+ - code: 774
+   description: "Opérations de constitution ou liquidation des fiducies"
+   système: base
+ - code: 7741
+   description: "Opérations liées à la constitution de fiducie - Transfert des éléments"
+   système: développé
+ - code: 7742
+   description: "Opérations liées à la liquidation de la fiducie"
+   système: développé
+ - code: 775
+   description: "Produits des cessions d'éléments d'actif"
+   système: base
+ - code: 7751
+   description: "Immobilisations incorporelles"
+   système: développé
+ - code: 7752
+   description: "Immobilisations corporelles"
+   système: développé
+ - code: 7756
+   description: "Immobilisations financières"
+   système: développé
+ - code: 7758
+   description: "Autres éléments d'actif"
+   système: développé
+ - code: 777
+   description: "Quote-part des subventions d'investissement virée au résultat de l'exercice"
+   système: base
+ - code: 778
+   description: "Autres produits exceptionnels"
+   système: base
+ - code: 7781
+   description: "Bonis provenant de clauses d'indexation"
+   système: développé
+ - code: 7782
+   description: "Lots"
+   système: développé
+ - code: 7783
+   description: "Bonis provenant du rachat par l'entreprise d'actions et d'obligations émises par elle-même"
+   système: développé
+ - code: 7788
+   description: "Produits exceptionnels divers"
+   système: développé
+ - code: 78
+   description: "Reprises sur amortissements, dépréciations et provisions"
+   système: base
+ - code: 781
+   description: "Reprises sur amortissements, dépréciations et provisions"
+   système: abrégé
+   commentaire: "à inscrire dans les produits d'exploitation"
+ - code: 7811
+   description: "Reprises sur amortissements des immobilisations incorporelles et corporelles"
+   système: base
+ - code: 78111
+   description: "Immobilisations incorporelles"
+   système: développé
+ - code: 78112
+   description: "Immobilisations corporelles"
+   système: développé
+ - code: 7815
+   description: "Reprises sur provisions d'exploitation"
+   système: base
+ - code: 7816
+   description: "Reprises sur dépréciations des immobilisations incorporelles et corporelles"
+   système: base
+ - code: 78161
+   description: "Immobilisations incorporelles"
+   système: développé
+ - code: 78162
+   description: "Immobilisations corporelles"
+   système: développé
+ - code: 7817
+   description: "Reprises sur dépréciations des actifs circulants"
+   système: base
+ - code: 78173
+   description: "Stocks et en-cours"
+   système: développé
+ - code: 78174
+   description: "Créances"
+   système: développé
+ - code: 786
+   description: "Reprises sur provisions pour risques et dépréciations"
+   système: abrégé
+   commentaire: "à inscrire dans les produits financiers"
+ - code: 7865
+   description: "Reprises sur provisions financières"
+   système: base
+ - code: 7866
+   description: "Reprises sur dépréciations des éléments financiers"
+   système: base
+ - code: 78662
+   description: "Immobilisations financières"
+   système: développé
+ - code: 78665
+   description: "Valeurs mobilières de placements"
+   système: développé
+ - code: 787
+   description: "Reprises sur provisions et dépréciations"
+   système: abrégé
+   commentaire: "à inscrire dans les produits exceptionnels"
+ - code: 7872
+   description: "Reprises sur provisions réglementées"
+   système: base
+   commentaire: "immobilisations"
+ - code: 78725
+   description: "Amortissements dérogatoires"
+   système: développé
+ - code: 78726
+   description: "Provision spéciale de réévaluation"
+   système: développé
+ - code: 78727
+   description: "Plus-values réinvesties"
+   système: développé
+ - code: 7873
+   description: "Reprises sur provisions réglementées"
+   système: base
+   commentaire: "stocks"
+ - code: 7874
+   description: "Reprises sur autres provisions réglementées"
+   système: base
+ - code: 7875
+   description: "Reprises sur provisions exceptionnelles"
+   système: base
+ - code: 7876
+   description: "Reprises sur dépréciations exceptionnelles"
+   système: base
+ - code: 79
+   description: "Transferts de charges"
+   système: abrégé
+ - code: 791
+   description: "Transferts de charges d'exploitation"
+   système: base
+ - code: 796
+   description: "Transferts de charges financières"
+   système: base
+ - code: 797
+   description: "Transferts de charges exceptionnelles"
+   système: base
+ - code: 8
+   description: "Comptes spéciaux"
+   système: classe
