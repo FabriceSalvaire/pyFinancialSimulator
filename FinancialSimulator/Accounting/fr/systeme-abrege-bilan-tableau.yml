@@ -1,0 +1,49 @@
+# Art. 822-1
+# Modèle de bilan avant répartition
+Actif:
+- title: "Total I"
+- - title: "Actif immobilisé"
+  - - title: "Immobilisations incorporelles"
+    - - title: "fonds commercial"
+      - title: "autres"
+  - title: "Immobilisations corporelles"
+  - title: "Immobilisations financières"
+- title: "Total II"
+- - title: "Actif circulant"
+  - - title: "Stocks et en-cours (autres que marchandises)"
+    - title: "Marchandises"
+    - title: "Avances et acomptes versés sur commandes"
+    - title: "Créances"
+    - - title: "clients et comptes rattachés"
+      - title: "autres"
+  - title: "Valeurs mobilières de placement"
+  - title: "Disponibilités (autres que caisse)"
+  - title: "Caisse"
+- title: "Charges constatées d'avance (III)"
+
+Passif:
+- title: "Total I"
+- - title: "Capitaux propres"
+  - - title: "Capital"
+    - title: "Ecart de réévaluation"
+      - title: "Réserves"
+      - - title: "réserve légale"
+        - title: "réserves réglementées"
+        - title: "autres"
+    - title: "Report à nouveau"
+# avant répartition
+    - title: "Résultat de l'exercice [bénéfice ou perte]"
+# après répartition
+#   - title: "Sous total : situation nette"
+    - title: "Provisions réglementées"
+- title: "Provisions (II)"
+- title: "Total III"
+- - title: "Dettes"
+  - - title: "Emprunts et dettes assimilées"
+    - title: "Avances et acomptes reçus sur commandes en cours"
+      - title: "Fournisseurs et comptes rattachés"
+      - title: "Autres"
+- title: "Produits constatés d'avance (IV)"
+
+# Art. 822-2
+# Modèle de bilan après répartition

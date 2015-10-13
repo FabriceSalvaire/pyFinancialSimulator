@@ -1,0 +1,40 @@
+# Art. 822-3
+Charges (hors taxes):
+- title: "Total des charges (I + II + III)"
+- - title: "Total I"
+  - - title: "Charges d'exploitation"
+    - - title: "Achats de marchandises"
+      - title: "Variation de stocks [marchandises]"
+      - title: "Achats d'approvisionnements"
+      - title: "Variation de stocks [approvisionnements]"
+      - title: "Autres charges externes"
+      - title: "Impôts, taxes et versements assimilés"
+      - title: "Rémunérations du personnel"
+      - title: "Charges sociales"
+      - title: "Dotations aux amortissements"
+      - title: "Dotations aux dépréciations"
+      - title: "Dotations aux provisions"
+      - title: "Autres charges"
+      - title: "Charges financières"
+  - title: "Charges exceptionnelles (II)"
+  - title: "Impôts sur les bénéfices (III)"
+- title: "Solde créditeur : bénéfice"
+
+Produits (hors taxes):
+- title: "Total des produits (I + II)"
+- - title: "Total I"
+  - - title: "Produits d'exploitation"
+    - - title: "Ventes de marchandises"
+      - title: "Production vendue [biens et services]"
+      - title: "Production stockée"
+      - title: "Production immobilisée"
+      - title: "Subventions d'exploitation"
+      - title: "Autres produits"
+    - title: "Produits financiers"
+  - title: "dont à l'exportation"
+  - title: "Produits exceptionnels (II)"
+- title: "Solde débiteur : perte"
+
+# * Y compris :
+# - redevances de crédit-bail mobilier
+# - redevances de crédit-bail immobilier
