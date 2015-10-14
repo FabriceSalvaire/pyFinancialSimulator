@@ -29,6 +29,7 @@ logger = Logging.setup_logging('financial-simulator')
 
 ####################################################################################################
 
+import datetime
 import unittest
 
 ####################################################################################################
@@ -61,7 +62,8 @@ class TestAccounting(unittest.TestCase):
         
         journal_ventes = Journal('Ventes', account_chart)
         
-        journal_ventes.log_transaction(debit={'706':80, '44571':20},
+        journal_ventes.log_transaction(date=datetime.date(2016, 1, 1),
+                                       debit={'706':80, '44571':20},
                                        credit={'512':100},
                                        description='vente'
         )
