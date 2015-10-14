@@ -58,12 +58,11 @@ class HdlParser(object):
     }
 
     tokens = [
-        # 'SEMICOLON',
-        'LEFT_PARENTHESIS', 'RIGHT_PARENTHESIS',
-        'SET',
-        'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
         'DECIMAL_NUMBER',
         'NAME',
+        'LEFT_PARENTHESIS', 'RIGHT_PARENTHESIS',
+        'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
+        'SET',
     ] + list(reserved.values())
 
     ##############################################
@@ -92,17 +91,15 @@ class HdlParser(object):
 
     ##############################################
 
-    # t_SEMICOLON = r';'
-
     t_LEFT_PARENTHESIS = r'\('
     t_RIGHT_PARENTHESIS = r'\)'
-
-    t_SET = r'='
 
     t_PLUS = r'\+'
     t_MINUS = r'-'
     t_TIMES = r'\*'
     t_DIVIDE = r'/'
+
+    t_SET = r'='
 
     def t_NAME(self, t):
         r'[a-zA-Z_][a-zA-Z_0-9]*'
@@ -142,11 +139,6 @@ class HdlParser(object):
         'statement : NAME SET expression'
         statement = Assignation(Variable(p[1]), p[3])
         self._statements.append(statement)
-
-    def p_account(self, p):
-        '''expression : DECIMAL_NUMBER
-        '''
-        p[0] = Account(str(p[1]))
 
     def p_expression_name(self, p):
         'expression : NAME'
@@ -204,6 +196,28 @@ class HdlParser(object):
             if not token:
                 break
             print(token)
+
+####################################################################################################
+
+class HdlNumericalParser(object):
+
+    ##############################################
+
+    def p_constant(self, p):
+        '''expression : DECIMAL_NUMBER
+        '''
+        p[0] = Constant(p[1])
+
+####################################################################################################
+
+class HdlAccountParser(object):
+
+    ##############################################
+
+    def p_account(self, p):
+        '''expression : DECIMAL_NUMBER
+        '''
+        p[0] = Account(str(p[1]))
 
 ####################################################################################################
 #

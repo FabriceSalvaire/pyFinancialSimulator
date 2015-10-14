@@ -76,6 +76,18 @@ class Account(Variable):
 
 ####################################################################################################
 
+class Constant(object):
+    def __init__(self, value):
+        self._value = value
+
+    def __float__(self):
+        return self._value
+
+    def __str__(self):
+        return str(self._value)
+
+####################################################################################################
+
 class Expression(object):
 
     __number_of_operands__ = None

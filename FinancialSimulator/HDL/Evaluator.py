@@ -74,13 +74,6 @@ class Evaluator(object):
 
     ##############################################
 
-    def eval_Account(self, level, statement):
-
-        # Fixme:
-        return float(str(statement))
-
-    ##############################################
-
     def eval_Assignation(self, level, statement, value):
 
         value = float(value)
@@ -110,6 +103,39 @@ class Evaluator(object):
     def eval_Division(self, level, statement, operand1, operand2):
 
         return float(operand1) / float(operand2)
+
+####################################################################################################
+
+class NumericalEvaluator(Evaluator):
+
+    ##############################################
+
+    def eval_Constant(self, level, statement):
+
+        return float(statement)
+
+####################################################################################################
+
+class AccountEvaluator(Evaluator):
+
+    ##############################################
+
+    def __init__(self, account_chart):
+
+        super(AccountEvaluator, self).__init__()
+        
+        self._account_chart = account_chart
+
+    ##############################################
+
+    def eval_Account(self, level, statement):
+
+        # Fixme: signed etc.
+        account = self._account_chart[str(statement)]
+        if account.balance:
+            return account.credit
+        else:
+            return account.debit
 
 ####################################################################################################
 #
