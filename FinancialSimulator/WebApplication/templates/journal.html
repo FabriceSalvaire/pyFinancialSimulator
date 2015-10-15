@@ -1,0 +1,54 @@
+{# -*- engine: jinja2 -*- #}
+{% extends "base.html" %}
+{% block body %}
+  <ul class="breadcrumb">
+    <li><a href="/main">Accueil</a></li>
+    <li class="active"></li>
+  </ul>
+
+  <div class="row">
+    <div class="col-xl-12">
+      <h1>{{ journal.name }}</h1>
+      <table class="table table-hover">
+	<col style="width:5%">
+	<col style="width:65%">
+	<col style="width:10%">
+	<col style="width:10%">
+	<thead>
+	  <tr>
+	    <th>Date</th>
+	    <th>Description</th>
+	    <th>Débit</th>
+	    <th>Crédit</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for transaction in journal %}
+	    <tr>
+	      <th scope="row">{{ transaction.date }}</th>
+	      <td>{{ transaction.description }}</td>
+	      <td></td>
+	      <td></td>
+	    </tr>
+	    {% for imputation in transaction.iter_on_debits() %}
+	      <tr>
+		<th scope="row"></th>
+		<td>{{ imputation.account.code }}: {{ imputation.account.name }}</td>
+		<td class="text-right">{{ '%0.2f'| format(imputation.amount | round(2)) }} €</td>
+		<td></td>
+	      </tr>
+	    {% endfor %}
+	    {% for imputation in transaction.iter_on_credits() %}
+	      <tr>
+		<th scope="row"></th>
+		<td>{{ imputation.account.code }}: {{ imputation.account.name }}</td>
+		<td></td>
+		<td class="text-right">{{ '%0.2f'| format(imputation.amount | round(2)) }} €</td>
+	      </tr>
+	    {% endfor %}
+	  {% endfor %}
+	</tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

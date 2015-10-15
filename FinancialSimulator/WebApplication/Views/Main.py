@@ -32,8 +32,19 @@ main = Blueprint('main', __name__, url_prefix='/main')
 
 @main.route('/')
 def index():
-    accounts = [account for account in model.account_chart if account.debit or account.credit]
-    return render_template(current_app.config['INDEX_TEMPLATE'], accounts=accounts)
+    journals = [journal for journal in model.journals.values()]
+    journals.sort(key=lambda journal: journal.name)
+    return render_template('main.html', journals=journals)
+
+@main.route('/account_chart')
+def account_chart():
+    accounts = [account for account in model.account_chart if account.has_imputations()]
+    return render_template('account_chart.html', accounts=accounts)
+
+@main.route('/journal/<name>')
+def journal(name):
+    journal = model.journals[name]
+    return render_template('journal.html', journal=journal)
 
 ####################################################################################################
 #

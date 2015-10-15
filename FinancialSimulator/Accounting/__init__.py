@@ -146,6 +146,40 @@ class UnplannedTransaction(object):
 
     ##############################################
 
+    def _iter_on_imputations(self, imputations):
+
+        imputations = list(imputations.values())
+        imputations.sort(key=lambda x: x.account)
+        return iter(imputations)
+
+    ##############################################
+
+    def iter_on_debits(self):
+
+        # return iter(self._debit.values())
+        return self._iter_on_imputations(self._debit)
+
+    ##############################################
+
+    def iter_on_credits(self):
+
+        # return iter(self._credit.values())
+        return self._iter_on_imputations(self._credit)
+
+    ##############################################
+
+    @property
+    def debits(self):
+        return self._debit.values()
+
+    ##############################################
+
+    @property
+    def credits(self):
+        return self._credit.values()
+
+    ##############################################
+
     def run(self):
 
         for imputation in self._imputations.values():
@@ -273,6 +307,19 @@ class Account(object):
 
     ##############################################
 
+    def __lt__(self, other):
+
+        code1 = str(self._code)
+        code2 = str(other._code)
+        return code1 < code2
+        # for d1, d2 in zip(code1, code2):
+        #     if d1 < d2:
+        #         return True
+        #     elif d1 > d2:
+        #         return False
+
+    ##############################################
+
     def add_child(self, child):
 
         self.balance_is_dirty()
@@ -351,6 +398,12 @@ class Account(object):
         if self._balance is None:
             self._compute_balance()
         return self._debit
+
+    ##############################################
+
+    def has_imputations(self):
+
+        return self._inner_debit or self._inner_credit
 
     ##############################################
 
@@ -458,8 +511,10 @@ class Journal(object):
 
     ##############################################
 
-    def __init__(self, name, account_chart):
+    def __init__(self, code, name, account_chart):
 
+        # Fixme: code name / label description
+        self._code = code
         self._name = name
         self._account_chart = account_chart
         self._transactions = []
@@ -467,9 +522,20 @@ class Journal(object):
     ##############################################
 
     @property
-    def name(self):
+    def code(self):
+        return self._code
 
+    ##############################################
+
+    @property
+    def name(self):
         return self._name
+
+    ##############################################
+
+    def __iter__(self):
+
+        return iter(self._transactions)
 
     ##############################################
 
