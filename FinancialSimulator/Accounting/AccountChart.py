@@ -35,8 +35,8 @@ _account_charts = {
 
 def load_account_chart(country_code):
 
-    yml_file = os.path.join(os.path.dirname(__file__), country_code, _account_charts[country_code])
-    with open(yml_file, 'r') as f:
+    yaml_path = os.path.join(os.path.dirname(__file__), country_code, _account_charts[country_code])
+    with open(yaml_path, 'r') as f:
         data = yaml.load(f.read())
 
     metadata = data['metadata']

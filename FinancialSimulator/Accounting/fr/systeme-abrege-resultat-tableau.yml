@@ -1,40 +1,64 @@
 # Art. 822-3
+
 Charges (hors taxes):
+- title: "Charges d'exploitation"
+- - title: "Achats de marchandises"
+    computation: 60 - 609
+  - title: "Variation de stocks [marchandises]"
+    # +/-
+    computation: 603
+  - title: "Achats d'approvisionnements"
+  - title: "Variation de stocks [approvisionnements]"
+  - title: "Autres charges externes"
+    computation: 61 - 619 + 62 - 629
+  - title: "Impôts, taxes et versements assimilés"
+    computation: 63
+  - title: "Rémunérations du personnel"
+    computation: 64
+  - title: "Charges sociales"
+  - title: "Dotations aux amortissements"
+    computation: 681
+  - title: "Dotations aux dépréciations"
+  - title: "Dotations aux provisions"
+  - title: "Autres charges"
+    computation: 65
+  - title: "Charges financières"
+    computation: 66 + 686
+- title: "Total I"
+- title: "Charges exceptionnelles (II)"
+  computation: T2 = 67 + 687
+- title: "Impôts sur les bénéfices (III)"
+  computation: T3 = 69
 - title: "Total des charges (I + II + III)"
-- - title: "Total I"
-  - - title: "Charges d'exploitation"
-    - - title: "Achats de marchandises"
-      - title: "Variation de stocks [marchandises]"
-      - title: "Achats d'approvisionnements"
-      - title: "Variation de stocks [approvisionnements]"
-      - title: "Autres charges externes"
-      - title: "Impôts, taxes et versements assimilés"
-      - title: "Rémunérations du personnel"
-      - title: "Charges sociales"
-      - title: "Dotations aux amortissements"
-      - title: "Dotations aux dépréciations"
-      - title: "Dotations aux provisions"
-      - title: "Autres charges"
-      - title: "Charges financières"
-  - title: "Charges exceptionnelles (II)"
-  - title: "Impôts sur les bénéfices (III)"
-- title: "Solde créditeur : bénéfice"
-
-Produits (hors taxes):
-- title: "Total des produits (I + II)"
-- - title: "Total I"
-  - - title: "Produits d'exploitation"
-    - - title: "Ventes de marchandises"
-      - title: "Production vendue [biens et services]"
-      - title: "Production stockée"
-      - title: "Production immobilisée"
-      - title: "Subventions d'exploitation"
-      - title: "Autres produits"
-    - title: "Produits financiers"
-  - title: "dont à l'exportation"
-  - title: "Produits exceptionnels (II)"
-- title: "Solde débiteur : perte"
-
+  computation: T1 + T2 + T3
+- title: "Solde créditeur : Bénéfice"
+- title: "Total général"
 # * Y compris :
 # - redevances de crédit-bail mobilier
 # - redevances de crédit-bail immobilier
+
+Produits (hors taxes):
+- title: "Produits d'exploitation"
+- - title: "Ventes de marchandises"
+    computation: 707 - 7097
+  - title: "Production vendue [biens et services]"
+    computation: '[701:706] - [7091:7096]'
+  - title: "Production stockée"
+    computation: 713
+  - title: "Production immobilisée"
+    computation: 72
+  - title: "Subventions d'exploitation"
+    computation: 74
+  - title: "Autres produits"
+    computation: 75 + 781 + 791 + 708 - 7098
+  - padding: 2
+  - title: "Produits financiers"
+    computation: 76 + 786 + 796
+- title: "Total I"
+- title: "dont à l'exportation"
+- title: "Produits exceptionnels (II)"
+  computation: 77 + 787 + 797
+- padding: 1
+- title: "Total des produits (I + II)"
+- title: "Solde débiteur : perte"
+- title: "Total général"

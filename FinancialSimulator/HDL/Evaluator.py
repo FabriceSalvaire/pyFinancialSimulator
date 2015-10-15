@@ -42,7 +42,7 @@ class Evaluator(object):
 
     def eval_statement(self, level, statement):
 
-        self._logger.debug('')
+        # self._logger.debug('')
 
         statement_class = statement.__class__.__name__
         # if statement_class == 'Function':
@@ -131,11 +131,25 @@ class AccountEvaluator(Evaluator):
     def eval_Account(self, level, statement):
 
         # Fixme: signed etc.
-        account = self._account_chart[str(statement)]
-        if account.balance:
-            return account.credit
-        else:
-            return account.debit
+        try:
+            account = self._account_chart[str(statement)]
+            if account.balance:
+                return account.debit
+            else:
+                return account.credit
+        except KeyError:
+            self._logger.warning("Account {} doesn't exist".format(str(statement)))
+            return 0
+
+    ##############################################
+
+    def eval_AccountInterval(self, level, statement):
+
+        # Fixme: check
+        value = 0
+        for code in statement:
+            value += self.eval_Account(level, code)
+        return value
 
 ####################################################################################################
 #

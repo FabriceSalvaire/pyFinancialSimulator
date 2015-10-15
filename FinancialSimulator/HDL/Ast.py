@@ -76,6 +76,29 @@ class Account(Variable):
 
 ####################################################################################################
 
+class AccountInterval(object):
+
+    ##############################################
+
+    def __init__(self, name_inf, name_sup):
+
+        self._name_inf = name_inf
+        self._name_sup = name_sup
+
+    ##############################################
+
+    def __str__(self):
+        return '[{}:{}]'.format(self._name_inf, self._name_sup)
+
+    ##############################################
+
+    def __iter__(self):
+
+        for code in range(int(self._name_inf), int(self._name_sup) +1):
+            yield str(code)
+
+####################################################################################################
+
 class Constant(object):
     def __init__(self, value):
         self._value = value
@@ -148,7 +171,7 @@ class Assignation(UnaryExpression):
 
     def __str__(self):
         # ←
-        return ' '.join((str(self.destination), '<-', str(self.value)))
+        return ' '.join((str(self.destination), '=', str(self.value)))
 
 ####################################################################################################
 

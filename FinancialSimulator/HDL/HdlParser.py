@@ -58,11 +58,17 @@ class HdlParser(object):
     }
 
     tokens = [
+        'COLON',
+        'COMMA',
         'DECIMAL_NUMBER',
-        'NAME',
+        'LEFT_BRACE', 'RIGHT_BRACE',
+        'LEFT_BRACKET', 'RIGHT_BRACKET',
         'LEFT_PARENTHESIS', 'RIGHT_PARENTHESIS',
-        'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
+        'NAME',
+        'PLUS', 'MINUS',
+        'SEMICOLON',
         'SET',
+        'TIMES', 'DIVIDE',
     ] + list(reserved.values())
 
     ##############################################
@@ -91,15 +97,22 @@ class HdlParser(object):
 
     ##############################################
 
+    t_COLON = r':'
+    t_COMMA = r','
+    t_SEMICOLON = r';'
+    t_SET = r'='
+
+    t_LEFT_BRACE = r'\{'
+    t_LEFT_BRACKET = r'\['
     t_LEFT_PARENTHESIS = r'\('
+    t_RIGHT_BRACE = r'\}'
+    t_RIGHT_BRACKET = r'\]'
     t_RIGHT_PARENTHESIS = r'\)'
 
-    t_PLUS = r'\+'
-    t_MINUS = r'-'
-    t_TIMES = r'\*'
     t_DIVIDE = r'/'
-
-    t_SET = r'='
+    t_MINUS = r'-'
+    t_PLUS = r'\+'
+    t_TIMES = r'\*'
 
     def t_NAME(self, t):
         r'[a-zA-Z_][a-zA-Z_0-9]*'
@@ -110,6 +123,11 @@ class HdlParser(object):
     def t_DECIMAL_NUMBER(self, t):
         r'\d+'
         t.value = int(t.value)
+        return t
+
+    def t_FLOAT_NUMBER(self, t):
+        r'\d+(\.\d*)?'
+        t.value = float(t.value)
         return t
 
     ##############################################
@@ -161,14 +179,17 @@ class HdlParser(object):
 
     def __init__(self):
 
-        self._build()
+        self._build(debug=False)
 
     ##############################################
 
     def _build(self, **kwargs):
 
-        self._lexer = lex.lex(module=self, **kwargs)
-        self._parser = yacc.yacc(module=self, **kwargs)
+        self._lexer = lex.lex(module=self , **kwargs)
+        self._parser = yacc.yacc(module=self,
+                                 tabmodule=self.__class__.__name__ + '_tab',
+                                 outputdir='.',
+                                 **kwargs)
 
     ##############################################
 
@@ -210,7 +231,7 @@ class HdlNumericalParser(object):
 
 ####################################################################################################
 
-class HdlAccountParser(object):
+class HdlAccountParser(HdlParser):
 
     ##############################################
 
@@ -218,6 +239,13 @@ class HdlAccountParser(object):
         '''expression : DECIMAL_NUMBER
         '''
         p[0] = Account(str(p[1]))
+
+    ##############################################
+
+    def p_account_interval(self, p):
+        '''expression : LEFT_BRACKET DECIMAL_NUMBER COLON DECIMAL_NUMBER RIGHT_BRACKET
+        '''
+        p[0] = AccountInterval(str(p[2]), str(p[4]))
 
 ####################################################################################################
 #
