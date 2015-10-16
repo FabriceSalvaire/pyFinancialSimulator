@@ -47,6 +47,21 @@ def journal(name):
     return render_template('journal.html', journal=journal)
 
 ####################################################################################################
+
+from FinancialSimulator.Accounting import Results
+
+# yaml_file = 'systeme-abrege-resultat-tableau.yml'
+yaml_file = 'systeme-base-bilan-tableau.yml'
+yaml_loader = Results.YamlLoader(yaml_file)
+
+@main.route('/tableau/bilan')
+def result():
+    account_chart = model.account_chart
+    table = yaml_loader.table
+    computation_visitor = Results.ComputationVisitor(account_chart)
+    return render_template('result.html', table=table, computation_visitor=computation_visitor)
+
+####################################################################################################
 #
 # End
 #

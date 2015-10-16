@@ -1,0 +1,40 @@
+{# -*- engine: jinja2 -*- #}
+{% extends "base.html" %}
+{% block body %}
+  <ul class="breadcrumb">
+    <li><a href="/main">Accueil</a></li>
+    <li class="active"></li>
+  </ul>
+
+  <div class="row">
+    <div class="col-xl-12">
+      <h1>Compte de bilan</h1>
+      {% for column in table %}
+	<h2>{{ column.title }}</h2>
+	<table class="table table-hover">
+	  {# <col style="width:10%"> #}
+	  <thead>
+	    <tr>
+	      <th>Actif</th>
+	      <th>Brut</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    {% for row in column %}
+	      <tr>
+		<th scope="row">{{ row.title }}</th>
+		{% with value = computation_visitor[row] %}
+		  {% if row.show and value %}
+		    <td class="text-right">{{ '%0.2f'| format(value | round(2)) }} €</td>
+		  {% else %}
+		    <td></td>
+		  {% endif %}
+		{% endwith %}
+	      </tr>
+	    {% endfor %}
+	  </tbody>
+	</table>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
