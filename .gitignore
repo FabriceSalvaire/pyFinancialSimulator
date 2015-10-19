@@ -1,4 +1,12 @@
 *~
 __pycache__
+parser.out
+parsetab.py
 #
+projet/
 doc/sphinx/build/
+FinancialSimulator/WebApplication/static/bower_components/
+FinancialSimulator/WebApplication/static/css/bootstrap.min.css
+FinancialSimulator/WebApplication/static/js/bootstrap.min.js
+FinancialSimulator/WebApplication/static/js/jquery.min.js
+
