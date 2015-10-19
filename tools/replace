@@ -42,7 +42,7 @@ default_excluded_extension = ','.join(('~',
                                        '.txt',
                                        ))
 
-default_exclusion_pattern = '\.bzr'
+default_exclusion_pattern = '\.git'
 
 ####################################################################################################
 #
