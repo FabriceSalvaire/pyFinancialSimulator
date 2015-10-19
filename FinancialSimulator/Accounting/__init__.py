@@ -32,15 +32,38 @@ _module_logger = logging.getLogger(__name__)
 
 ####################################################################################################
 
+class AccountingDocument(object):
+
+    ##############################################
+
+    def __init__(self, number, date):
+
+        self._number = number # Fixme: id
+        self._date = date
+
+    ##############################################
+
+    @property
+    def number(self):
+        return self._number
+
+    ##############################################
+
+    @property
+    def date(self):
+        return self._date
+
+####################################################################################################
+
 class Imputation(object):
 
     __letter__ = ''
 
     ##############################################
 
-    def __init__(self, transaction, account, amount):
+    def __init__(self, _journal_entry, account, amount):
 
-        self._transaction = transaction
+        self._journal_entry = _journal_entry
         self._account = account
         self._amount = amount
 
@@ -48,7 +71,7 @@ class Imputation(object):
 
     @property
     def description(self):
-        return self._transaction.description
+        return self._journal_entry.description
 
     @property
     def account(self):
@@ -66,13 +89,14 @@ class Imputation(object):
 
     def __str__(self):
 
-        return '{} {:>10}: {:>10} {}'.format(self.__letter__, self._account.code,
+        return '{} {:>10}: {:>10} {}'.format(self.__letter__, self._account.number,
                                              self._amount, self._account.devise)
 
     ##############################################
 
     def run(self):
 
+        # Fixme: simulation vs accounting
         self._account.run_imputation(self)
 
 ####################################################################################################
@@ -87,18 +111,20 @@ class CreditImputation(Imputation):
 
 ####################################################################################################
 
-class UnplannedTransaction(object):
+class UnplannedJournalEntry(object):
 
     ##############################################
 
-    def __init__(self, debit_pairs, credit_pairs, description):
+    def __init__(self, description, debit_pairs, credit_pairs):
+
+        # Fixme: for simulation
 
         self._description = description
         
         # Fixme: keep debit/credit ?
-        self._debit = {account.code:DebitImputation(self, account, float(amount))
+        self._debit = {account.number:DebitImputation(self, account, float(amount))
                        for account, amount in debit_pairs}
-        self._credit = {account.code:CreditImputation(self, account, float(amount))
+        self._credit = {account.number:CreditImputation(self, account, float(amount))
                        for account, amount in credit_pairs}
         self._imputations = dict(self._debit)
         self._imputations.update(self._credit)
@@ -106,7 +132,7 @@ class UnplannedTransaction(object):
         sum_of_debits = self.sum_of_debits()
         sum_of_credits = self.sum_of_credits()
         if sum_of_debits != sum_of_credits:
-            message = "Transaction '{}' is not balanced D {} != C {}"
+            message = "Journal Entry '{}' is not balanced D {} != C {}"
             raise NameError(message.format(self._description,
                                            sum_of_debits,
                                            sum_of_credits))
@@ -142,7 +168,7 @@ class UnplannedTransaction(object):
 
     def __getitem__(self, account):
 
-        return self._imputations[account.code]
+        return self._imputations[account.number]
 
     ##############################################
 
@@ -182,6 +208,7 @@ class UnplannedTransaction(object):
 
     def run(self):
 
+        # Fixme: simulation
         for imputation in self._imputations.values():
             imputation.run()
 
@@ -189,23 +216,40 @@ class UnplannedTransaction(object):
 
     def plan(self, date):
 
-        obj = Transaction.__new__(Transaction)
+        obj = JournalEntry.__new__(JournalEntry)
         obj.__dict__.update(self.__dict__)
         obj._date = date
+        # Fixme:
+        obj._id = 1
+        obj._document = ''
+        obj._validation_date = '2016-01-01'
+        obj._reconciliation_id = '1'
+        obj._reconciliation_date = '2016-01-01'
         
         return obj
 
 ####################################################################################################
 
-class Transaction(UnplannedTransaction):
+class JournalEntry(UnplannedJournalEntry):
 
     ##############################################
 
-    def __init__(self, date, debit_pairs, credit_pairs, description):
+    def __init__(self, sequence_number, date, description, document, debit_pairs, credit_pairs):
 
-        super(Transaction, self).__init__(debit_pairs, credit_pairs, description)
+        super(JournalEntry, self).__init__(description, debit_pairs, credit_pairs, description)
 
+        self._id = sequence_number
         self._date = date
+        self._document = document # accounting document
+        self._validation_date = None
+        self._reconciliation_id = None # clearing
+        self._reconciliation_date = None
+
+    ##############################################
+
+    @property
+    def sequence_number(self):
+        return self._id
 
     ##############################################
 
@@ -215,9 +259,33 @@ class Transaction(UnplannedTransaction):
 
     ##############################################
 
+    @property
+    def document(self):
+        return self._document
+
+    ##############################################
+
+    @property
+    def validation_date(self):
+        return self._validation_date
+
+    ##############################################
+
+    @property
+    def reconciliation_id(self):
+        return self._reconciliation_id
+
+    ##############################################
+
+    @property
+    def reconciliation_date(self):
+        return self._reconciliation_date
+
+    ##############################################
+
     def __str__(self):
 
-        message = 'Transaction on {}: {}\n'.format(self._date, self._description)
+        message = 'Journal Entry on {}: {}\n'.format(self._date, self._description)
         for imputations in self._debit, self._credit:
             message += '\n'.join([str(imputation) for imputation in imputations.values()])
             message += '\n'
@@ -231,15 +299,15 @@ class Account(object):
 
     ##############################################
 
-    def __init__(self, code, name,
+    def __init__(self, number, description,
                  parent=None,
                  devise='€',
                  comment='',
                  system='',
                  initial_balance=0):
 
-        self._name = name
-        self._code = code
+        self._description = description
+        self._number = number
         self._comment = comment
         self._system = system
         
@@ -268,14 +336,14 @@ class Account(object):
     ##############################################
 
     @property
-    def name(self):
-        return self._name
+    def description(self):
+        return self._description
 
     ##############################################
 
     @property
-    def code(self):
-        return self._code
+    def number(self):
+        return self._number
 
     ##############################################
 
@@ -298,7 +366,7 @@ class Account(object):
     ##############################################
 
     def __str__(self):
-        return '#' + self._code
+        return '#' + self._number
 
     ##############################################
 
@@ -309,10 +377,10 @@ class Account(object):
 
     def __lt__(self, other):
 
-        code1 = str(self._code)
-        code2 = str(other._code)
-        return code1 < code2
-        # for d1, d2 in zip(code1, code2):
+        number1 = str(self._number)
+        number2 = str(other._number)
+        return number1 < number2
+        # for d1, d2 in zip(number1, number2):
         #     if d1 < d2:
         #         return True
         #     elif d1 > d2:
@@ -412,7 +480,7 @@ class Account(object):
         # Fixme:
         # imputation: (account, type, amount) -> update
         # -> debit/credit function
-        # move code to imputation ?
+        # move number to imputation ?
 
         if imputation.account is not self:
             raise NameError("Account mismatch")
@@ -425,7 +493,7 @@ class Account(object):
             operation = 'Credit'
             self._inner_credit += imputation.amount
         message = '{} on {}: {} {} ({})'.format(operation,
-                                                self._code,
+                                                self._number,
                                                 imputation.amount,
                                                 self._devise,
                                                 imputation.description,
@@ -455,13 +523,13 @@ class AccountChart(object):
 
     def add_account(self, account):
 
-        self._accounts[account.code] = account
+        self._accounts[account.number] = account
 
     ##############################################
 
-    def __getitem__(self, code):
+    def __getitem__(self, number):
 
-        return self._accounts[code]
+        return self._accounts[number]
 
     ##############################################
 
@@ -476,7 +544,7 @@ class AccountChart(object):
     def _build_sibling_hierarchy(self, account):
 
         siblings = list(account.siblings)
-        siblings.sort(key=lambda x: x.code)
+        siblings.sort(key=lambda x: x.number)
         for sibling in siblings:
             yield sibling
             yield from self._build_sibling_hierarchy(sibling)
@@ -489,7 +557,7 @@ class AccountChart(object):
         for account in self._accounts.values():
             if account.parent is None:
                 root_accounts.append(account)
-        root_accounts.sort(key=lambda x: x.code)
+        root_accounts.sort(key=lambda x: x.number)
         
         flat_hierarchy = []
         for account in root_accounts:
@@ -511,67 +579,140 @@ class Journal(object):
 
     ##############################################
 
-    def __init__(self, code, name, account_chart):
+    def __init__(self, label, description, account_chart):
 
-        # Fixme: code name / label description
-        self._code = code
-        self._name = name
+        self._label = label
+        self._description = description
         self._account_chart = account_chart
-        self._transactions = []
+        
+        self._last_id = 0
+        self._journal_entries = []
 
     ##############################################
 
     @property
-    def code(self):
-        return self._code
+    def label(self):
+        return self._label
 
     ##############################################
 
     @property
-    def name(self):
-        return self._name
+    def description(self):
+        return self._description
 
     ##############################################
 
     def __iter__(self):
 
-        return iter(self._transactions)
+        return iter(self._journal_entries)
 
     ##############################################
 
     def run(self):
 
         self._account_chart.reset()
-        for transaction in self._transactions:
-            transaction.run()
+        for journal_entry in self._journal_entries:
+            journal_entry.run()
 
     ##############################################
 
-    def log_transaction_object(self, transaction):
+    def log_entry_object(self, journal_entry):
 
-        self._transactions.append(transaction)
-        transaction.run()
+        self._journal_entries.append(journal_entry)
+        journal_entry.run()
+        self._last_id += 1
 
     ##############################################
 
     def _make_imputation_pairs(self, imputations):
 
-        return [(self._account_chart[account_code], amount)
-                for account_code, amount in imputations.items()]
+        return [(self._account_chart[account_number], amount)
+                for account_number, amount in imputations.items()]
 
     ##############################################
 
-    def log_transaction(self, date, debit, credit, description):
+    def log_entry(self, date, description, debit, credit, document=None):
 
         # Fixme:
         #  DebitImputation(account, amount)
-        #  DebitImputation(account_code, amount)
+        #  DebitImputation(account_number, amount)
 
-        transaction = Transaction(date,
-                                  self._make_imputation_pairs(debit),
-                                  self._make_imputation_pairs(credit),
-                                  description)
-        self.log_transaction_object(transaction)
+        sequence_number = self._last_id
+        journal_entry = JournalEntry(sequence_number,
+                                     date,
+                                     description,
+                                     document,
+                                     self._make_imputation_pairs(debit),
+                                     self._make_imputation_pairs(credit)
+        )
+        self.log_entry_object(journal_entry)
+
+####################################################################################################
+
+class Journals(object):
+
+    ##############################################
+
+    def __init__(self, account_chart, journals):
+
+        self._journals = {label:Journal(label, description, account_chart)
+                          for label, description in journals}
+
+    ##############################################
+
+    def __getitem__(self, label):
+
+        return self._journals[label]
+
+    ##############################################
+
+    def __iter__(self):
+
+        return iter(self._journals.values())
+
+####################################################################################################
+
+class FinancialPeriod(object):
+
+    ##############################################
+
+    def __init__(self,
+                 account_chart,
+                 journals,
+                 start_date,
+                 stop_date
+    ):
+
+        # Fixme: template
+        self._account_chart = account_chart
+        self._journals = Journals(account_chart, journals)
+        
+        self._start_date = start_date
+        self._stop_date = stop_date
+
+    ##############################################
+
+    @property
+    def account_chart(self):
+        return self._account_chart
+
+    ##############################################
+
+    @property
+    def journals(self):
+        return self._journals
+
+    ##############################################
+
+    @property
+    def start_date(self):
+        return self._start_date
+
+    ##############################################
+
+    @property
+    def stop_date(self):
+        return self._stop_date
 
 ####################################################################################################
 #

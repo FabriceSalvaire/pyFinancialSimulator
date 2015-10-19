@@ -20,16 +20,16 @@
 
 ####################################################################################################
 
-from FinancialSimulator.Accounting import UnplannedTransaction
-from .Actions import (SingleTransactionAction,
-                      MonthlyTransactionAction,
-                      QuaterlyTransactionAction,
-                      AnnualTransactionAction,
+from FinancialSimulator.Accounting import UnplannedJournalEntry
+from .Actions import (SingleJournalEntryAction,
+                      MonthlyJournalEntryAction,
+                      QuaterlyJournalEntryAction,
+                      AnnualJournalEntryAction,
 )
 
 ####################################################################################################
 
-class TransactionActionFactory(object):
+class JournalEntryActionFactory(object):
 
     ##############################################
 
@@ -52,13 +52,13 @@ class TransactionActionFactory(object):
 
         recurrence = transaction_definition.recurrence
         if recurrence == 'single':
-            class_action = SingleTransactionAction
+            class_action = SingleJournalEntryAction
         elif recurrence == 'mensuel':
-            class_action = MonthlyTransactionAction
+            class_action = MonthlyJournalEntryAction
         elif recurrence == 'trimestriel':
-            class_action = QuaterlyTransactionAction
+            class_action = QuaterlyJournalEntryAction
         elif recurrence == 'annuel':
-            class_action = AnnualTransactionAction
+            class_action = AnnualJournalEntryAction
         else:
             raise NameError(recurrence)
 
@@ -66,7 +66,7 @@ class TransactionActionFactory(object):
         # Fixme:
         debit = journal._make_imputation_pairs(transaction_definition.debit)
         credit = journal._make_imputation_pairs(transaction_definition.credit)
-        transaction = UnplannedTransaction(debit, credit, transaction_definition.description)
+        transaction = UnplannedJournalEntry(transaction_definition.description, debit, credit)
 
         return  class_action(journal, transaction_definition.date, transaction)
 

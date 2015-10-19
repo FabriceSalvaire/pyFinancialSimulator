@@ -27,8 +27,8 @@
 	<tbody>
 	  {% for account in accounts %}
 	    <tr>
-	      <th scope="row">{{ account.code }}</th>
-	      <td>{{ account.name }}</td>
+	      <th scope="row">{{ account.number }}</th>
+	      <td>{{ account.description }}</td>
 	      <td class="text-right">{{ '%0.2f'| format(account.debit | round(2)) }} €</td>
 	      <td class="text-right">{{ '%0.2f'| format(account.credit | round(2)) }} €</td>
 	      <td class="text-right">{{ '%0.2f'| format(account.balance | round(2)) }} €</td>

@@ -71,9 +71,9 @@ class Variables(dict):
 
 ####################################################################################################
 
-class TransactionDefinition(object):
+class JournalEntryDefinition(object):
 
-    _logger = _module_logger.getChild('Transactions')
+    _logger = _module_logger.getChild('JournalEntrys')
 
     ##############################################
 
@@ -164,7 +164,7 @@ class YamlUnit(object):
                 transaction[key] = value
                 self._logger.info('{} = {}'.format(key, value))
         
-        return TransactionDefinition(transaction)
+        return JournalEntryDefinition(transaction)
 
     ##############################################
 

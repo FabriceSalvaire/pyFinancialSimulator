@@ -33,7 +33,7 @@ main = Blueprint('main', __name__, url_prefix='/main')
 @main.route('/')
 def index():
     journals = [journal for journal in model.journals.values()]
-    journals.sort(key=lambda journal: journal.name)
+    journals.sort(key=lambda journal: journal.label)
     return render_template('main.html', journals=journals)
 
 @main.route('/account_chart')
@@ -41,9 +41,9 @@ def account_chart():
     accounts = [account for account in model.account_chart if account.has_imputations()]
     return render_template('account_chart.html', accounts=accounts)
 
-@main.route('/journal/<name>')
-def journal(name):
-    journal = model.journals[name]
+@main.route('/journal/<label>')
+def journal(label):
+    journal = model.journals[label]
     return render_template('journal.html', journal=journal)
 
 ####################################################################################################

@@ -10,7 +10,7 @@
       <h2>Journals</h2>
       <ul>
 	{% for journal in journals %}
-	  <li><a href="/main/journal/{{ journal.code }}">{{ journal.name }} ({{ journal.code }})</a></li>
+	  <li><a href="/main/journal/{{ journal.label }}">{{ journal.description }} ({{ journal.label }})</a></li>
 	{% endfor %}
       </ul>
       <h2>Tableaux de synthèse</h2>

@@ -28,7 +28,7 @@ from FinancialSimulator.Scheduler import (SingleAction,
 
 ####################################################################################################
 
-class TransactionActionMixin(object):
+class JournalEntryActionMixin(object):
 
     ##############################################
 
@@ -41,11 +41,11 @@ class TransactionActionMixin(object):
 
     def run(self, date):
 
-        self._journal.log_transaction_object(self._transaction.plan(date))
+        self._journal.log_entry_object(self._transaction.plan(date))
 
 ####################################################################################################
 
-class SingleTransactionAction(TransactionActionMixin, SingleAction):
+class SingleJournalEntryAction(JournalEntryActionMixin, SingleAction):
 
     ##############################################
 
@@ -53,11 +53,11 @@ class SingleTransactionAction(TransactionActionMixin, SingleAction):
 
         # Fixme: transaction has date
         SingleAction.__init__(self, date, transaction.description)
-        TransactionActionMixin.__init__(self, journal, transaction)
+        JournalEntryActionMixin.__init__(self, journal, transaction)
 
 ####################################################################################################
 
-class MonthlyTransactionAction(TransactionActionMixin, MonthlyAction):
+class MonthlyJournalEntryAction(JournalEntryActionMixin, MonthlyAction):
 
     ##############################################
 
@@ -65,29 +65,29 @@ class MonthlyTransactionAction(TransactionActionMixin, MonthlyAction):
 
         # Fixme: transaction has date
         MonthlyAction.__init__(self, date, transaction.description)
-        TransactionActionMixin.__init__(self, journal, transaction)
+        JournalEntryActionMixin.__init__(self, journal, transaction)
 
 ####################################################################################################
 
-class QuaterlyTransactionAction(TransactionActionMixin, QuaterlyAction):
+class QuaterlyJournalEntryAction(JournalEntryActionMixin, QuaterlyAction):
 
     ##############################################
 
     def __init__(self, journal, date, transaction):
 
         QuaterlyAction.__init__(self, date, transaction.description)
-        TransactionActionMixin.__init__(self, journal, transaction)
+        JournalEntryActionMixin.__init__(self, journal, transaction)
 
 ####################################################################################################
 
-class AnnualTransactionAction(TransactionActionMixin, AnnualAction):
+class AnnualJournalEntryAction(JournalEntryActionMixin, AnnualAction):
 
     ##############################################
 
     def __init__(self, journal, date, transaction):
 
         AnnualAction.__init__(self, date, transaction.description)
-        TransactionActionMixin.__init__(self, journal, transaction)
+        JournalEntryActionMixin.__init__(self, journal, transaction)
 
 ####################################################################################################
 #

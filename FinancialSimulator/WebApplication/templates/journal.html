@@ -33,7 +33,7 @@
 	    {% for imputation in transaction.iter_on_debits() %}
 	      <tr>
 		<th scope="row"></th>
-		<td>{{ imputation.account.code }}: {{ imputation.account.name }}</td>
+		<td>{{ imputation.account.number }}: {{ imputation.account.description }}</td>
 		<td class="text-right">{{ '%0.2f'| format(imputation.amount | round(2)) }} €</td>
 		<td></td>
 	      </tr>
@@ -41,7 +41,7 @@
 	    {% for imputation in transaction.iter_on_credits() %}
 	      <tr>
 		<th scope="row"></th>
-		<td>{{ imputation.account.code }}: {{ imputation.account.name }}</td>
+		<td>{{ imputation.account.number }}: {{ imputation.account.description }}</td>
 		<td></td>
 		<td class="text-right">{{ '%0.2f'| format(imputation.amount | round(2)) }} €</td>
 	      </tr>
