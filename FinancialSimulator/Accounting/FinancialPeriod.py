@@ -25,7 +25,7 @@ import logging
 ####################################################################################################
 
 from .AccountChart import Account, AccountChart
-from .Journal import Journals
+from .Journal import Journal
 
 ####################################################################################################
 
@@ -40,8 +40,6 @@ class AccountSnapshot(Account):
     ##############################################
 
     def __init__(self, account, parent=None):
-
-        # , debit=0, credit=0
 
         super(AccountSnapshot, self). __init__(account.number,
                                                account.description,
@@ -153,18 +151,9 @@ class AccountSnapshot(Account):
         
         self.inner_balance_is_dirty()
         if imputation.is_debit():
-            operation = 'Debit'
             self._inner_debit += imputation.amount
         else:
-            operation = 'Credit'
             self._inner_credit += imputation.amount
-        message = '{} on {}: {} {} ({})'.format(operation,
-                                                self._number,
-                                                imputation.amount,
-                                                self._devise,
-                                                imputation.description,
-        )
-        self._logger.info(message)
 
 ####################################################################################################
 
@@ -191,6 +180,29 @@ class AccountChartSnapshot(AccountChart):
 
         for account in self:
             account.reset()
+
+####################################################################################################
+
+class Journals(object):
+
+    ##############################################
+
+    def __init__(self, account_chart, journals):
+
+        self._journals = {label:Journal(label, description, account_chart)
+                          for label, description in journals}
+
+    ##############################################
+
+    def __getitem__(self, label):
+
+        return self._journals[label]
+
+    ##############################################
+
+    def __iter__(self):
+
+        return iter(self._journals.values())
 
 ####################################################################################################
 

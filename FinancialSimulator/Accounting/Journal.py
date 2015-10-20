@@ -35,6 +35,8 @@ _module_logger = logging.getLogger(__name__)
 
 class Imputation(object):
 
+    _logger = _module_logger.getChild('Imputation')
+
     ##############################################
 
     def __init__(self, _journal_entry, account, amount):
@@ -89,6 +91,19 @@ class Imputation(object):
 
         # Fixme: simulation vs accounting
         # apply
+
+        if self.is_debit():
+            operation = 'Debit'
+        else:
+            operation = 'Credit'
+        message = '{} on {}: {} {} ({})'.format(operation,
+                                                self._account.number,
+                                                self.amount,
+                                                self._account.devise,
+                                                self.description,
+        )
+        self._logger.info(message)
+        
         self._account.run_imputation(self)
 
 ####################################################################################################
@@ -388,29 +403,6 @@ class Journal(object):
                                      self._make_imputation_pairs(credit)
         )
         self.log_entry_object(journal_entry)
-
-####################################################################################################
-
-class Journals(object):
-
-    ##############################################
-
-    def __init__(self, account_chart, journals):
-
-        self._journals = {label:Journal(label, description, account_chart)
-                          for label, description in journals}
-
-    ##############################################
-
-    def __getitem__(self, label):
-
-        return self._journals[label]
-
-    ##############################################
-
-    def __iter__(self):
-
-        return iter(self._journals.values())
 
 ####################################################################################################
 #
