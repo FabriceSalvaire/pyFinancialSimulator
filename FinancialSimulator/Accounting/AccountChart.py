@@ -46,19 +46,19 @@ def load_account_chart(country_code):
     parent = [None]
     current_level = 1
     for account_definition in data['plan']:
-        code = str(account_definition['code'])
-        name = account_definition['description']
+        number = int(account_definition['code'])
+        description = account_definition['description']
         comment = account_definition.get('commentaire', '')
         system = account_definition['système']
-        item_level = len(code)
+        item_level = len(str(number))
         if item_level > current_level:
             parent.append(previous)
             current_level = item_level
         elif item_level < current_level:
             parent = parent[:item_level-current_level]
             current_level = item_level
-        account = Account(code, name, parent=parent[-1], comment=comment, system=system)
-        account_chart.add_account(account)
+        account = Account(number, description, parent=parent[-1], comment=comment, system=system)
+        account_chart.add_node(account)
         previous = account
     
     return account_chart

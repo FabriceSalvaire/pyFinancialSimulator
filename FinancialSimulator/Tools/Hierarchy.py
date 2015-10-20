@@ -114,7 +114,13 @@ class Hierarchy(object):
 
     ##############################################
 
-    def depth_first_search(self):
+    def __getitem__(self, node_hash):
+
+        return self._nodes[node_hash]
+
+    ##############################################
+
+    def __iter__(self):
 
         for root_node in self._root_nodes:
             yield from root_node.depth_first_search()

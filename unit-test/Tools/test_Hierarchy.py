@@ -101,7 +101,7 @@ class TestHierarchy(unittest.TestCase):
         hierarchy = Hierarchy()
         for node in (node_1, node_2, node_3):
             hierarchy.add_node(node)
-        flat_list = [node for node in hierarchy.depth_first_search()]
+        flat_list = [node for node in hierarchy]
         flat_list_true = [
             node_1, node_11,
             node_2, node_21,
