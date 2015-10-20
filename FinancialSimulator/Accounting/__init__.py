@@ -20,6 +20,7 @@
 
 ####################################################################################################
 
+import datetime
 import logging
 
 ####################################################################################################
@@ -57,8 +58,6 @@ class AccountingDocument(object):
 
 class Imputation(object):
 
-    __letter__ = ''
-
     ##############################################
 
     def __init__(self, _journal_entry, account, amount):
@@ -87,27 +86,51 @@ class Imputation(object):
 
     ##############################################
 
+    def is_debit(self):
+        raise NotImplementedError
+
+    ##############################################
+
+    def is_credit(self):
+        return not self.is_debit()
+
+    ##############################################
+
     def __str__(self):
 
-        return '{} {:>10}: {:>10} {}'.format(self.__letter__, self._account.number,
-                                             self._amount, self._account.devise)
+        if self.is_debit():
+            letter = 'D'
+        else:
+            letter = 'C'
+        string_format = '{} {:>10}: {:>10} {}'
+        return string_format.format(letter, self._account.number,
+                                    self._amount, self._account.devise)
 
     ##############################################
 
     def run(self):
 
         # Fixme: simulation vs accounting
+        # apply
         self._account.run_imputation(self)
 
 ####################################################################################################
 
 class DebitImputation(Imputation):
-    __letter__ = 'D'
+
+    ##############################################
+
+    def is_debit(self):
+        return True
 
 ####################################################################################################
 
 class CreditImputation(Imputation):
-    __letter__ = 'C'
+
+    ##############################################
+
+    def is_debit(self):
+        return False
 
 ####################################################################################################
 
@@ -121,7 +144,6 @@ class UnplannedJournalEntry(object):
 
         self._description = description
         
-        # Fixme: keep debit/credit ?
         self._debit = {account.number:DebitImputation(self, account, float(amount))
                        for account, amount in debit_pairs}
         self._credit = {account.number:CreditImputation(self, account, float(amount))
@@ -129,6 +151,12 @@ class UnplannedJournalEntry(object):
         self._imputations = dict(self._debit)
         self._imputations.update(self._credit)
         
+        self._check()
+
+    ##############################################
+
+    def _check(self):
+
         sum_of_debits = self.sum_of_debits()
         sum_of_credits = self.sum_of_credits()
         if sum_of_debits != sum_of_credits:
@@ -219,7 +247,7 @@ class UnplannedJournalEntry(object):
         obj = JournalEntry.__new__(JournalEntry)
         obj.__dict__.update(self.__dict__)
         obj._date = date
-        # Fixme:
+        # Fixme: !!!
         obj._id = 1
         obj._document = ''
         obj._validation_date = '2016-01-01'
@@ -290,6 +318,25 @@ class JournalEntry(UnplannedJournalEntry):
             message += '\n'.join([str(imputation) for imputation in imputations.values()])
             message += '\n'
         return message
+
+    ##############################################
+
+    def validate(self):
+
+        if self._validation_date is not None:
+            self._validation_date = datetime.datetime.utcnow()
+        else:
+            raise NameError('Journal entry is already validated')
+
+    ##############################################
+
+    def reconcile(self, reconciliation_id):
+
+        if self._reconciliation_date is not None:
+            self._reconciliation_id = reconciliation_id
+            self._reconciliation_date = datetime.datetime.utcnow()
+        else:
+            raise NameError('Journal entry is already cleared')
 
 ####################################################################################################
 
