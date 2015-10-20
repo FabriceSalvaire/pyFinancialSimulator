@@ -38,35 +38,18 @@ class Account(object):
                  parent=None,
                  devise='€',
                  comment='',
-                 system='',
-                 initial_balance=0):
+                 system=''):
 
-        self._description = description
         self._number = number
+        self._description = description
         self._comment = comment
-        self._system = system
-        
+        self._system = system # PCG Fr: classe, base, abrégé, développé
+        self._devise = devise
         self._parent = parent
+        #
         self._siblings = set()
         if parent is not None:
             parent.add_child(self)
-        
-        self._initial_balance = initial_balance
-        self._devise = devise
-        
-        self.reset()
-
-    ##############################################
-
-    def reset(self):
-
-        self._inner_credit = 0
-        self._inner_debit = 0
-        self._inner_balance = None
-        
-        self._credit = None
-        self._debit = None
-        self._balance = None
 
     ##############################################
 
@@ -100,6 +83,18 @@ class Account(object):
 
     ##############################################
 
+    @property
+    def parent(self):
+        return self._parent
+
+    ##############################################
+
+    @property
+    def siblings(self):
+        return self._siblings
+
+    ##############################################
+
     def __str__(self):
         return '#' + self._number
 
@@ -125,20 +120,134 @@ class Account(object):
 
     def add_child(self, child):
 
-        self.balance_is_dirty()
+        # Fixme: self.balance_is_dirty()
         self._siblings.add(child)
 
-    ##############################################
+####################################################################################################
 
-    @property
-    def parent(self):
-        return self._parent
+class AccountChart(object):
 
     ##############################################
 
+    def __init__(self, name):
+
+        self._name = name
+        self._accounts = {}
+        self._flat_hierarchy = None
+        self._root_accounts = []
+
+    ##############################################
+
     @property
-    def siblings(self):
-        return self._siblings
+    def name(self):
+
+        return self._name
+
+    ##############################################
+
+    def add_account(self, account):
+
+        self._accounts[account.number] = account
+
+    ##############################################
+
+    def _build_sibling_hierarchy(self, account):
+
+        siblings = list(account.siblings)
+        siblings.sort(key=lambda x: x.number)
+        for sibling in siblings:
+            yield sibling
+            yield from self._build_sibling_hierarchy(sibling)
+
+    ##############################################
+
+    def _build_hierarchy(self):
+
+        # Fixme: can simplify using str sort
+
+        root_accounts = []
+        for account in self._accounts.values():
+            if account.parent is None:
+                root_accounts.append(account)
+        root_accounts.sort(key=lambda x: x.number)
+        
+        flat_hierarchy = []
+        for account in root_accounts:
+            flat_hierarchy.append(account)
+            for item in self._build_sibling_hierarchy(account):
+                flat_hierarchy.append(item)
+        
+        self._root_accounts = root_accounts
+        self._flat_hierarchy = flat_hierarchy
+
+    ##############################################
+
+    def __getitem__(self, number):
+
+        return self._accounts[number]
+
+    ##############################################
+
+    def __iter__(self):
+
+        if self._flat_hierarchy is None:
+            self._build_hierarchy()
+        return iter(self._flat_hierarchy)
+
+    ##############################################
+
+    def _breadth_first_search(self, node, visitor):
+
+        visitor(node)
+        for sibling in node.siblings:
+            visitor(sibling)
+            self._breadth_first_search(sibling)
+
+    ##############################################
+
+    def breadth_first_search(self, visitor):
+
+        if self._flat_hierarchy is None:
+            self._build_hierarchy()
+        for root in self._root_accounts:
+            self._breadth_first_search(root, visitor)
+
+####################################################################################################
+
+class AccountSnapshot(Account):
+
+    _logger = _module_logger.getChild('AccountSnapshot')
+
+    ##############################################
+
+    def __init__(self, account, debit=0, credit=0):
+
+        super(AccountSnapshot, self). __init__(account.number,
+                                               account.description,
+                                               account.devise,
+                                               account.comment,
+                                               account.system)
+        
+        self.reset()
+
+    ##############################################
+
+    def reset(self):
+
+        self._inner_credit = 0
+        self._inner_debit = 0
+        self._inner_balance = None
+        
+        self._credit = None
+        self._debit = None
+        self._balance = None
+
+    ##############################################
+
+    def add_child(self, child):
+
+        self.balance_is_dirty()
+        super(AccountSnapshot, self).add_child(child)
 
     ##############################################
 
@@ -188,7 +297,7 @@ class Account(object):
     @property
     def credit(self):
 
-        # Fxime: solde créditeur
+        # Fixme: solde créditeur
         if self._balance is None:
             self._compute_balance()
         return self._credit
@@ -237,69 +346,11 @@ class Account(object):
 
 ####################################################################################################
 
-class AccountChart(object):
+class AccountChartSnapshot(object):
 
     ##############################################
 
-    def __init__(self, name):
-
-        self._name = name
-        self._accounts = {}
-        self._flat_hierarchy = None
-
-    ##############################################
-
-    @property
-    def name(self):
-
-        return self._name
-
-    ##############################################
-
-    def add_account(self, account):
-
-        self._accounts[account.number] = account
-
-    ##############################################
-
-    def __getitem__(self, number):
-
-        return self._accounts[number]
-
-    ##############################################
-
-    def __iter__(self):
-
-        if self._flat_hierarchy is None:
-            self._build_hierarchy()
-        return iter(self._flat_hierarchy)
-
-    ##############################################
-
-    def _build_sibling_hierarchy(self, account):
-
-        siblings = list(account.siblings)
-        siblings.sort(key=lambda x: x.number)
-        for sibling in siblings:
-            yield sibling
-            yield from self._build_sibling_hierarchy(sibling)
-
-    ##############################################
-
-    def _build_hierarchy(self):
-
-        root_accounts = []
-        for account in self._accounts.values():
-            if account.parent is None:
-                root_accounts.append(account)
-        root_accounts.sort(key=lambda x: x.number)
-        
-        flat_hierarchy = []
-        for account in root_accounts:
-            flat_hierarchy.append(account)
-            for item in self._build_sibling_hierarchy(account):
-                flat_hierarchy.append(item)
-        self._flat_hierarchy = flat_hierarchy
+    def __init__(self, account_chart):
 
     ##############################################
 
