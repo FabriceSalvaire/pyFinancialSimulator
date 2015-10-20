@@ -20,48 +20,59 @@
 
 ####################################################################################################
 
-import os
-import yaml
+import logging
 
 ####################################################################################################
 
-from .Account import Account, AccountChart
+from .Journal import Journals
 
 ####################################################################################################
 
-_account_charts = {
-    'fr': 'plan-comptable-francais.yml',
-}
+_module_logger = logging.getLogger(__name__)
 
-def load_account_chart(country_code):
+####################################################################################################
 
-    yaml_path = os.path.join(os.path.dirname(__file__), country_code, _account_charts[country_code])
-    with open(yaml_path, 'r') as f:
-        data = yaml.load(f.read())
+class FinancialPeriod(object):
 
-    metadata = data['metadata']
-    account_chart = AccountChart(name=metadata['name'])
-    
-    previous = None
-    parent = [None]
-    current_level = 1
-    for account_definition in data['plan']:
-        code = str(account_definition['code'])
-        name = account_definition['description']
-        comment = account_definition.get('commentaire', '')
-        system = account_definition['système']
-        item_level = len(code)
-        if item_level > current_level:
-            parent.append(previous)
-            current_level = item_level
-        elif item_level < current_level:
-            parent = parent[:item_level-current_level]
-            current_level = item_level
-        account = Account(code, name, parent=parent[-1], comment=comment, system=system)
-        account_chart.add_account(account)
-        previous = account
-    
-    return account_chart
+    ##############################################
+
+    def __init__(self,
+                 account_chart,
+                 journals,
+                 start_date,
+                 stop_date
+    ):
+
+        # Fixme: template
+        self._account_chart = account_chart
+        self._journals = Journals(account_chart, journals)
+        
+        self._start_date = start_date
+        self._stop_date = stop_date
+
+    ##############################################
+
+    @property
+    def account_chart(self):
+        return self._account_chart
+
+    ##############################################
+
+    @property
+    def journals(self):
+        return self._journals
+
+    ##############################################
+
+    @property
+    def start_date(self):
+        return self._start_date
+
+    ##############################################
+
+    @property
+    def stop_date(self):
+        return self._stop_date
 
 ####################################################################################################
 #

@@ -20,48 +20,34 @@
 
 ####################################################################################################
 
-import os
-import yaml
+import logging
 
 ####################################################################################################
 
-from .Account import Account, AccountChart
+_module_logger = logging.getLogger(__name__)
 
 ####################################################################################################
 
-_account_charts = {
-    'fr': 'plan-comptable-francais.yml',
-}
+class AccountingDocument(object):
 
-def load_account_chart(country_code):
+    ##############################################
 
-    yaml_path = os.path.join(os.path.dirname(__file__), country_code, _account_charts[country_code])
-    with open(yaml_path, 'r') as f:
-        data = yaml.load(f.read())
+    def __init__(self, number, date):
 
-    metadata = data['metadata']
-    account_chart = AccountChart(name=metadata['name'])
-    
-    previous = None
-    parent = [None]
-    current_level = 1
-    for account_definition in data['plan']:
-        code = str(account_definition['code'])
-        name = account_definition['description']
-        comment = account_definition.get('commentaire', '')
-        system = account_definition['système']
-        item_level = len(code)
-        if item_level > current_level:
-            parent.append(previous)
-            current_level = item_level
-        elif item_level < current_level:
-            parent = parent[:item_level-current_level]
-            current_level = item_level
-        account = Account(code, name, parent=parent[-1], comment=comment, system=system)
-        account_chart.add_account(account)
-        previous = account
-    
-    return account_chart
+        self._number = number # Fixme: id
+        self._date = date
+
+    ##############################################
+
+    @property
+    def number(self):
+        return self._number
+
+    ##############################################
+
+    @property
+    def date(self):
+        return self._date
 
 ####################################################################################################
 #
