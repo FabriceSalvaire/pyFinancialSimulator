@@ -94,8 +94,8 @@ class AccountInterval(object):
 
     def __iter__(self):
 
-        for code in range(int(self._name_inf), int(self._name_sup) +1):
-            yield str(code)
+        for number in range(int(self._name_inf), int(self._name_sup) +1):
+            yield str(number)
 
 ####################################################################################################
 

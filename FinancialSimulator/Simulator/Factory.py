@@ -20,7 +20,7 @@
 
 ####################################################################################################
 
-from FinancialSimulator.Accounting import UnplannedJournalEntry
+from FinancialSimulator.Accounting.Journal import UnplannedJournalEntry
 from .Actions import (SingleJournalEntryAction,
                       MonthlyJournalEntryAction,
                       QuaterlyJournalEntryAction,

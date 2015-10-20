@@ -24,6 +24,7 @@ import logging
 
 ####################################################################################################
 
+from .Account import AccountChartSnapshot
 from .Journal import Journals
 
 ####################################################################################################
@@ -43,9 +44,8 @@ class FinancialPeriod(object):
                  stop_date
     ):
 
-        # Fixme: template
-        self._account_chart = account_chart
-        self._journals = Journals(account_chart, journals)
+        self._account_chart = AccountChartSnapshot(account_chart)
+        self._journals = Journals(self._account_chart, journals)
         
         self._start_date = start_date
         self._stop_date = stop_date

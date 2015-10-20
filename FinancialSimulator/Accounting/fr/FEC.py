@@ -100,7 +100,7 @@ class FecWriter(object):
                 for imputation in iterator:
                     with xf.element('ligne'):
                         with xf.element('CompteNum'):
-                            number = imputation.account.number
+                            number = str(imputation.account.number)
                             l = 3 - len(number)
                             if l:
                                 number += '0' * l

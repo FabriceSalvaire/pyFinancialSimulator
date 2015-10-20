@@ -147,8 +147,8 @@ class AccountEvaluator(Evaluator):
 
         # Fixme: check
         value = 0
-        for code in statement:
-            value += self.eval_Account(level, code)
+        for number in statement:
+            value += self.eval_Account(level, number)
         return value
 
 ####################################################################################################

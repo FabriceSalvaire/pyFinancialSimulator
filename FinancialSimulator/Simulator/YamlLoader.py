@@ -86,11 +86,11 @@ class JournalEntryDefinition(object):
         self._credit = {}
         for key, value in self._definition.items():
             if key.startswith('debit'):
-                account_code = key[len('debit '):]
-                self._debit[account_code] = value
+                account_number = int(key[len('debit '):])
+                self._debit[account_number] = value
             elif key.startswith('credit'):
-                account_code = key[len('credit '):]
-                self._credit[account_code] = value
+                account_number = int(key[len('credit '):])
+                self._credit[account_number] = value
 
     ##############################################
 
