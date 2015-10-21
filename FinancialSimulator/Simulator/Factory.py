@@ -20,7 +20,7 @@
 
 ####################################################################################################
 
-from FinancialSimulator.Accounting.Journal import UnplannedJournalEntry
+from FinancialSimulator.Accounting.Journal import JournalEntryTemplate
 from .Actions import (SingleJournalEntryAction,
                       MonthlyJournalEntryAction,
                       QuaterlyJournalEntryAction,
@@ -66,7 +66,7 @@ class JournalEntryActionFactory(object):
         # Fixme:
         debit = journal._make_imputation_pairs(transaction_definition.debit)
         credit = journal._make_imputation_pairs(transaction_definition.credit)
-        transaction = UnplannedJournalEntry(transaction_definition.description, debit, credit)
+        transaction = JournalEntryTemplate(transaction_definition.description, debit, credit)
 
         return  class_action(journal, transaction_definition.date, transaction)
 

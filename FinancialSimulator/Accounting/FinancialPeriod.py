@@ -35,6 +35,8 @@ _module_logger = logging.getLogger(__name__)
 
 class AccountSnapshot(Account):
 
+    # Fixme: AccountSnapshot / AccountBalance ?
+
     _logger = _module_logger.getChild('AccountSnapshot')
 
     ##############################################
@@ -72,6 +74,7 @@ class AccountSnapshot(Account):
     ##############################################
 
     def balance_is_dirty(self):
+
         self._balance = None
 
     ##############################################
@@ -139,21 +142,36 @@ class AccountSnapshot(Account):
 
     ##############################################
 
-    def run_imputation(self, imputation):
+    def _apply_debit_credit(self, amount):
 
-        # Fixme:
-        # imputation: (account, type, amount) -> update
-        # -> debit/credit function
-        # move number to imputation ?
-
-        if imputation.account is not self:
-            raise NameError("Account mismatch")
-        
+        # Fixme: <=
+        if amount < 0:
+            raise ValueError("Amount must be positive")
         self.inner_balance_is_dirty()
-        if imputation.is_debit():
-            self._inner_debit += imputation.amount
-        else:
-            self._inner_credit += imputation.amount
+
+    ##############################################
+
+    def apply_debit(self, amount):
+
+        self._apply_debit_credit(amount)
+        self._inner_debit += amount
+
+    ##############################################
+
+    def apply_credit(self, amount):
+
+        self._apply_debit_credit(amount)
+        self._inner_credit += amount
+
+    ##############################################
+
+    def force_balance(self, debit=0, credit=0):
+
+        if debit < 0 or credit < 0:
+            raise ValueError("Amount must be positive")
+        self.inner_balance_is_dirty()
+        self._inner_debit = debit
+        self._inner_credit = credit
 
 ####################################################################################################
 

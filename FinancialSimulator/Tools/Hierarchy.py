@@ -76,6 +76,11 @@ class Node(object):
 
 ####################################################################################################
 
+class NonExistingNodeError(Exception):
+    pass
+
+####################################################################################################
+
 class Hierarchy(object):
 
     ##############################################
@@ -116,7 +121,10 @@ class Hierarchy(object):
 
     def __getitem__(self, node_hash):
 
-        return self._nodes[node_hash]
+        try:
+            return self._nodes[node_hash]
+        except KeyError:
+            raise NonExistingNodeError(node_hash)
 
     ##############################################
 

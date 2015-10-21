@@ -23,8 +23,7 @@
 from FinancialSimulator.Scheduler import (SingleAction,
                                           MonthlyAction,
                                           QuaterlyAction,
-                                          AnnualAction,
-)
+                                          AnnualAction)
 
 ####################################################################################################
 
@@ -41,7 +40,8 @@ class JournalEntryActionMixin(object):
 
     def run(self, date):
 
-        self._journal.log_entry_object(self._transaction.plan(date))
+        journal_entry = self._journal.log_template(date, self._transaction)
+        journal_entry.validate()
 
 ####################################################################################################
 

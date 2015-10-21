@@ -88,11 +88,11 @@ class FecWriter(object):
             with xf.element('PieceDate'):
                 xf.write('2016-01-01') # entry.document.date.isoformat()
             with xf.element('EcritureLet'):
-                xf.write(entry.reconciliation_id)
+                xf.write('L1') # entry.reconciliation_id)
             with xf.element('DateLet'):
-                xf.write(entry.reconciliation_date) # .isoformat()
+                xf.write('2016-01-01') # entry.reconciliation_date.isoformat()
             with xf.element('ValidDate'):
-                xf.write(entry.validation_date) # .isoformat()
+                xf.write(entry.validation_date.isoformat())
             
             for iterator, name in ((entry.iter_on_debits(), 'Debit'),
                                    (entry.iter_on_credits(), 'Credit'),

@@ -26,10 +26,23 @@ import logging
 ####################################################################################################
 
 from FinancialSimulator.Units import round_currency
+from FinancialSimulator.Tools.Hierarchy import NonExistingNodeError
 
 ####################################################################################################
 
 _module_logger = logging.getLogger(__name__)
+
+####################################################################################################
+
+# Fixme: move
+class NegativeAmountError(ValueError):
+    pass
+
+class UnbalancedEntryError(NameError):
+    pass
+
+class DuplicatedEntryError(NameError):
+    pass
 
 ####################################################################################################
 
@@ -40,6 +53,9 @@ class Imputation(object):
     ##############################################
 
     def __init__(self, _journal_entry, account, amount):
+
+        if amount < 0:
+            raise NegativeAmountError()
 
         self._journal_entry = _journal_entry
         self._account = account
@@ -87,11 +103,11 @@ class Imputation(object):
 
     ##############################################
 
-    def run(self):
+    def apply(self):
 
         # Fixme: simulation vs accounting
-        # apply
 
+        # Fixme: cf. infra
         if self.is_debit():
             operation = 'Debit'
         else:
@@ -104,7 +120,10 @@ class Imputation(object):
         )
         self._logger.info(message)
         
-        self._account.run_imputation(self)
+        if self.is_debit():
+            self._account.apply_debit(self.amount)
+        else:
+            self._account.apply_credit(self.amount)
 
 ####################################################################################################
 
@@ -126,20 +145,18 @@ class CreditImputation(Imputation):
 
 ####################################################################################################
 
-class UnplannedJournalEntry(object):
+class JournalEntryMixin(object):
 
     ##############################################
 
     def __init__(self, description, debit_pairs, credit_pairs):
 
-        # Fixme: for simulation
-
         self._description = description
-        
+
         self._debit = {account.number:DebitImputation(self, account, float(amount))
                        for account, amount in debit_pairs}
         self._credit = {account.number:CreditImputation(self, account, float(amount))
-                       for account, amount in credit_pairs}
+                        for account, amount in credit_pairs}
         self._imputations = dict(self._debit)
         self._imputations.update(self._credit)
         
@@ -149,13 +166,20 @@ class UnplannedJournalEntry(object):
 
     def _check(self):
 
+        account_counter = {}
+        for account_number in list(self._debit.keys()) + list(self._credit.keys()):
+            if account_number in account_counter:
+                raise DuplicatedEntryError(account_number)
+            else:
+                account_counter[account_number] = 1
+        
         sum_of_debits = self.sum_of_debits()
         sum_of_credits = self.sum_of_credits()
         if sum_of_debits != sum_of_credits:
             message = "Journal Entry '{}' is not balanced D {} != C {}"
-            raise NameError(message.format(self._description,
-                                           sum_of_debits,
-                                           sum_of_credits))
+            raise UnbalancedEntryError(message.format(self._description,
+                                                      sum_of_debits,
+                                                      sum_of_credits))
 
     ##############################################
 
@@ -224,39 +248,39 @@ class UnplannedJournalEntry(object):
     def credits(self):
         return self._credit.values()
 
+####################################################################################################
+
+class JournalEntryTemplate(JournalEntryMixin):
+
+    # Fixme:
+
     ##############################################
 
-    def run(self):
+    def _make_imputation_pairs(self, imputations):
 
-        # Fixme: simulation
-        for imputation in self._imputations.values():
-            imputation.run()
+        return [(imputation.account, imputation.amount) for imputation in imputations.values()]
 
-    # ##############################################
+    ##############################################
 
-    def plan(self, date):
+    def debit_pairs(self):
 
-        obj = JournalEntry.__new__(JournalEntry)
-        obj.__dict__.update(self.__dict__)
-        obj._date = date
-        # Fixme: !!!
-        obj._id = 1
-        obj._document = ''
-        obj._validation_date = '2016-01-01'
-        obj._reconciliation_id = '1'
-        obj._reconciliation_date = '2016-01-01'
-        
-        return obj
+        return self._make_imputation_pairs(self._debit)
+
+    ##############################################
+
+    def credit_pairs(self):
+
+        return self._make_imputation_pairs(self._credit)
 
 ####################################################################################################
 
-class JournalEntry(UnplannedJournalEntry):
+class JournalEntry(JournalEntryMixin):
 
     ##############################################
 
     def __init__(self, sequence_number, date, description, document, debit_pairs, credit_pairs):
 
-        super(JournalEntry, self).__init__(description, debit_pairs, credit_pairs, description)
+        super(JournalEntry, self).__init__(description, debit_pairs, credit_pairs)
 
         self._id = sequence_number
         self._date = date
@@ -313,9 +337,16 @@ class JournalEntry(UnplannedJournalEntry):
 
     ##############################################
 
+    def apply(self):
+
+        for imputation in self._imputations.values():
+            imputation.apply()
+
+    ##############################################
+
     def validate(self):
 
-        if self._validation_date is not None:
+        if self._validation_date is None:
             self._validation_date = datetime.datetime.utcnow()
         else:
             raise NameError('Journal entry is already validated')
@@ -334,6 +365,12 @@ class JournalEntry(UnplannedJournalEntry):
 
 class Journal(object):
 
+    # Fixme:
+    # add/save entry = transaction
+    # how to rollback ? backup/restore snapshot
+    # update sequence number
+    # update account chart snapshot / update date
+
     ##############################################
 
     def __init__(self, label, description, account_chart):
@@ -342,7 +379,7 @@ class Journal(object):
         self._description = description
         self._account_chart = account_chart
         
-        self._last_id = 0
+        self._next_id = 0
         self._journal_entries = []
 
     ##############################################
@@ -369,40 +406,59 @@ class Journal(object):
 
         self._account_chart.reset()
         for journal_entry in self._journal_entries:
-            journal_entry.run()
-
-    ##############################################
-
-    def log_entry_object(self, journal_entry):
-
-        self._journal_entries.append(journal_entry)
-        journal_entry.run()
-        self._last_id += 1
+            journal_entry.apply()
 
     ##############################################
 
     def _make_imputation_pairs(self, imputations):
 
+        # Fixme: check account exists, account is unique, amount > 0
         return [(self._account_chart[account_number], amount)
                 for account_number, amount in imputations.items()]
 
     ##############################################
 
-    def log_entry(self, date, description, debit, credit, document=None):
+    def _log_entry(self, date, description, document, debit_pairs, credit_pairs):
 
         # Fixme:
         #  DebitImputation(account, amount)
         #  DebitImputation(account_number, amount)
 
-        sequence_number = self._last_id
-        journal_entry = JournalEntry(sequence_number,
-                                     date,
-                                     description,
-                                     document,
-                                     self._make_imputation_pairs(debit),
-                                     self._make_imputation_pairs(credit)
+        try:
+            sequence_number = self._next_id
+            journal_entry = JournalEntry(sequence_number,
+                                         date,
+                                         description,
+                                         document,
+                                         debit_pairs,
+                                         credit_pairs,
+            )
+            self._journal_entries.append(journal_entry)
+            self._next_id += 1
+            journal_entry.apply()
+        except NonExistingNodeError:
+            raise
+        
+        return journal_entry
+
+    ##############################################
+
+    def log_entry(self, date, description, debit, credit, document=None):
+
+        debit_pairs = self._make_imputation_pairs(debit)
+        credit_pairs = self._make_imputation_pairs(credit)
+        return self._log_entry(date, description, document, debit_pairs, credit_pairs)
+
+    ##############################################
+
+    def log_template(self, date, template, document=None):
+
+        return self._log_entry(date,
+                               template.description,
+                               document,
+                               template.debit_pairs(),
+                               template.credit_pairs(),
         )
-        self.log_entry_object(journal_entry)
 
 ####################################################################################################
 #
