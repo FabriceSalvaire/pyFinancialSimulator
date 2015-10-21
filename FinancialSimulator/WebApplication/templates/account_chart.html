@@ -11,10 +11,10 @@
       <h1>Plan Comptable Général Français</h1>
       <table class="table table-hover">
 	<col style="width:5%">
-	<col style="width:65%">
-	<col style="width:10%">
-	<col style="width:10%">
-	<col style="width:10%">
+	<col style="width:50%">
+	<col style="width:15%">
+	<col style="width:15%">
+	<col style="width:15%">
 	<thead>
 	  <tr>
 	    <th>Compte</th>
@@ -29,9 +29,9 @@
 	    <tr>
 	      <th scope="row">{{ account.number }}</th>
 	      <td>{{ account.description }}</td>
-	      <td class="text-right">{{ '%0.2f'| format(account.debit | round(2)) }} €</td>
-	      <td class="text-right">{{ '%0.2f'| format(account.credit | round(2)) }} €</td>
-	      <td class="text-right">{{ '%0.2f'| format(account.balance | round(2)) }} €</td>
+	      <td class="text-right">{{ account.debit_str }}</td>
+	      <td class="text-right">{{ account.credit_str }}</td>
+	      <td class="text-right">{{ account.balance_str }}</td>
 	    </tr>
 	  {% endfor %}
 	</tbody>

@@ -41,7 +41,13 @@ class Node(object):
 
     @property
     def siblings(self):
-        return self._siblings
+        # Fixme: to protect
+        return iter(self._siblings)
+
+    ##############################################
+
+    def __iter__(self):
+        return iter(self._siblings)
 
     ##############################################
 

@@ -24,6 +24,10 @@ import logging
 
 ####################################################################################################
 
+from FinancialSimulator.Tools.Hierarchy import NonExistingNodeError
+
+####################################################################################################
+
 _module_logger = logging.getLogger(__name__)
 
 ####################################################################################################
@@ -132,12 +136,12 @@ class AccountEvaluator(Evaluator):
 
         # Fixme: signed etc.
         try:
-            account = self._account_chart[str(statement)]
+            account = self._account_chart[int(statement)]
             if account.balance:
                 return account.debit
             else:
                 return account.credit
-        except KeyError:
+        except NonExistingNodeError:
             self._logger.warning("Account {} doesn't exist".format(str(statement)))
             return 0
 
@@ -148,6 +152,7 @@ class AccountEvaluator(Evaluator):
         # Fixme: check
         value = 0
         for number in statement:
+            # can raise NonExistingNodeError
             value += self.eval_Account(level, number)
         return value
 

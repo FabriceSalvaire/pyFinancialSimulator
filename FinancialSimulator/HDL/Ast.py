@@ -69,6 +69,9 @@ class Variable(object):
     def __str__(self):
         return self._name
 
+    def __int__(self):
+        return int(self._name)
+
 ####################################################################################################
 
 class Account(Variable):

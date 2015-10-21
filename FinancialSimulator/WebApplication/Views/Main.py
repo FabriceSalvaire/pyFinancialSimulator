@@ -32,7 +32,7 @@ main = Blueprint('main', __name__, url_prefix='/main')
 
 @main.route('/')
 def index():
-    journals = [journal for journal in model.journals.values()]
+    journals = [journal for journal in model.journals]
     journals.sort(key=lambda journal: journal.label)
     return render_template('main.html', journals=journals)
 

@@ -26,6 +26,7 @@ import logging
 
 from .AccountChart import Account, AccountChart
 from .Journal import Journal
+from FinancialSimulator.Tools.Currency import format_currency
 
 ####################################################################################################
 
@@ -133,6 +134,27 @@ class AccountSnapshot(Account):
         if self._balance is None:
             self._compute_balance()
         return self._debit
+
+    ##############################################
+
+    @property
+    def debit_str(self):
+
+        return format_currency(self.debit)
+
+    ##############################################
+
+    @property
+    def credit_str(self):
+
+        return format_currency(self.credit)
+
+    ##############################################
+
+    @property
+    def balance_str(self):
+
+        return format_currency(self.balance)
 
     ##############################################
 

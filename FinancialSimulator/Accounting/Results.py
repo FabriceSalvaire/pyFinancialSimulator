@@ -28,6 +28,7 @@ import yaml
 
 from FinancialSimulator.HDL.HdlParser import HdlAccountParser
 from FinancialSimulator.HDL.Evaluator import AccountEvaluator
+from FinancialSimulator.Tools import Hierarchy
 
 ####################################################################################################
 
@@ -35,31 +36,20 @@ _module_logger = logging.getLogger(__name__)
 
 ####################################################################################################
 
-class Node(object):
+class Node(Hierarchy.Node):
 
     ##############################################
 
     def __init__(self, level=0):
 
+        super(Node, self).__init__()
         self._level = level
-        self._siblings = []
 
     ##############################################
 
     @property
     def level(self):
         return self._level
-
-    ##############################################
-
-    def add_sibling(self, sibling):
-
-        self._siblings.append(sibling)
-
-    ##############################################
-
-    def __iter__(self):
-        return iter(self._siblings)
 
 ####################################################################################################
 
