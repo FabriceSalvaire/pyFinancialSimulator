@@ -3,6 +3,7 @@
 **************
 
 .. toctree::
+  Tools/Hierarchy
   Tools/Path
   Tools/Singleton
   Tools/__init__
