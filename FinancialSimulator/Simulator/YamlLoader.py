@@ -96,7 +96,7 @@ class JournalEntryDefinition(object):
 
     @property
     def journal(self):
-        return 'JOD'
+        return self._definition['journal']
 
     @property
     def date(self):
