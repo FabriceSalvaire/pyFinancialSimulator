@@ -100,6 +100,8 @@ class JournalEntryDefinition(object):
                     imputation_class = DebitImputationData
                 else:
                     imputation_class = CreditImputationData
+                if analytic_account is not None:
+                    analytic_account = int(analytic_account)
                 imputation = imputation_class(int(account), value, analytic_account)
                 self._imputations.append(imputation)
 

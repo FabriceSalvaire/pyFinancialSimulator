@@ -65,7 +65,8 @@ class JournalEntryActionFactory(object):
         journal = self._journals[transaction_definition.journal]
         # Fixme:
         account_chart = journal._account_chart
-        resolved_imputations = [imputation.resolve(account_chart)
+        analytic_account_chart = journal._analytic_account_chart
+        resolved_imputations = [imputation.resolve(account_chart, analytic_account_chart)
                                 for imputation in transaction_definition.imputations]
         transaction = JournalEntryTemplate(transaction_definition.description,
                                            resolved_imputations)

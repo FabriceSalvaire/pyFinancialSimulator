@@ -24,13 +24,14 @@ from flask import Flask
 
 ####################################################################################################
 
-def create_application(config_path, account_chart, journals):
+def create_application(config_path, account_chart, analytic_account_chart, journals):
 
     application = Flask(__name__)
 
     application.config.from_pyfile(config_path)
     # Fixme: right way?
     application.config['account_chart'] = account_chart
+    application.config['analytic_account_chart'] = analytic_account_chart
     application.config['journals'] = journals
 
     from .Model import model

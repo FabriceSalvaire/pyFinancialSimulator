@@ -3,12 +3,12 @@
 {% block body %}
   <ul class="breadcrumb">
     <li><a href="/main">Accueil</a></li>
-    <li class="active">Plan Comptable Général Français</li>
+    <li class="active">{{ account_chart.name }}</li>
   </ul>
 
   <div class="row">
     <div class="col-xl-12">
-      <h1>Plan Comptable Général Français</h1>
+      <h1>{{ account_chart.name }}</h1>
       <table class="table table-hover">
 	<col style="width:5%">
 	<col style="width:50%">

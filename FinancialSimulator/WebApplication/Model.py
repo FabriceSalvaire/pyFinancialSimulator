@@ -35,7 +35,9 @@ class Model(object):
     def init_app(self, application):
 
         self._application = application
+        # Fixme: FinancialPeriod
         self._account_chart = self._application.config['account_chart']
+        self._analytic_account_chart = self._application.config['analytic_account_chart']
         self._journals = self._application.config['journals']
 
     ##############################################
@@ -43,6 +45,12 @@ class Model(object):
     @property
     def account_chart(self):
         return self._account_chart
+
+    ##############################################
+
+    @property
+    def analytic_account_chart(self):
+        return self._analytic_account_chart
 
     ##############################################
 

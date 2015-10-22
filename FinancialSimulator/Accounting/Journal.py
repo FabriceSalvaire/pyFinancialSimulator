@@ -75,10 +75,14 @@ class ImputationData(object):
 
     ##############################################
 
-    def resolve(self, account_chart):
+    def resolve(self, account_chart, analytic_account_chart):
 
         account = account_chart[self.account]
-        return self.__class__(account, self.amount, self.analytic_account)
+        if self.analytic_account is not None:
+            analytic_account = analytic_account_chart[self.analytic_account]
+        else:
+            analytic_account = None
+        return self.__class__(account, self.amount, analytic_account)
 
     ##############################################
 
@@ -176,8 +180,12 @@ class Imputation(object):
         
         if self.is_debit():
             self._account.apply_debit(self.amount)
+            if self._analytic_account is not None:
+                self._analytic_account.apply_debit(self.amount)
         else:
             self._account.apply_credit(self.amount)
+            if self._analytic_account is not None:
+                self._analytic_account.apply_credit(self.amount)
 
 ####################################################################################################
 
@@ -396,11 +404,12 @@ class Journal(object):
 
     ##############################################
 
-    def __init__(self, label, description, account_chart):
+    def __init__(self, label, description, account_chart, analytic_account_chart):
 
         self._label = label
         self._description = description
         self._account_chart = account_chart
+        self._analytic_account_chart = analytic_account_chart
         
         self._next_id = 0
         self._journal_entries = []
@@ -453,7 +462,7 @@ class Journal(object):
     def log_entry(self, date, description, imputations, document=None):
 
         try:
-            resolved_imputations = [imputation.resolve(self._account_chart)
+            resolved_imputations = [imputation.resolve(self._account_chart, self._analytic_account_chart)
                                     for imputation in imputations]
             return self._log_entry(date, description, resolved_imputations, document)
         except NonExistingNodeError:

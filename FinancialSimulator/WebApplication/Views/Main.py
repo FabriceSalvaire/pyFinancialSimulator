@@ -39,7 +39,16 @@ def index():
 @main.route('/account_chart')
 def account_chart():
     accounts = [account for account in model.account_chart if account.has_imputations()]
-    return render_template('account_chart.html', accounts=accounts)
+    return render_template('account_chart.html',
+                           account_chart=model.account_chart,
+                           accounts=accounts)
+
+@main.route('/analytic_account_chart')
+def analytic_account_chart():
+    accounts = [account for account in model.analytic_account_chart if account.has_imputations()]
+    return render_template('account_chart.html',
+                           account_chart=model.analytic_account_chart,
+                           accounts=accounts)
 
 @main.route('/journal/<label>')
 def journal(label):

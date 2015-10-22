@@ -227,9 +227,9 @@ class Journals(object):
 
     ##############################################
 
-    def __init__(self, account_chart, journals):
+    def __init__(self, account_chart, analytic_account_chart, journals):
 
-        self._journals = {label:Journal(label, description, account_chart)
+        self._journals = {label:Journal(label, description, account_chart, analytic_account_chart)
                           for label, description in journals}
 
     ##############################################
@@ -252,13 +252,15 @@ class FinancialPeriod(object):
 
     def __init__(self,
                  account_chart,
+                 analytic_account_chart,
                  journals,
                  start_date,
                  stop_date
     ):
 
         self._account_chart = AccountChartSnapshot(account_chart)
-        self._journals = Journals(self._account_chart, journals)
+        self._analytic_account_chart = AccountChartSnapshot(analytic_account_chart)
+        self._journals = Journals(self._account_chart, self._analytic_account_chart, journals)
         
         self._start_date = start_date
         self._stop_date = stop_date
@@ -268,6 +270,12 @@ class FinancialPeriod(object):
     @property
     def account_chart(self):
         return self._account_chart
+
+    ##############################################
+
+    @property
+    def analytic_account_chart(self):
+        return self._analytic_account_chart
 
     ##############################################
 
