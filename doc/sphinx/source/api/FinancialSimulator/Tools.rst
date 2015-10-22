@@ -3,6 +3,7 @@
 **************
 
 .. toctree::
+  Tools/Currency
   Tools/Hierarchy
   Tools/Path
   Tools/Singleton
