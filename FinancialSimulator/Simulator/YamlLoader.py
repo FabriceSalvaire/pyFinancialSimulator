@@ -20,12 +20,14 @@
 
 ####################################################################################################
 
-import yaml
 import logging
+import re
+import yaml
 
 ####################################################################################################
 
 from .Parser import ValueParser
+from FinancialSimulator.Accounting.Journal import DebitImputationData, CreditImputationData
 
 ####################################################################################################
 
@@ -75,6 +77,8 @@ class JournalEntryDefinition(object):
 
     _logger = _module_logger.getChild('JournalEntrys')
 
+    _imputation_re = re.compile('(debit|credit) (\d+)( / (\d+))?')
+
     ##############################################
 
     def __init__(self, definition):
@@ -82,15 +86,22 @@ class JournalEntryDefinition(object):
         # self._logger.info(str(definition))
         self._definition = definition
 
-        self._debit = {}
-        self._credit = {}
+        self._imputations = []
         for key, value in self._definition.items():
-            if key.startswith('debit'):
-                account_number = int(key[len('debit '):])
-                self._debit[account_number] = value
-            elif key.startswith('credit'):
-                account_number = int(key[len('credit '):])
-                self._credit[account_number] = value
+            match = self._imputation_re.match(key)
+            if key.startswith('debit') or key.startswith('credit'):
+                match = self._imputation_re.match(key)
+                if match is not None:
+                    type_, account, analytic_account = match.group(1), match.group(2), match.group(4)
+                else:
+                    raise NameError("Bad imputation {}".format(key))
+                # Fixme: check doublon
+                if type_ == 'debit':
+                    imputation_class = DebitImputationData
+                else:
+                    imputation_class = CreditImputationData
+                imputation = imputation_class(int(account), value, analytic_account)
+                self._imputations.append(imputation)
 
     ##############################################
 
@@ -111,12 +122,8 @@ class JournalEntryDefinition(object):
         return self._definition['label']
 
     @property
-    def debit(self):
-        return self._debit
-
-    @property
-    def credit(self):
-        return self._credit
+    def imputations(self):
+        return iter(self._imputations)
 
 ####################################################################################################
 

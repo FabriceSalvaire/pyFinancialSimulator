@@ -64,9 +64,11 @@ class JournalEntryActionFactory(object):
 
         journal = self._journals[transaction_definition.journal]
         # Fixme:
-        debit = journal._make_imputation_pairs(transaction_definition.debit)
-        credit = journal._make_imputation_pairs(transaction_definition.credit)
-        transaction = JournalEntryTemplate(transaction_definition.description, debit, credit)
+        account_chart = journal._account_chart
+        resolved_imputations = [imputation.resolve(account_chart)
+                                for imputation in transaction_definition.imputations]
+        transaction = JournalEntryTemplate(transaction_definition.description,
+                                           resolved_imputations)
 
         return  class_action(journal, transaction_definition.date, transaction)
 

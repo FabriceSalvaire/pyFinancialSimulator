@@ -94,8 +94,8 @@ class FecWriter(object):
             with xf.element('ValidDate'):
                 xf.write(entry.validation_date.isoformat())
             
-            for iterator, name in ((entry.iter_on_debits(), 'Debit'),
-                                   (entry.iter_on_credits(), 'Credit'),
+            for iterator, name in ((entry.debits, 'Debit'),
+                                   (entry.credits, 'Credit'),
             ):
                 for imputation in iterator:
                     with xf.element('ligne'):

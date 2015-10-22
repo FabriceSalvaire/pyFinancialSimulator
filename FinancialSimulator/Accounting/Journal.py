@@ -46,20 +46,64 @@ class DuplicatedEntryError(NameError):
 
 ####################################################################################################
 
+class DebitMixin(object):
+    def is_debit(self):
+        return True
+    def is_credit(self):
+        return False
+
+class CreditMixin(object):
+    def is_debit(self):
+        return False
+    def is_credit(self):
+        return True
+
+####################################################################################################
+
+class ImputationData(object):
+
+    __imputation_class__ = None
+
+    ##############################################
+
+    def __init__(self, account, amount, analytic_account):
+
+        # Fixme: int
+        self.account = account
+        self.amount = float(amount)
+        self.analytic_account = analytic_account
+
+    ##############################################
+
+    def resolve(self, account_chart):
+
+        account = account_chart[self.account]
+        return self.__class__(account, self.amount, self.analytic_account)
+
+    ##############################################
+
+    def to_imputation(self, journal_entry):
+
+        return self.__imputation_class__(journal_entry,
+                                         self.account, self.amount, self.analytic_account)
+
+####################################################################################################
+
 class Imputation(object):
 
     _logger = _module_logger.getChild('Imputation')
 
     ##############################################
 
-    def __init__(self, _journal_entry, account, amount):
+    def __init__(self, journal_entry, account, amount, analytic_account):
 
         if amount < 0:
             raise NegativeAmountError()
 
-        self._journal_entry = _journal_entry
+        self._journal_entry = journal_entry
         self._account = account
         self._amount = amount
+        self._analytic_account = analytic_account
 
     ##############################################
 
@@ -79,15 +123,25 @@ class Imputation(object):
     def devise(self):
         return self._account.devise
 
+    @property
+    def analytic_account(self):
+        return self._analytic_account
+
+    ##############################################
+
+    def to_imputation(self, journal_entry):
+
+        # Fixme: template -> 
+        return self.__class__(journal_entry,
+                              self.account, self.amount, self.analytic_account)
+
     ##############################################
 
     def is_debit(self):
         raise NotImplementedError
 
-    ##############################################
-
     def is_credit(self):
-        return not self.is_debit()
+        raise NotImplementedError
 
     ##############################################
 
@@ -127,38 +181,34 @@ class Imputation(object):
 
 ####################################################################################################
 
-class DebitImputation(Imputation):
+class DebitImputation(DebitMixin, Imputation):
+    pass
 
-    ##############################################
+class CreditImputation(CreditMixin, Imputation):
+    pass
 
-    def is_debit(self):
-        return True
+class DebitImputationData(DebitMixin, ImputationData):
+    __imputation_class__ = DebitImputation
 
-####################################################################################################
-
-class CreditImputation(Imputation):
-
-    ##############################################
-
-    def is_debit(self):
-        return False
+class CreditImputationData(CreditMixin, ImputationData):
+    __imputation_class__ = CreditImputation
 
 ####################################################################################################
 
 class JournalEntryMixin(object):
 
+    _logger = _module_logger.getChild('JournalEntryMixin')
+
     ##############################################
 
-    def __init__(self, description, debit_pairs, credit_pairs):
+    def __init__(self, description, imputation_datas):
 
         self._description = description
 
-        self._debit = {account.number:DebitImputation(self, account, float(amount))
-                       for account, amount in debit_pairs}
-        self._credit = {account.number:CreditImputation(self, account, float(amount))
-                        for account, amount in credit_pairs}
-        self._imputations = dict(self._debit)
-        self._imputations.update(self._credit)
+        self._imputations = [imputation.to_imputation(self) for imputation in imputation_datas]
+        self._imputations.sort(key=lambda x: x.account)
+        self._debits = [imputation for imputation in self._imputations if imputation.is_debit()]
+        self._credits = [imputation for imputation in self._imputations if imputation.is_credit()]
         
         self._check()
 
@@ -167,8 +217,10 @@ class JournalEntryMixin(object):
     def _check(self):
 
         account_counter = {}
-        for account_number in list(self._debit.keys()) + list(self._credit.keys()):
+        account_numbers = [imputation.account for imputation in self._imputations]
+        for account_number in account_numbers:
             if account_number in account_counter:
+                self._logger.error(str(self))
                 raise DuplicatedEntryError(account_number)
             else:
                 account_counter[account_number] = 1
@@ -176,6 +228,7 @@ class JournalEntryMixin(object):
         sum_of_debits = self.sum_of_debits()
         sum_of_credits = self.sum_of_credits()
         if sum_of_debits != sum_of_credits:
+            self._logger.error(str(self))
             message = "Journal Entry '{}' is not balanced D {} != C {}"
             raise UnbalancedEntryError(message.format(self._description,
                                                       sum_of_debits,
@@ -189,88 +242,58 @@ class JournalEntryMixin(object):
 
     ##############################################
 
+    def __str__(self):
+
+        message = 'Journal Entry: {}\n'.format(self._description)
+        # Fixme: duplicate
+        for imputations in (self.debits, self.credits):
+            message += '\n'.join([str(imputation) for imputation in imputations])
+            message += '\n'
+        return message
+
+    ##############################################
+
     def _sum_of_imputations(self, imputations):
-        return round_currency(sum([imputation.amount for imputation in imputations.values()]))
+        return round_currency(sum([imputation.amount for imputation in imputations]))
 
     ##############################################
 
     def sum_of_debits(self):
-        return self._sum_of_imputations(self._debit)
+        return self._sum_of_imputations(self._debits)
 
     ##############################################
 
     def sum_of_credits(self):
-        return self._sum_of_imputations(self._credit)
+        return self._sum_of_imputations(self._credits)
 
     ##############################################
 
     def __iter__(self):
 
-        return iter(self._imputations.values())
+        return iter(self._imputations)
 
     ##############################################
 
-    def __getitem__(self, account):
-
-        return self._imputations[account.number]
-
-    ##############################################
-
-    def _iter_on_imputations(self, imputations):
-
-        imputations = list(imputations.values())
-        imputations.sort(key=lambda x: x.account)
-        return iter(imputations)
-
-    ##############################################
-
-    def iter_on_debits(self):
-
-        # return iter(self._debit.values())
-        return self._iter_on_imputations(self._debit)
-
-    ##############################################
-
-    def iter_on_credits(self):
-
-        # return iter(self._credit.values())
-        return self._iter_on_imputations(self._credit)
+    @property
+    def imputations(self):
+        return iter(self._imputations)
 
     ##############################################
 
     @property
     def debits(self):
-        return self._debit.values()
+        return iter(self._debits)
 
     ##############################################
 
     @property
     def credits(self):
-        return self._credit.values()
+        return iter(self._credits)
 
 ####################################################################################################
 
 class JournalEntryTemplate(JournalEntryMixin):
-
-    # Fixme:
-
-    ##############################################
-
-    def _make_imputation_pairs(self, imputations):
-
-        return [(imputation.account, imputation.amount) for imputation in imputations.values()]
-
-    ##############################################
-
-    def debit_pairs(self):
-
-        return self._make_imputation_pairs(self._debit)
-
-    ##############################################
-
-    def credit_pairs(self):
-
-        return self._make_imputation_pairs(self._credit)
+    pass
 
 ####################################################################################################
 
@@ -278,9 +301,9 @@ class JournalEntry(JournalEntryMixin):
 
     ##############################################
 
-    def __init__(self, sequence_number, date, description, document, debit_pairs, credit_pairs):
+    def __init__(self, sequence_number, date, description, document, imputations):
 
-        super(JournalEntry, self).__init__(description, debit_pairs, credit_pairs)
+        super(JournalEntry, self).__init__(description, imputations)
 
         self._id = sequence_number
         self._date = date
@@ -330,8 +353,8 @@ class JournalEntry(JournalEntryMixin):
     def __str__(self):
 
         message = 'Journal Entry on {}: {}\n'.format(self._date, self._description)
-        for imputations in self._debit, self._credit:
-            message += '\n'.join([str(imputation) for imputation in imputations.values()])
+        for imputations in (self.debits, self.credits):
+            message += '\n'.join([str(imputation) for imputation in imputations])
             message += '\n'
         return message
 
@@ -339,7 +362,7 @@ class JournalEntry(JournalEntryMixin):
 
     def apply(self):
 
-        for imputation in self._imputations.values():
+        for imputation in self._imputations:
             imputation.apply()
 
     ##############################################
@@ -410,44 +433,31 @@ class Journal(object):
 
     ##############################################
 
-    def _make_imputation_pairs(self, imputations):
+    def _log_entry(self, date, description, imputations, document=None):
 
-        # Fixme: check account exists, account is unique, amount > 0
-        return [(self._account_chart[account_number], amount)
-                for account_number, amount in imputations.items()]
-
-    ##############################################
-
-    def _log_entry(self, date, description, document, debit_pairs, credit_pairs):
-
-        # Fixme:
-        #  DebitImputation(account, amount)
-        #  DebitImputation(account_number, amount)
-
-        try:
-            sequence_number = self._next_id
-            journal_entry = JournalEntry(sequence_number,
-                                         date,
-                                         description,
-                                         document,
-                                         debit_pairs,
-                                         credit_pairs,
-            )
-            self._journal_entries.append(journal_entry)
-            self._next_id += 1
-            journal_entry.apply()
-        except NonExistingNodeError:
-            raise
+        sequence_number = self._next_id
+        journal_entry = JournalEntry(sequence_number,
+                                     date,
+                                     description,
+                                     document,
+                                     imputations
+        )
+        self._journal_entries.append(journal_entry)
+        self._next_id += 1
+        journal_entry.apply()
         
         return journal_entry
 
     ##############################################
 
-    def log_entry(self, date, description, debit, credit, document=None):
+    def log_entry(self, date, description, imputations, document=None):
 
-        debit_pairs = self._make_imputation_pairs(debit)
-        credit_pairs = self._make_imputation_pairs(credit)
-        return self._log_entry(date, description, document, debit_pairs, credit_pairs)
+        try:
+            resolved_imputations = [imputation.resolve(self._account_chart)
+                                    for imputation in imputations]
+            return self._log_entry(date, description, resolved_imputations, document)
+        except NonExistingNodeError:
+            raise
 
     ##############################################
 
@@ -455,9 +465,8 @@ class Journal(object):
 
         return self._log_entry(date,
                                template.description,
+                               template.imputations,
                                document,
-                               template.debit_pairs(),
-                               template.credit_pairs(),
         )
 
 ####################################################################################################

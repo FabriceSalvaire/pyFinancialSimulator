@@ -30,7 +30,7 @@
 	      <td></td>
 	      <td></td>
 	    </tr>
-	    {% for imputation in transaction.iter_on_debits() %}
+	    {% for imputation in transaction.debits %}
 	      <tr>
 		<th scope="row"></th>
 		<td>{{ imputation.account.number }}: {{ imputation.account.description }}</td>
@@ -38,7 +38,7 @@
 		<td></td>
 	      </tr>
 	    {% endfor %}
-	    {% for imputation in transaction.iter_on_credits() %}
+	    {% for imputation in transaction.credits %}
 	      <tr>
 		<th scope="row"></th>
 		<td>{{ imputation.account.number }}: {{ imputation.account.description }}</td>

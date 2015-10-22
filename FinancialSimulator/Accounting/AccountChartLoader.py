@@ -29,13 +29,8 @@ from .AccountChart import Account, AccountChart
 
 ####################################################################################################
 
-_account_charts = {
-    'fr': 'plan-comptable-francais.yml',
-}
+def load_account_chart(yaml_path):
 
-def load_account_chart(country_code):
-
-    yaml_path = os.path.join(os.path.dirname(__file__), country_code, _account_charts[country_code])
     with open(yaml_path, 'r') as f:
         data = yaml.load(f.read())
 
@@ -49,7 +44,8 @@ def load_account_chart(country_code):
         number = int(account_definition['code'])
         description = account_definition['description']
         comment = account_definition.get('commentaire', '')
-        system = account_definition['système']
+        # Fixme: PCG metadata
+        system = account_definition.get('système', None)
         item_level = len(str(number))
         if item_level > current_level:
             parent.append(previous)
@@ -66,6 +62,17 @@ def load_account_chart(country_code):
         account.sort_siblings()
     
     return account_chart
+
+####################################################################################################
+
+_account_charts = {
+    'fr': 'plan-comptable-francais.yml',
+}
+
+def load_account_chart_for_country(country_code):
+
+    yaml_path = os.path.join(os.path.dirname(__file__), country_code, _account_charts[country_code])
+    return load_account_chart(yaml_path)
 
 ####################################################################################################
 #
