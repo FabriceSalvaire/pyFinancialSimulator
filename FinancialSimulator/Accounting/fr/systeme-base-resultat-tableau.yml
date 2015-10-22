@@ -1,66 +1,149 @@
 # Art. 821-3
 Charges:
-- title: "TOTAL I"
-- - title: "Charges d'exploitation"
-  - - title: "Achats de marchandises"
-    - - title: "Variation des stocks"
-    - title: "Achats de matières premières et autres approvisionnements"
-    - - title: "Variation des stocks"
-      - title: "Autres achats et charges externes"
-    - title: "Impôts, taxes et versements assimilés"
-    - title: "Salaires et traitements"
-    - title: "Charges sociales"
-    - title: "Dotations aux amortissements et dépréciations"
-    - - title: "Sur immobilisations : dotations aux amortissements"
-      - title: "Sur immobilisations : dotations aux dépréciations"
-      - title: "Sur actif circulant : dotations aux dépréciations"
-      - title: "Dotations aux provisions"
-      - title: "Autres charges"
+- title: "Total I"
+  assign: T1
+  show: True
+  position: after
+  childs:
+    - title: "Charges d'exploitation"
+      childs:
+        - title: "Achats de marchandises"
+          computation: 607D - 6097C
+        - title: "Variation des stocks"
+          computation: -6037B
+        - title: "Achats de matières premières et autres approvisionnements"
+          computation: 601D - 6091C  + 602D - 6092C + 608D
+          # 6081 + 6082
+        - title: "Variation des stocks"
+          computation: 6031D - 6032C
+        - title: "Autres achats et charges externes"
+          #computation: "[604:606]D - 609C + 61D - 619C + 62D - 629C + 6122D + 6125D"
+          computation: "[604:606]D + 61D - 619C + 62D - 629C + 6122D + 6125D"
+          # Fixme: ???
+        - title: "Impôts, taxes et versements assimilés"
+          computation: 63D
+        - title: "Salaires et traitements"
+          computation: 641D + 644D + 648D
+        - title: "Charges sociales"
+          computation: 645D + 646D + 647D
+        - title: "Dotations aux amortissements et dépréciations"
+          childs:
+            - title: "Sur immobilisations : dotations aux amortissements"
+              computation: 6811D + 6812D
+            - title: "Sur immobilisations : dotations aux dépréciations"
+              computation: 6816D
+            - title: "Sur actif circulant : dotations aux dépréciations"
+              computation: 6817D
+    - title: "Dotations aux provisions"
+      computation: 6815D
+    - title: "Autres charges"
+      computation: 65D - 655D
 - title: "Quote-parts de résultat sur opérations faites en commun"
-- title: "TOTAL III"
-- - title: "Charges financières"
-  - - title: "Dotations aux amortissements, aux dépréciations et aux provisions"
-    - title: "Intérêts et charges assimilées"
-    - title: "Différences négatives de change"
-    - title: "Charges nettes sur cessions de valeurs mobilières de placement"
-- title: "TOTAL IV"
-- - title: "Charges exceptionnelles"
-  - - title: "Sur opérations de gestion"
-    - title: "Sur opérations en capital"
-    - title: "Dotations aux amortissements, aux dépréciations et aux provisions"
+  computation: T2 = 655D
+- title: "Total III"
+  show: True
+  position: after
+  assign: T3
+  childs:
+    - title: "Charges financières"
+      childs:
+        - title: "Dotations aux amortissements, aux dépréciations et aux provisions"
+          computation: 686D
+        - title: "Intérêts et charges assimilées"
+          computation: 66D - 666D - 667D
+        - title: "Différences négatives de change"
+          computation: 666D
+        - title: "Charges nettes sur cessions de valeurs mobilières de placement"
+          computation: 667D
+- title: "Total IV"
+  assign: T4
+  show: True
+  position: after
+  childs:
+    - title: "Charges exceptionnelles"
+      childs:
+        - title: "Sur opérations de gestion"
+          computation: 671D
+        - title: "Sur opérations en capital"
+          computation: 675D + 678D
+        - title: "Dotations aux amortissements, aux dépréciations et aux provisions"
+          computation: 687D
 - title: "Participation des salariés aux résultats (V)"
+  computation: T5 = 691D
 - title: "Impôts sur les bénéfices (VI)"
+  computation: T6 = 695D + 698D + 699D
+  # + 689
 - title: "Total des charges (I + II + III + IV + V + VI)"
+  computation: Tactif = T1 + T2 + T3 + T4 + T5 + T6
 - title: "Solde créditeur = bénéfice"
-# * Y compris
-# - redevances de crédit-bail mobilier
-# - redevances de crédit-bail immobilier
+  # computation: Tactif - Tpassif
 
 Produits (hors taxes):
 - title: "Total I (A + B )"
-- - title: "Produits d'exploitation"
-- - - title: "Sous total A - Montant net du chiffre d'affaires"
-  - - title: "Ventes de marchandises"
-    - title: "Production vendue [biens et services] dont à l'exportation"
-- title: "Sous total B"
-    - title: "Production stockée"
-    - title: "Production immobilisée"
-    - title: "Subventions d'exploitation"
-    - title: "Reprises sur provisions, dépréciations (et amortissements) et transferts de charges"
-    - title: "Autres produits"
+  assign: T1
+  show: True
+  position: after
+  childs:
+    - title: "Produits d'exploitation"
+      childs:
+        - title: "Sous total A - Montant net du chiffre d'affaires"
+          show: True
+          position: after
+          childs:
+            - title: "Ventes de marchandises"
+              computation: 707C - 7097D
+              # + 708C en partie ?
+            - title: "Production vendue [biens et services] dont à l'exportation"
+              computation: "[701:706]C - [7091:7096]D + 708C"
+              # + 708C en partie ?
+        - title: "Sous total B"
+          show: True
+          position: after
+          childs:
+            - title: "Production stockée"
+              computation: 713C
+            - title: "Production immobilisée"
+              computation: 72C
+            - title: "Subventions d'exploitation"
+              computation: 74C
+            - title: "Reprises sur provisions, dépréciations (et amortissements) et transferts de charges"
+              computation: 781C + 791C
+            - title: "Autres produits"
+              computation: 75C - 755C
 - title: "Quote-part de résultat sur opérations faites en commun (II)"
+  computation: T2 = 755C
 - title: "Total III"
-- - title: "Produits financiers"
-  - - title: "De participation"
-    - title: "D'autres valeurs mobilières et créances de l'actif immobilisé"
-    - title: "Autres intérêts et produits assimilés"
-    - title: "Reprises sur provisions, dépréciations et transferts de charges"
-    - title: "Différences positives de change"
-    - title: "Produits nets sur cessions de valeurs mobilières de placement"
-- title: "TOTAL IV"
-- - title: "Produits exceptionnels"
-  - - title: "Sur opérations de gestion"
-    - title: "Sur opérations en capital"
-    - title: "Reprises sur provisions, dépréciations et transferts de charges"
+  assign: T3
+  show: True
+  position: after
+  childs:
+    - title: "Produits financiers"
+      childs:
+        - title: "De participation"
+          computation: 761C
+        - title: "D'autres valeurs mobilières et créances de l'actif immobilisé"
+          computation: 762C
+        - title: "Autres intérêts et produits assimilés"
+          computation: "[763:765]C + 768C"
+        - title: "Reprises sur provisions, dépréciations et transferts de charges"
+          computation: 786C + 796C
+        - title: "Différences positives de change"
+          computation: 766C
+        - title: "Produits nets sur cessions de valeurs mobilières de placement"
+          computation: 767C
+- title: "Total IV"
+  assign: T4
+  show: True
+  position: after
+  childs:
+    - title: "Produits exceptionnels"
+      childs:
+        - title: "Sur opérations de gestion"
+          computation: 771C
+        - title: "Sur opérations en capital"
+          computation: 775C + 777C + 778C
+        - title: "Reprises sur provisions, dépréciations et transferts de charges"
+          computation: 787C + 797C
 - title: "Total des produits (I + II + III + IV)"
+  computation: Tpassif = T1 + T2 + T3 + T4
 - title: "Solde débiteur = perte"

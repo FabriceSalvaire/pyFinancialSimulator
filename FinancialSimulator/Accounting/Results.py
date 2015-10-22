@@ -29,6 +29,7 @@ import yaml
 from FinancialSimulator.HDL.HdlParser import HdlAccountParser
 from FinancialSimulator.HDL.Evaluator import AccountEvaluator
 from FinancialSimulator.Tools import Hierarchy
+from FinancialSimulator.Tools.Currency import format_currency
 
 ####################################################################################################
 
@@ -62,6 +63,12 @@ class EmptyRow(Node):
         super(EmptyRow, self).__init__(level)
         
         self._number_of_lines = number_of_lines
+
+    ##############################################
+
+    def compute(self, visitor):
+
+        return 0
 
 ####################################################################################################
 
@@ -108,10 +115,10 @@ class ValueRow(Row):
 
     ##############################################
 
-    def compute(self, evaluator):
+    def compute(self, visitor):
 
         if self._computation is not None:
-            return evaluator.run_ast_program(self._computation)
+            return visitor.evaluator.run_ast_program(self._computation)
         else:
             return 0
 
@@ -121,11 +128,21 @@ class SumRow(Row):
 
     ##############################################
 
-    def __init__(self, level, title, show, position):
+    def __init__(self, level, title, show, position, variable=None):
 
         super(SumRow, self).__init__(level, title, show)
         
         self._position = position
+        self._variable = variable
+
+    ##############################################
+
+    def compute(self, visitor):
+
+        value = sum([visitor.compute(sibling) for sibling in self])
+        if self._variable is not None:
+            visitor.evaluator[self._variable] = value
+        return value
 
 ####################################################################################################
 
@@ -137,6 +154,12 @@ class ComputationVisitor(object):
 
         self._evaluator = AccountEvaluator(account_chart)
         self.reset()
+
+    ##############################################
+
+    @property
+    def evaluator(self):
+        return self._evaluator
 
     ##############################################
 
@@ -152,13 +175,7 @@ class ComputationVisitor(object):
         if node_id in self._cache:
             return self._cache[node_id]
         else:
-            # Fixme: better ?
-            if isinstance(node, SumRow):
-                value = sum([self.compute(sibling) for sibling in node])
-            elif isinstance(node, Row):
-                value = node.compute(self._evaluator)
-            else:
-                value = 0
+            value = node.compute(self)
             self._cache[node_id] = value
             return value
 
@@ -167,6 +184,12 @@ class ComputationVisitor(object):
     def __getitem__(self, node):
 
         return self.compute(node)
+
+    ##############################################
+
+    def str_value(self, node):
+
+        return format_currency(self.compute(node))
 
 ####################################################################################################
 
@@ -248,7 +271,9 @@ class YamlLoader(object):
             data = yaml.load(f.read())
         
         self._table = Table('')
-        for title, items in data.items():
+        # for title, items in data.items():
+        for title in sorted(data.keys()):
+            items = data[title]
             node = Node()
             self._column = Column(title, node)
             for item in items:
@@ -264,10 +289,11 @@ class YamlLoader(object):
         # self._logger.info(str(node_data))
         if 'childs' in node_data:
             title = node_data['title']
+            variable = node_data.get('assign', None)
             position = node_data.get('position', 'before')
             show = node_data.get('show', False)
             self._logger.info('Node ' + title)
-            row = SumRow(level, title, show, position)
+            row = SumRow(level, title, show, position, variable)
             if position == 'before':
                 self._column.append_row(row)
             for child_data in node_data['childs']:
@@ -286,7 +312,9 @@ class YamlLoader(object):
             title = node_data['title']
             self._logger.info('Row ' + title)
             if 'computation' in node_data:
-                computation = hdl_parser.parse(str(node_data['computation']))
+                computation = str(node_data['computation'])
+                print(computation)
+                computation = hdl_parser.parse(computation)
             else:
                 computation = None
             row = ValueRow(level, title, computation)

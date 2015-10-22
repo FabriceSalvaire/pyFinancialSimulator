@@ -69,13 +69,32 @@ class Variable(object):
     def __str__(self):
         return self._name
 
-    def __int__(self):
-        return int(self._name)
-
 ####################################################################################################
 
-class Account(Variable):
-    pass
+class Account(object):
+
+    ##############################################
+
+    def __init__(self, number, dcb):
+
+        self._number = int(number)
+        self._dcb = dcb
+
+    ##############################################
+
+    @property
+    def dcb(self):
+        return self._dcb
+
+    ##############################################
+
+    def __str__(self):
+        return '{}{}'.format(self._number, self._dcb)
+
+    ##############################################
+
+    def __int__(self):
+        return self._number
 
 ####################################################################################################
 
@@ -83,22 +102,29 @@ class AccountInterval(object):
 
     ##############################################
 
-    def __init__(self, name_inf, name_sup):
+    def __init__(self, name_inf, name_sup, dcb):
 
         self._name_inf = name_inf
         self._name_sup = name_sup
+        self._dcb = dcb
+
+    ##############################################
+
+    @property
+    def dcb(self):
+        return self._dcb
 
     ##############################################
 
     def __str__(self):
-        return '[{}:{}]'.format(self._name_inf, self._name_sup)
+        return '[{}:{}]{}'.format(self._name_inf, self._name_sup, self._dcb)
 
     ##############################################
 
     def __iter__(self):
 
-        for number in range(int(self._name_inf), int(self._name_sup) +1):
-            yield str(number)
+        for number in range(self._name_inf, self._name_sup +1):
+            yield number
 
 ####################################################################################################
 
@@ -199,6 +225,13 @@ class Function(Expression):
 
         parameters = ', '.join([str(operand) for operand in self.iter_on_operands()])
         return self._name + ' (' + parameters  + ')'
+
+####################################################################################################
+
+class Negation(UnaryExpression):
+
+    def __str__(self):
+        return '-' + str(self.operand1)
 
 ####################################################################################################
 

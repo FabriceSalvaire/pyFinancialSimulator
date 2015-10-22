@@ -61,6 +61,10 @@ def load_account_chart(country_code):
         account_chart.add_node(account)
         previous = account
     
+    # PCG is not sorted: e.g. 603
+    for account in account_chart:
+        account.sort_siblings()
+    
     return account_chart
 
 ####################################################################################################

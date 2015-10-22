@@ -22,10 +22,10 @@
 	  <tbody>
 	    {% for row in column %}
 	      <tr>
-		<th scope="row">{{ row.title }}</th>
-		{% with value = computation_visitor[row] %}
+		<th scope="row"><span  class="indent-level-{{ row.level }}">{{ row.title }}</span></th>
+		{% with value = computation_visitor.str_value(row) %}
 		  {% if row.show and value %}
-		    <td class="text-right">{{ '%0.2f'| format(value | round(2)) }} €</td>
+		    <td class="text-right">{{ value }}</td>
 		  {% else %}
 		    <td></td>
 		  {% endif %}

@@ -69,6 +69,8 @@ class HdlParser(object):
         'SEMICOLON',
         'SET',
         'TIMES', 'DIVIDE',
+        # 'ACCOUNT_NUMBER',
+        # 'DCB',
     ] + list(reserved.values())
 
     ##############################################
@@ -120,6 +122,9 @@ class HdlParser(object):
         t.type = self.reserved.get(t.value, 'NAME')
         return t
 
+        t.value = t.value
+        return t
+
     def t_DECIMAL_NUMBER(self, t):
         r'\d+'
         t.value = int(t.value)
@@ -140,7 +145,7 @@ class HdlParser(object):
         # ('left', 'EQUAL'),
         ('left', 'PLUS', 'MINUS'),
         ('left', 'TIMES', 'DIVIDE'),
-        # ('right', 'UMINUS'),
+        ('right', 'UMINUS'),
     )
 
     def p_error(self, p):
@@ -165,6 +170,10 @@ class HdlParser(object):
     def p_expression_group(self, p):
         'expression : LEFT_PARENTHESIS expression RIGHT_PARENTHESIS'
         p[0] = p[2]
+
+    def p_expression_uminus(self, p):
+        'expression : MINUS expression %prec UMINUS'
+        p[0] = Negation(p[2])
 
     def p_binary_operation(self, p):
         # ... OP ...
@@ -236,16 +245,20 @@ class HdlAccountParser(HdlParser):
     ##############################################
 
     def p_account(self, p):
-        '''expression : DECIMAL_NUMBER
+        # '''expression : ACCOUNT_NUMBER
+        # '''
+        # p1 = p[1]
+        # p[0] = Account(int(p1[:-1]), p1[-1])
+        '''expression : DECIMAL_NUMBER NAME
         '''
-        p[0] = Account(str(p[1]))
+        p[0] = Account(p[1], p[2])
 
     ##############################################
 
     def p_account_interval(self, p):
-        '''expression : LEFT_BRACKET DECIMAL_NUMBER COLON DECIMAL_NUMBER RIGHT_BRACKET
+        '''expression : LEFT_BRACKET DECIMAL_NUMBER COLON DECIMAL_NUMBER RIGHT_BRACKET NAME
         '''
-        p[0] = AccountInterval(str(p[2]), str(p[4]))
+        p[0] = AccountInterval(p[2], p[4], p[6])
 
 ####################################################################################################
 #

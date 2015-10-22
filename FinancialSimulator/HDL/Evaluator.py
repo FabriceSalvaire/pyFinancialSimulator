@@ -44,6 +44,18 @@ class Evaluator(object):
 
     ##############################################
 
+    def __getitem__(self, name):
+
+        return self._variables[name]
+
+    ##############################################
+
+    def __setitem__(self, name, value):
+
+        self._variables[name] = value
+
+    ##############################################
+
     def eval_statement(self, level, statement):
 
         # self._logger.debug('')
@@ -83,6 +95,12 @@ class Evaluator(object):
         value = float(value)
         self._variables[str(statement.destination)] = value
         return value
+
+    ##############################################
+
+    def eval_Negation(self, level, statement, operand1):
+
+        return - float(operand1)
 
     ##############################################
 
@@ -132,18 +150,28 @@ class AccountEvaluator(Evaluator):
 
     ##############################################
 
-    def eval_Account(self, level, statement):
+    def _eval_Account(self, level, number, dcb):
 
         # Fixme: signed etc.
         try:
-            account = self._account_chart[int(statement)]
-            if account.balance:
+            account = self._account_chart[number]
+            if dcb == 'D':
                 return account.debit
-            else:
+            elif dcb == 'C':
                 return account.credit
+            elif dcb == 'B':
+                return account.balance
+            else:
+                raise NameError('')
         except NonExistingNodeError:
-            self._logger.warning("Account {} doesn't exist".format(str(statement)))
+            self._logger.warning("Account {} doesn't exist".format(number))
             return 0
+
+    ##############################################
+
+    def eval_Account(self, level, statement):
+
+        return self._eval_Account(level, int(statement), statement.dcb)
 
     ##############################################
 
@@ -153,7 +181,7 @@ class AccountEvaluator(Evaluator):
         value = 0
         for number in statement:
             # can raise NonExistingNodeError
-            value += self.eval_Account(level, number)
+            value += self._eval_Account(level, number, statement.dcb)
         return value
 
 ####################################################################################################
