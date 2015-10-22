@@ -59,7 +59,7 @@ yaml_loader = Results.YamlLoader(yaml_file)
 def result():
     account_chart = model.account_chart
     table = yaml_loader.table
-    computation_visitor = Results.ComputationVisitor(account_chart)
+    computation_visitor = yaml_loader.compute(account_chart)
     return render_template('result.html', table=table, computation_visitor=computation_visitor)
 
 ####################################################################################################

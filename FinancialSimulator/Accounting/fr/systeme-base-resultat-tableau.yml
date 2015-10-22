@@ -1,7 +1,7 @@
 # Art. 821-3
 Charges:
 - title: "Total I"
-  assign: T1
+  assign: TC1
   show: True
   position: after
   childs:
@@ -39,11 +39,11 @@ Charges:
     - title: "Autres charges"
       computation: 65D - 655D
 - title: "Quote-parts de résultat sur opérations faites en commun"
-  computation: T2 = 655D
+  computation: TC2 = 655D
 - title: "Total III"
   show: True
   position: after
-  assign: T3
+  assign: TC3
   childs:
     - title: "Charges financières"
       childs:
@@ -56,7 +56,7 @@ Charges:
         - title: "Charges nettes sur cessions de valeurs mobilières de placement"
           computation: 667D
 - title: "Total IV"
-  assign: T4
+  assign: TC4
   show: True
   position: after
   childs:
@@ -69,18 +69,20 @@ Charges:
         - title: "Dotations aux amortissements, aux dépréciations et aux provisions"
           computation: 687D
 - title: "Participation des salariés aux résultats (V)"
-  computation: T5 = 691D
+  computation: TC5 = 691D
 - title: "Impôts sur les bénéfices (VI)"
-  computation: T6 = 695D + 698D + 699D
+  computation: TC6 = 695D + 698D + 699D
   # + 689
 - title: "Total des charges (I + II + III + IV + V + VI)"
-  computation: Tactif = T1 + T2 + T3 + T4 + T5 + T6
+  computation: Tactif = TC1 + TC2 + TC3 + TC4 + TC5 + TC6
 - title: "Solde créditeur = bénéfice"
-  # computation: Tactif - Tpassif
+  computation: benefice = max_zero(Tpassif - Tactif)
+- title: "Total"
+  computation: Tactif + benefice
 
 Produits (hors taxes):
 - title: "Total I (A + B )"
-  assign: T1
+  assign: TP1
   show: True
   position: after
   childs:
@@ -111,9 +113,9 @@ Produits (hors taxes):
             - title: "Autres produits"
               computation: 75C - 755C
 - title: "Quote-part de résultat sur opérations faites en commun (II)"
-  computation: T2 = 755C
+  computation: TP2 = 755C
 - title: "Total III"
-  assign: T3
+  assign: TP3
   show: True
   position: after
   childs:
@@ -132,7 +134,7 @@ Produits (hors taxes):
         - title: "Produits nets sur cessions de valeurs mobilières de placement"
           computation: 767C
 - title: "Total IV"
-  assign: T4
+  assign: TP4
   show: True
   position: after
   childs:
@@ -145,5 +147,8 @@ Produits (hors taxes):
         - title: "Reprises sur provisions, dépréciations et transferts de charges"
           computation: 787C + 797C
 - title: "Total des produits (I + II + III + IV)"
-  computation: Tpassif = T1 + T2 + T3 + T4
+  computation: Tpassif = TP1 + TP2 + TP3 + TP4
 - title: "Solde débiteur = perte"
+  computation: perte = max_zero(Tactif - Tpassif)
+- title: "Total"
+  computation: Tpassif + perte

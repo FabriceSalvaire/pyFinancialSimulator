@@ -61,13 +61,13 @@ class Evaluator(object):
         # self._logger.debug('')
 
         statement_class = statement.__class__.__name__
-        # if statement_class == 'Function':
-        #     statement_class = statement.name
+        if statement_class == 'Function':
+            statement_class = statement.name
         evaluator = getattr(self, 'eval_' + statement_class)
-        if hasattr(statement, 'iter_on_operands'):
+        if statement.has_siblings():
             # Compute the operand values: traverse recursively the AST
             args = [self.eval_statement(level+1, operand)
-                    for operand in statement.iter_on_operands()]
+                    for operand in statement]
             value = evaluator(level, statement, *args)
         else:
             value = evaluator(level, statement)
@@ -183,6 +183,18 @@ class AccountEvaluator(Evaluator):
             # can raise NonExistingNodeError
             value += self._eval_Account(level, number, statement.dcb)
         return value
+
+    ##############################################
+
+    def eval_min_zero(self, level, statement, value):
+
+        return min(value, 0)
+
+    ##############################################
+
+    def eval_max_zero(self, level, statement, value):
+
+        return max(value, 0)
 
 ####################################################################################################
 #

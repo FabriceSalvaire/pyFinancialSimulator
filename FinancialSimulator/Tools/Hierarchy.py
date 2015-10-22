@@ -20,14 +20,13 @@
 
 ####################################################################################################
 
-class Node(object):
+class Leaf(object):
 
     ##############################################
 
     def __init__(self, parent=None):
 
         self._parent = parent
-        self._siblings = []
         if parent is not None:
             parent.add_sibling(self)
 
@@ -39,10 +38,62 @@ class Node(object):
 
     ##############################################
 
+    def is_leaf(self):
+        return True
+
+    ##############################################
+
+    def has_siblings(self):
+        return False
+
+    ##############################################
+
+    def __iter__(self):
+        # Fixme:
+        return iter([])
+
+    ##############################################
+
+    def depth_first_search(self):
+
+        yield self
+
+    ##############################################
+
+    def depth_first_search_sibling(self):
+
+        yield self
+
+####################################################################################################
+
+class Node(Leaf):
+
+    ##############################################
+
+    def __init__(self, parent=None, siblings=None):
+
+        super(Node, self).__init__(parent)
+        if siblings is not None:
+            self._siblings = list(siblings)
+        else:
+            self._siblings = []
+
+    ##############################################
+
     @property
     def siblings(self):
         # Fixme: to protect
         return iter(self._siblings)
+
+    ##############################################
+
+    def is_leaf(self):
+        return False
+
+    ##############################################
+
+    def has_siblings(self):
+        return True
 
     ##############################################
 
@@ -77,7 +128,7 @@ class Node(object):
     def depth_first_search_sibling(self):
 
         for sibling in self._siblings:
-            yield from sibling.depth_first_search()
+            yield from sibling.depth_first_search_sibling()
         yield self
 
 ####################################################################################################

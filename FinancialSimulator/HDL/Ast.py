@@ -24,35 +24,35 @@ import logging
 
 ####################################################################################################
 
+from FinancialSimulator.Tools.Hierarchy import Leaf, Node
+
+####################################################################################################
+
 _module_logger = logging.getLogger(__name__)
 
 ####################################################################################################
 
-class StatementList(object):
+class StatementList(Node):
 
     ##############################################
 
     def __init__(self, *statements):
 
-        self._statements = list(statements)
+        super(StatementList, self).__init__(siblings=statements)
 
     ##############################################
 
     def __nonzero__(self):
 
-        return bool(self._statements)
+        # Fixme:
+        return bool(self._siblings)
 
     ##############################################
 
-    def __iter__(self):
+    def __getitem__(self, i):
 
-        return iter(self._statements)
-
-    ##############################################
-
-    def append(self, statement):
-
-        self._statements.append(statement)
+        # Fixme:
+        return self._siblings[i]
 
     ##############################################
 
@@ -62,21 +62,29 @@ class StatementList(object):
 
 ####################################################################################################
 
-class Variable(object):
+class Variable(Leaf):
+
+    ##############################################
+
     def __init__(self, name):
+
+        super(Variable, self).__init__()
         self._name = name
+
+    ##############################################
 
     def __str__(self):
         return self._name
 
 ####################################################################################################
 
-class Account(object):
+class Account(Leaf):
 
     ##############################################
 
     def __init__(self, number, dcb):
 
+        super(Account, self).__init__()
         self._number = int(number)
         self._dcb = dcb
 
@@ -98,12 +106,13 @@ class Account(object):
 
 ####################################################################################################
 
-class AccountInterval(object):
+class AccountInterval(Leaf):
 
     ##############################################
 
     def __init__(self, name_inf, name_sup, dcb):
 
+        super(AccountInterval, self).__init__()
         self._name_inf = name_inf
         self._name_sup = name_sup
         self._dcb = dcb
@@ -128,19 +137,28 @@ class AccountInterval(object):
 
 ####################################################################################################
 
-class Constant(object):
+class Constant(Leaf):
+
+    ##############################################
+
     def __init__(self, value):
+
+        super(Constant, self).__init__()
         self._value = value
+
+    ##############################################
 
     def __float__(self):
         return self._value
+
+    ##############################################
 
     def __str__(self):
         return str(self._value)
 
 ####################################################################################################
 
-class Expression(object):
+class Expression(Node):
 
     __number_of_operands__ = None
 
@@ -151,27 +169,24 @@ class Expression(object):
         if (self.__number_of_operands__ is not None
             and len(args) != self.__number_of_operands__):
             raise ValueError("Wrong number of operands")
-
-        self._operands = args
-
-    ##############################################
-
-    def iter_on_operands(self):
-        return iter(self._operands)
+        
+        super(Expression, self).__init__(siblings=args)
 
     ##############################################
 
     @property
     def operand(self):
-        return self._operands[0]
+        return self._siblings[0]
 
     @property
     def operand1(self):
-        return self._operands[0]
+        return self._siblings[0]
 
     @property
     def operand2(self):
-        return self._operands[1]
+        return self._siblings[1]
+
+####################################################################################################
 
 class UnaryExpression(Expression):
     __number_of_operands__ = 1
@@ -190,13 +205,19 @@ class Assignation(UnaryExpression):
         super(Assignation, self).__init__(value)
         self._destination = destination
 
+    ##############################################
+
     @property
     def destination(self):
         return self._destination
 
+    ##############################################
+
     @property
     def value(self):
-        return self._operands[0]
+        return self._siblings[0]
+
+    ##############################################
 
     def __str__(self):
         # ←
@@ -223,7 +244,7 @@ class Function(Expression):
 
     def __str__(self):
 
-        parameters = ', '.join([str(operand) for operand in self.iter_on_operands()])
+        parameters = ', '.join([str(operand) for operand in self])
         return self._name + ' (' + parameters  + ')'
 
 ####################################################################################################
@@ -236,7 +257,10 @@ class Negation(UnaryExpression):
 ####################################################################################################
 
 class BinaryOperator(BinaryExpression):
+
     __operator__ = None
+
+    ##############################################
 
     def __str__(self):
         return '(' + ' '.join((str(self.operand1), self.__operator__, str(self.operand2))) + ')'

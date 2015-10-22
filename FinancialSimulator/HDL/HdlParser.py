@@ -156,12 +156,12 @@ class HdlParser(object):
 
     def p_statement_expr(self, p):
         'statement : expression'
-        self._statements.append(p[1])
+        self._statements.add_sibling(p[1])
 
     def p_assignation(self, p):
         'statement : NAME SET expression'
         statement = Assignation(Variable(p[1]), p[3])
-        self._statements.append(statement)
+        self._statements.add_sibling(statement)
 
     def p_expression_name(self, p):
         'expression : NAME'
@@ -183,6 +183,27 @@ class HdlParser(object):
                       | expression DIVIDE expression
         '''
         p[0] = self._operator_to_class[p[2]](p[1], p[3])
+
+    def p_expression_list(self, p):
+        '''expression_list : expression
+                           | expression_list COMMA expression
+        '''
+        if len(p) == 3:
+            p[1].add(p[2])
+            p[0] = p[1]
+        else:
+            p[0] = StatementList(p[1])
+
+    def p_function(self, p):
+        '''expression : NAME LEFT_PARENTHESIS expression_list RIGHT_PARENTHESIS
+                      | NAME LEFT_PARENTHESIS RIGHT_PARENTHESIS
+        '''
+        if len(p) == 5:
+            # Fixme:
+            operands = list(p[3].siblings)
+            p[0] = Function(p[1], *operands)
+        else:
+            p[0] = Function(p[1])
 
     ##############################################
 

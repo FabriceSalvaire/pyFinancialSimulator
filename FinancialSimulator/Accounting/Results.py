@@ -26,6 +26,7 @@ import yaml
 
 ####################################################################################################
 
+from FinancialSimulator.HDL.Ast import Variable, Assignation
 from FinancialSimulator.HDL.HdlParser import HdlAccountParser
 from FinancialSimulator.HDL.Evaluator import AccountEvaluator
 from FinancialSimulator.Tools import Hierarchy
@@ -137,12 +138,43 @@ class SumRow(Row):
 
     ##############################################
 
+    @property
+    def variable(self):
+        return self._variable
+
+    ##############################################
+
     def compute(self, visitor):
 
         value = sum([visitor.compute(sibling) for sibling in self])
         if self._variable is not None:
             visitor.evaluator[self._variable] = value
         return value
+
+####################################################################################################
+
+class DependencyNode(Hierarchy.Node):
+
+    ##############################################
+
+    def __init__(self, variable, row):
+
+        super(DependencyNode, self).__init__()
+        
+        self._variable = variable
+        self._row = row
+
+    ##############################################
+
+    @property
+    def variable(self):
+        return self._variable
+
+    ##############################################
+
+    @property
+    def row(self):
+        return self._row
 
 ####################################################################################################
 
@@ -270,6 +302,8 @@ class YamlLoader(object):
         with open(yaml_path, 'r') as f:
             data = yaml.load(f.read())
         
+        self._variable_to_row = {}
+        self._assignation_to_row = {}
         self._table = Table('')
         # for title, items in data.items():
         for title in sorted(data.keys()):
@@ -281,6 +315,20 @@ class YamlLoader(object):
                 if sibling is not None:
                     node.add_sibling(sibling)
             self._table.append_column(self._column)
+        
+        variables = dict(self._variable_to_row)
+        variables.update(self._assignation_to_row)
+        variable_to_dependency_node = {variable:DependencyNode(variable, node)
+                                       for variable, node in variables.items()}
+        for variable, row in self._assignation_to_row.items():
+            ast = row.computation[0]
+            operands = [str(node) for node in ast.depth_first_search() if isinstance(node, Variable)]
+            node = variable_to_dependency_node[variable]
+            for operand in operands:
+                node.add_sibling(variable_to_dependency_node[operand])
+        self._variable_to_dependency_node = variable_to_dependency_node
+        # for dependency_node in self._variable_to_dependency_node.values():
+        #     print(dependency_node.variable, [node.variable for node in dependency_node])
 
     ##############################################
 
@@ -288,44 +336,87 @@ class YamlLoader(object):
 
         # self._logger.info(str(node_data))
         if 'childs' in node_data:
-            title = node_data['title']
-            variable = node_data.get('assign', None)
-            position = node_data.get('position', 'before')
-            show = node_data.get('show', False)
-            self._logger.info('Node ' + title)
-            row = SumRow(level, title, show, position, variable)
-            if position == 'before':
-                self._column.append_row(row)
-            for child_data in node_data['childs']:
-                sibling = self._process_node(child_data, level +1)
-                if sibling is not None:
-                    row.add_sibling(sibling)
-            if position == 'after':
-                self._column.append_row(row)
-            return row
+            return self._process_sum_row(node_data, level)
         elif 'padding' in node_data:
-            number_of_lines = int(node_data['padding'])
-            for i in range(number_of_lines):
-                self._column.append_empty_row()
-            return EmptyRow(level, number_of_lines)
+            return self._process_empty_row(node_data, level)
         else:
-            title = node_data['title']
-            self._logger.info('Row ' + title)
-            if 'computation' in node_data:
-                computation = str(node_data['computation'])
-                print(computation)
-                computation = hdl_parser.parse(computation)
-            else:
-                computation = None
-            row = ValueRow(level, title, computation)
+            return self._process_value_row(node_data, level)
+
+    ##############################################
+
+    def _process_sum_row(self, node_data, level):
+
+        title = node_data['title']
+        variable = node_data.get('assign', None)
+        position = node_data.get('position', 'before')
+        show = node_data.get('show', False)
+        
+        self._logger.info('Node ' + title)
+        row = SumRow(level, title, show, position, variable)
+        
+        if row.variable is not None:
+            self._variable_to_row[str(variable)] = row
+        
+        if position == 'before':
             self._column.append_row(row)
-            return row
+        for child_data in node_data['childs']:
+            sibling = self._process_node(child_data, level +1)
+            if sibling is not None:
+                row.add_sibling(sibling)
+        if position == 'after':
+            self._column.append_row(row)
+        
+        return row
+
+    ##############################################
+
+    def _process_empty_row(self, node_data, level):
+
+        number_of_lines = int(node_data['padding'])
+        for i in range(number_of_lines):
+            self._column.append_empty_row()
+        
+        return EmptyRow(level, number_of_lines)
+
+    ##############################################
+
+    def _process_value_row(self, node_data, level):
+
+        title = node_data['title']
+        if 'computation' in node_data:
+            computation = str(node_data['computation'])
+            computation = hdl_parser.parse(computation)
+        else:
+            computation = None
+        
+        self._logger.info('Row ' + title)
+        row = ValueRow(level, title, computation)
+        self._column.append_row(row)
+
+        if computation is not None:
+            ast = computation[0]
+            if isinstance(ast, Assignation):
+                self._assignation_to_row[str(ast.destination)] = row
+        
+        return row
 
     ##############################################
 
     @property
     def table(self):
         return self._table
+
+    ##############################################
+
+    def compute(self, account_chart):
+
+        computation_visitor = ComputationVisitor(account_chart)
+        for root_node in self._variable_to_dependency_node.values():
+            for dependency_node in root_node.depth_first_search_sibling():
+                # self._logger.info('{} = ...'.format(dependency_node.variable))
+                value = computation_visitor.compute(dependency_node.row)
+                self._logger.info('{} = {}'.format(dependency_node.variable, value))
+        return computation_visitor
 
 ####################################################################################################
 #
