@@ -40,6 +40,8 @@ _module_logger = logging.getLogger(__name__)
 
 class Node(Hierarchy.Node):
 
+    # Fixme: Leaf
+
     ##############################################
 
     def __init__(self, level=0):
@@ -227,12 +229,18 @@ class ComputationVisitor(object):
 
 class Table(object):
 
+    _logger = _module_logger.getChild('Table')
+
     ##############################################
 
     def __init__(self, title):
 
         self._title = title
         self._columns = []
+        
+        self._variable_to_row = None
+        self._assignation_to_row = None
+        self._variable_to_dependency_node = None
 
     ##############################################
 
@@ -244,6 +252,59 @@ class Table(object):
     def __iter__(self):
 
         return iter(self._columns)
+
+    ##############################################
+
+    def make_dependency_graph(self):
+
+        self._variable_to_row = {}
+        self._assignation_to_row = {}
+        for column in self:
+            for row in column.node.depth_first_search():
+                if isinstance(row, SumRow):
+                    self._process_sum_row(row)
+                elif isinstance(row, ValueRow):
+                    self._process_value_row(row)
+        
+        variables = dict(self._variable_to_row)
+        variables.update(self._assignation_to_row)
+        variable_to_dependency_node = {variable:DependencyNode(variable, node)
+                                       for variable, node in variables.items()}
+        for variable, row in self._assignation_to_row.items():
+            ast = row.computation[0]
+            operands = [str(node) for node in ast.depth_first_search() if isinstance(node, Variable)]
+            node = variable_to_dependency_node[variable]
+            for operand in operands:
+                node.add_sibling(variable_to_dependency_node[operand])
+        self._variable_to_dependency_node = variable_to_dependency_node
+
+    ##############################################
+
+    def _process_sum_row(self, row):
+
+        if row.variable is not None:
+            self._variable_to_row[str(row.variable)] = row
+
+    ##############################################
+
+    def _process_value_row(self, row):
+
+        if row.computation is not None:
+            ast = row.computation[0]
+            if isinstance(ast, Assignation):
+                self._assignation_to_row[str(ast.destination)] = row
+
+    ##############################################
+
+    def compute(self, account_chart):
+
+        computation_visitor = ComputationVisitor(account_chart)
+        for root_node in self._variable_to_dependency_node.values():
+            for dependency_node in root_node.depth_first_search_sibling():
+                # self._logger.info('{} = ...'.format(dependency_node.variable))
+                value = computation_visitor.compute(dependency_node.row)
+                self._logger.info('{} = {}'.format(dependency_node.variable, value))
+        return computation_visitor
 
 ####################################################################################################
 
@@ -302,8 +363,6 @@ class YamlLoader(object):
         with open(yaml_path, 'r') as f:
             data = yaml.load(f.read())
         
-        self._variable_to_row = {}
-        self._assignation_to_row = {}
         self._table = Table('')
         # for title, items in data.items():
         for title in sorted(data.keys()):
@@ -316,19 +375,7 @@ class YamlLoader(object):
                     node.add_sibling(sibling)
             self._table.append_column(self._column)
         
-        variables = dict(self._variable_to_row)
-        variables.update(self._assignation_to_row)
-        variable_to_dependency_node = {variable:DependencyNode(variable, node)
-                                       for variable, node in variables.items()}
-        for variable, row in self._assignation_to_row.items():
-            ast = row.computation[0]
-            operands = [str(node) for node in ast.depth_first_search() if isinstance(node, Variable)]
-            node = variable_to_dependency_node[variable]
-            for operand in operands:
-                node.add_sibling(variable_to_dependency_node[operand])
-        self._variable_to_dependency_node = variable_to_dependency_node
-        # for dependency_node in self._variable_to_dependency_node.values():
-        #     print(dependency_node.variable, [node.variable for node in dependency_node])
+        self._table.make_dependency_graph()
 
     ##############################################
 
@@ -353,9 +400,6 @@ class YamlLoader(object):
         
         self._logger.info('Node ' + title)
         row = SumRow(level, title, show, position, variable)
-        
-        if row.variable is not None:
-            self._variable_to_row[str(variable)] = row
         
         if position == 'before':
             self._column.append_row(row)
@@ -392,11 +436,6 @@ class YamlLoader(object):
         self._logger.info('Row ' + title)
         row = ValueRow(level, title, computation)
         self._column.append_row(row)
-
-        if computation is not None:
-            ast = computation[0]
-            if isinstance(ast, Assignation):
-                self._assignation_to_row[str(ast.destination)] = row
         
         return row
 
@@ -405,18 +444,6 @@ class YamlLoader(object):
     @property
     def table(self):
         return self._table
-
-    ##############################################
-
-    def compute(self, account_chart):
-
-        computation_visitor = ComputationVisitor(account_chart)
-        for root_node in self._variable_to_dependency_node.values():
-            for dependency_node in root_node.depth_first_search_sibling():
-                # self._logger.info('{} = ...'.format(dependency_node.variable))
-                value = computation_visitor.compute(dependency_node.row)
-                self._logger.info('{} = {}'.format(dependency_node.variable, value))
-        return computation_visitor
 
 ####################################################################################################
 #
