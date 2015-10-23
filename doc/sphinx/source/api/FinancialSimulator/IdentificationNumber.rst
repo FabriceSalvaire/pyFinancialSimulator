@@ -3,6 +3,8 @@
 *****************************
 
 .. toctree::
+  IdentificationNumber/Bank
+  IdentificationNumber/Company
   IdentificationNumber/LuhnChecksum
   IdentificationNumber/__init__
 

@@ -5,6 +5,7 @@
 .. toctree::
   Accounting/AccountChart
   Accounting/AccountChartLoader
+  Accounting/BankStatement
   Accounting/Document
   Accounting/FinancialPeriod
   Accounting/Journal
