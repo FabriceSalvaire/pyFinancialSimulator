@@ -28,7 +28,7 @@ from lxml import etree
 ####################################################################################################
 
 from FinancialSimulator.IdentificationNumber.Bank import BankAccountNumber
-from .BankStatement import BankStatement, Transaction
+from .BankStatement import BankStatement
 
 ####################################################################################################
 
@@ -99,8 +99,10 @@ class OfxSgmlParser(object):
             source = f.read()
 
         header_data, location = self._parse_header(source)
-        xml_source = self._to_xml(source[location:])
+        if header_data['DATA'] != 'OFXSGML':
+            raise NameError("Unsupported OFX")
 
+        xml_source = self._to_xml(source[location:])
         tree = etree.fromstring(xml_source)
         statement_ressource = self._get_xpath_element(tree, '/OFX/BANKMSGSRSV1/STMTTRNRS/STMTRS')
 
@@ -164,7 +166,7 @@ class OfxSgmlParser(object):
 
     def _to_xml(self, source):
 
-        """Convert quirk SGML to a valid XML document (add close tags)"""
+        """Convert SGML to a valid XML document (add close tags)"""
 
         xml_source = '<?xml version="1.0"?>\n'
         location = 0
