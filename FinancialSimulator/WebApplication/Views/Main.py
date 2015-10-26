@@ -38,7 +38,8 @@ def index():
 
 @main.route('/account_chart')
 def account_chart():
-    accounts = [account for account in model.account_chart if account.has_imputations()]
+    accounts = [account for account in model.account_chart]
+    # if account.has_imputations()]
     return render_template('account_chart.html',
                            account_chart=model.account_chart,
                            accounts=accounts)
@@ -59,15 +60,23 @@ def journal(label):
 
 from FinancialSimulator.Accounting import Results
 
-# yaml_file = 'systeme-abrege-resultat-tableau.yml'
-# yaml_file = 'systeme-base-bilan-tableau.yml'
-yaml_file = 'systeme-base-resultat-tableau.yml'
-yaml_loader = Results.YamlLoader(yaml_file)
+# yaml_file_resultat = 'systeme-abrege-resultat-tableau.yml'
+yaml_file_bilan = 'systeme-base-bilan-tableau.yml'
+yaml_file_resultat = 'systeme-base-resultat-tableau.yml'
+yaml_loader_bilan = Results.YamlLoader(yaml_file_bilan)
+yaml_loader_resultat = Results.YamlLoader(yaml_file_resultat)
+
+@main.route('/tableau/resultat')
+def resultat():
+    account_chart = model.account_chart
+    table = yaml_loader_resultat.table
+    computation_visitor = table.compute(account_chart)
+    return render_template('result.html', table=table, computation_visitor=computation_visitor)
 
 @main.route('/tableau/bilan')
-def result():
+def bilan():
     account_chart = model.account_chart
-    table = yaml_loader.table
+    table = yaml_loader_bilan.table
     computation_visitor = table.compute(account_chart)
     return render_template('result.html', table=table, computation_visitor=computation_visitor)
 

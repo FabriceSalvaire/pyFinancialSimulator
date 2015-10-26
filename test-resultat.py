@@ -72,8 +72,8 @@ if False:
     from FinancialSimulator.Accounting import Results
     
     # yaml_file = 'systeme-abrege-resultat-tableau.yml'
-    # yaml_file = 'systeme-base-bilan-tableau.yml'
-    yaml_file = 'systeme-base-resultat-tableau.yml'
+    yaml_file = 'systeme-base-bilan-tableau.yml'
+    # yaml_file = 'systeme-base-resultat-tableau.yml'
     yaml_loader = Results.YamlLoader(yaml_file)
     table = yaml_loader.table
 
@@ -92,7 +92,7 @@ if False:
                     string_format = '{:' + str(title_width) + '}'
                     print(string_format.format(title))
 
-if True:
+if False:
     from FinancialSimulator.Accounting import Results
     
     # yaml_file = 'systeme-abrege-resultat-tableau.yml'
@@ -113,7 +113,7 @@ if True:
                 delta -= account_set
     print('Delta:', sorted(delta))
 
-if False:
+if True:
     from FinancialSimulator.WebApplication.Application import create_application
     
     # Fixme: if DEBUG = True then reload ...

@@ -2,122 +2,185 @@
 # Système de base / Modèle de bilan en tableau
 Actif:
 - title: "Total I"
+  assign: TA1
   position: after
   show: True
   childs:
     - title: "Capital souscrit - non appelé"
-      computation: 109
+      computation: 109D
     - title: "Actif immobilise"
     - title: "Immobilisations incorporelles"
       childs:
         - title: "Frais d'établissement"
-          computation: 201
+          computation: 201D
         - title: "Frais de recherche et de développement"
-          computation: 203
+          computation: 203C
         - title: "Concessions, brevets, licences, marques, procédés, logiciels, droits et valeurs similaires"
-          computation: 205
+          computation: 205D
         - title: "Fonds commercial"
-          computation: 206 + 207
+          computation: 206D + 207D
         - title: "Autres"
-          computation: 208
+          computation: 208D
         - title: "Immobilisations incorporelles en cours"
-          computation: 232
+          computation: 232D
         - title: "Avances et acomptes"
-          computation: 237
+          computation: 237D
     - title: "Immobilisations corporelles"
       childs:
         - title: "Terrains"
-          computation: 211 + 212
+          computation: 211D + 212D
         - title: "Constructions"
-          computation: 213 + 214
+          computation: 213D + 214D
         - title: "Installations techniques, matériel et outillage industriels"
-          computation: 215
+          computation: 215D
         - title: "Autres"
-          computation: 218
+          computation: 218D
         - title: "Immobilisations corporelles en cours"
-          computation: 231
+          computation: 231D
         - title: "Avances et acomptes"
-          computation: 238
+          computation: 238D
     - title: "Immobilisations financières"
       childs:
         - title: "Participations"
-          computation: 261 + 266
+          computation: 261D + 266D
         - title: "Créances rattachées à des participations"
-          computation: 267 + 268
+          computation: 267D + 268D
         - title: "Titres immobilisés de l’activité de portefeuille"
-          computation: 273
+          computation: 273D
         - title: "Autres titres immobilisés"
-          computation: 271 + 272 + 27682
+          computation: 271D + 272D + 27682D
         - title: "Prêts"
-          computation: 274 + 27684
+          computation: 274D + 27684D
         - title: "Autres"
-          computation: 275 + 2761 + 27685 + 27688
+          computation: 275D + 2761D + 27685D + 27688D
 - title: "Total II"
+  assign: TA2
   position: after
   show: True
   childs:
     - title: "Actif circulant"
+      # Fixme:
     - title: "Stocks et en-cours"
       childs:
         - title: "Matières premières et autres approvisionnements"
+          computation: 31D + 32D
         - title: "En-cours de production [biens et services]"
+          computation: 33D + 34D
         - title: "Produits intermédiaires et finis"
+          computation: 35D
         - title: "Marchandises"
+          computation: 37D
     - title: "Avances et acomptes versés sur commandes"
+      computation: 4091D
     - title: "Créances"
       childs:
         - title: "Créances Clients et Comptes rattachés"
+          computation: 411D + 413D + 416D + 417D  + 418D
         - title: "Autres"
+          computation: 4096C + 4097C + 4098C + 425C + 4287C + 4387C + 441C + 443D + 444D + 4452C + 4456C + 44581C + 44582C + 44583C + 44586C + 44587C + 451D + 455D + 456D - 4562D + 458D + 462C + 465C + 467C + 4687C + 478D
         - title: "Capital souscrit - appelé, non versé"
+          computation: 4562D
     - title: "Valeurs mobilières de placement"
       childs:
         - title: "Actions propres"
+          computation: 502D
         - title: "Autres titres"
+          computation: 50D - 502D - 509D
     - title: "Instruments de trésorerie"
+      computation: 52D
     - title: "Disponibilités"
-      computation: 51 - (5186 + 519) + 53 + 54
+      computation: 51D - 5186D - 519D + 53C + 54C
     - title: "Charges constatées d’avance"
+      computation: 486D
 - title: "Charges à répartir sur plusieurs exercices (III)"
+  computation: TA3 = 481D
 - title: "Primes de remboursement des emprunts (IV)"
+  computation: TA4 = 169D
 - title: "Ecarts de conversion Actif (V)"
+  computation: TA5 = 476D
+- title: "Total (I + II + III + IV + V)"
+  computation: Tactif = TA1 + TA2 + TA3 + TA4 + TA5
 
 PASSIF (avant répartition):
 - title: "Total I"
+  assign: TP1
+  position: after
+  show: True
   childs:
     - title: "Capitaux propres"
     - title: "Capital [dont versé ...]"
+      computation: 101C + 108C
+      # 1013
     - title: "Primes d'émission, de fusion, d'apport, ..."
+      computation: 104C
     - title: "Ecarts de réévaluation"
+      computation: 105C
     - title: "Ecart d’équivalence"
+      computation: 107C
     - title: "Réserves"
       childs:
         - title: "Réserve légale"
+          computation: 1061C
         - title: "Réserves statutaires ou contractuelles"
+          computation: 1063C
         - title: "Réserves réglementées"
+          computation: 1062C + 1064C
         - title: "Autres"
+          computation: 1068C
     - title: "Report à nouveau"
+      computation: 110C
+      # 119
     - title: "Résultat de l'exercice [bénéfice ou perte]"
+      computation: 120C
+      # 129
     - title: "Subventions d'investissement"
+      computation: 13C
     - title: "Provisions réglementées"
+      computation: 14C
 - title: "Total II"
+  assign: TP2
+  position: after
+  show: True
   childs:
     - title: "Provisions"
     - title: "Provisions pour risques"
+      computation: 151C
     - title: "Provisions pour charges"
-    - title: "Total III"
+      computation: 15C - 151C
+- title: "Total III"
+  assign: TP3
+  position: after
+  show: True
+  childs:
     - title: "Dettes"
     - title: "Emprunts obligataires convertibles"
+      computation: 161C + 16881C
     - title: "Autres emprunts obligataires"
+      computation: 163C + 16883C
     - title: "Emprunts et dettes auprès des établissements de crédit"
+      computation: 164C + 16884C + 512C + 514C + 517C + 5186C + 519C
     - title: "Emprunts et dettes financières diverses"
+      computation: 165C + 166C + 1675C + 168C - 16881C - 16883C - 16884C + 17C + 426C + 45C - 457C
     - title: "Avances et acomptes reçus sur commandes en cours"
+      computation: 4191C
     - title: "Dettes Fournisseurs et Comptes rattachés"
+      computation: 401C + 403C + 4081C + 4088C
+      # en partie
     - title: "Dettes fiscales et sociales"
+      computation: 421C + 422C + 424C + 427C + 4282C + 4284C + 4286C + 43C - 4387C + 442C + 443C + 444C + 4455C + 4457C + 44584C + 44587C + 446C + 447C + 4482C + 4486C + 457C
     - title: "Dettes sur immobilisations et Comptes rattachés"
+      computation: 269C + 279C + 404C + 405C + 4084C + 4088C
+      # en partie
     - title: "Autres dettes"
+      computation: 4196C + 4197C + 4198C + 464C + 467C + 4686C + 478C + 509C
     - title: "Instruments de trésorerie"
+      computation: 52C
     - title: "Produits constatés d’avance"
+      computation: 487C
 - title: "Ecarts de conversion Passif (IV)"
+  computation: TP4 = 477C
+- title: "Total (I + II + III + IV)"
+  computation: Tpassif = TP1 + TP2 + TP3 + TP4
 
 # PASSIF (après répartition):
 # - title: "Total I"
