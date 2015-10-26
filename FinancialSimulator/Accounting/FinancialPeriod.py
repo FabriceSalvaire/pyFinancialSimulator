@@ -259,7 +259,10 @@ class FinancialPeriod(object):
     ):
 
         self._account_chart = AccountChartSnapshot(account_chart)
-        self._analytic_account_chart = AccountChartSnapshot(analytic_account_chart)
+        if analytic_account_chart is not None:
+            self._analytic_account_chart = AccountChartSnapshot(analytic_account_chart)
+        else:
+            self._analytic_account_chart = None
         self._journals = Journals(self._account_chart, self._analytic_account_chart, journals)
         
         self._start_date = start_date
