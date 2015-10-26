@@ -28,7 +28,7 @@ import yaml
 
 from FinancialSimulator.HDL.Ast import Variable, Assignation
 from FinancialSimulator.HDL.HdlParser import HdlAccountParser
-from FinancialSimulator.HDL.Evaluator import AccountEvaluator
+from FinancialSimulator.HDL.Evaluator import AccountEvaluator, AccountSetEvaluator
 from FinancialSimulator.Tools import Hierarchy
 from FinancialSimulator.Tools.Currency import format_currency
 
@@ -71,7 +71,10 @@ class EmptyRow(Node):
 
     def compute(self, visitor):
 
-        return 0
+        if visitor.set_evaluator:
+            return set()
+        else:
+            return 0
 
 ####################################################################################################
 
@@ -123,7 +126,10 @@ class ValueRow(Row):
         if self._computation is not None:
             return visitor.evaluator.run_ast_program(self._computation)
         else:
-            return 0
+            if visitor.set_evaluator:
+                return set()
+            else:
+                return 0
 
 ####################################################################################################
 
@@ -148,7 +154,13 @@ class SumRow(Row):
 
     def compute(self, visitor):
 
-        value = sum([visitor.compute(sibling) for sibling in self])
+        if visitor.set_evaluator:
+            value = set()
+            for sibling in self:
+                print(sibling.title)
+                value |= visitor.compute(sibling)
+        else:
+            value = sum([visitor.compute(sibling) for sibling in self])
         if self._variable is not None:
             visitor.evaluator[self._variable] = value
         return value
@@ -184,10 +196,21 @@ class ComputationVisitor(object):
 
     ##############################################
 
-    def __init__(self, account_chart):
+    def __init__(self, account_chart, set_evaluator=False):
 
-        self._evaluator = AccountEvaluator(account_chart)
+        self._set_evaluator = set_evaluator
+        if set_evaluator:
+            evaluator = AccountSetEvaluator
+        else:
+            evaluator = AccountEvaluator
+        self._evaluator = evaluator(account_chart)
         self.reset()
+
+    ##############################################
+
+    @property
+    def set_evaluator(self):
+        return self._set_evaluator
 
     ##############################################
 
@@ -296,9 +319,9 @@ class Table(object):
 
     ##############################################
 
-    def compute(self, account_chart):
+    def compute(self, account_chart, **kwargs):
 
-        computation_visitor = ComputationVisitor(account_chart)
+        computation_visitor = ComputationVisitor(account_chart, **kwargs)
         for root_node in self._variable_to_dependency_node.values():
             for dependency_node in root_node.depth_first_search_sibling():
                 # self._logger.info('{} = ...'.format(dependency_node.variable))

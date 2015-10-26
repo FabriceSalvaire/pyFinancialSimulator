@@ -197,6 +197,81 @@ class AccountEvaluator(Evaluator):
         return max(value, 0)
 
 ####################################################################################################
+
+class AccountSetEvaluator(AccountEvaluator):
+
+    ##############################################
+
+    def _eval_Account(self, level, number, dcb):
+
+        # Fixme: signed etc.
+        try:
+            account = self._account_chart[number]
+            return set(account.depth_first_search())
+        except NonExistingNodeError:
+            self._logger.warning("Account {} doesn't exist".format(number))
+            return set()
+
+    ##############################################
+
+    def eval_Account(self, level, statement):
+
+        return self._eval_Account(level, int(statement), statement.dcb)
+
+    ##############################################
+
+    def eval_AccountInterval(self, level, statement):
+
+        # Fixme: check
+        value = set()
+        for number in statement:
+            # can raise NonExistingNodeError
+            value.union(self._eval_Account(level, number, statement.dcb))
+        return value
+
+    ##############################################
+
+    def eval_Assignation(self, level, statement, value):
+
+        # Fixme:
+        # value = float(value)
+        self._variables[str(statement.destination)] = value
+        return value
+
+    ##############################################
+
+    def eval_Negation(self, level, statement, operand1):
+
+        return operand1
+
+    ##############################################
+
+    def eval_Addition(self, level, statement, operand1, operand2):
+
+        return operand1 | operand2
+
+    ##############################################
+
+    def eval_Subtraction(self, level, statement, operand1, operand2):
+
+        return operand1 - operand2
+
+
+    ##############################################
+
+    def eval_min_zero(self, level, statement, value):
+
+        # Fixme
+        return value
+
+    ##############################################
+
+    def eval_max_zero(self, level, statement, value):
+
+        # Fixme
+        return value
+
+####################################################################################################
 #
 # End
 #
