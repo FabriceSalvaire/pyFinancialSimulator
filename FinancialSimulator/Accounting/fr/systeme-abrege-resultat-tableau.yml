@@ -1,64 +1,99 @@
 # Art. 822-3
 
+# Vérifier la correspondance, le pcg abrégé
+
 Charges (hors taxes):
-- title: "Charges d'exploitation"
-- - title: "Achats de marchandises"
-    computation: 60 - 609
-  - title: "Variation de stocks [marchandises]"
-    # +/-
-    computation: 603
-  - title: "Achats d'approvisionnements"
-  - title: "Variation de stocks [approvisionnements]"
-  - title: "Autres charges externes"
-    computation: 61 - 619 + 62 - 629
-  - title: "Impôts, taxes et versements assimilés"
-    computation: 63
-  - title: "Rémunérations du personnel"
-    computation: 64
-  - title: "Charges sociales"
-  - title: "Dotations aux amortissements"
-    computation: 681
-  - title: "Dotations aux dépréciations"
-  - title: "Dotations aux provisions"
-  - title: "Autres charges"
-    computation: 65
-  - title: "Charges financières"
-    computation: 66 + 686
 - title: "Total I"
+  assign: TC1
+  show: True
+  position: after
+  childs:
+    - title: "Charges d'exploitation"
+      childs:
+          # 60 - 609
+          # +- 603
+          # 61 - 619
+          # 62 - 629
+          # 63 + 64 + 65 + 681
+          # 655 quote part
+        - title: "Achats de marchandises"
+          computation: 607D - 6097C
+        - title: "Variation de stocks [marchandises]"
+          computation: -603B
+        - title: "Achats d'approvisionnements"
+          computation: 601D - 6091C  + 602D - 6092C + 608D
+        - title: "Variation de stocks [approvisionnements]"
+          computation: 6031D - 6032C
+        - title: "Autres charges externes"
+          computation: "[604:606]D + 61D - 619C + 62D - 629C + 6122D + 6125D"
+        - title: "Impôts, taxes et versements assimilés"
+          computation: 63D
+        - title: "Rémunérations du personnel"
+          computation: 641D + 644D + 648D
+        - title: "Charges sociales"
+          computation: 645D + 646D + 647D
+        - title: "Dotations aux amortissements"
+          computation: 6811D + 6812D
+        - title: "Dotations aux dépréciations"
+          computation: 6816D + 6817D
+        - title: "Dotations aux provisions"
+          computation: 6815D
+        - title: "Autres charges"
+          computation: 65D
+        - title: "Charges financières"
+          computation: 66D + 686D
+          # ok
 - title: "Charges exceptionnelles (II)"
-  computation: T2 = 67 + 687
+  computation: TC2 = 67D + 687D
+  # ok
 - title: "Impôts sur les bénéfices (III)"
-  computation: T3 = 69
+  computation: TC3 = 69D
+  # ok
 - title: "Total des charges (I + II + III)"
-  computation: T1 + T2 + T3
+  computation: Tcharge = TC1 + TC2 + TC3
 - title: "Solde créditeur : Bénéfice"
+  computation: benefice = max_zero(Tproduit - Tcharge)
 - title: "Total général"
-# * Y compris :
-# - redevances de crédit-bail mobilier
-# - redevances de crédit-bail immobilier
+  computation: Tcharge + benefice
 
 Produits (hors taxes):
-- title: "Produits d'exploitation"
-- - title: "Ventes de marchandises"
-    computation: 707 - 7097
-  - title: "Production vendue [biens et services]"
-    computation: '[701:706] - [7091:7096]'
-  - title: "Production stockée"
-    computation: 713
-  - title: "Production immobilisée"
-    computation: 72
-  - title: "Subventions d'exploitation"
-    computation: 74
-  - title: "Autres produits"
-    computation: 75 + 781 + 791 + 708 - 7098
-  - padding: 2
-  - title: "Produits financiers"
-    computation: 76 + 786 + 796
 - title: "Total I"
-- title: "dont à l'exportation"
+# - title: "dont à l'exportation"
+  assign: TP1
+  show: True
+  position: after
+  childs:
+    - title: "Produits d'exploitation"
+      childs:
+        # 707 - 7097
+        # 701 à 706 - 7091 à 7096
+        # 708 - 7098
+        # +- 713
+        # 72 + 74 + 75 + 781 + 791
+        # quote part 755
+        - title: "Ventes de marchandises"
+          computation: 707D - 7097C
+        - title: "Production vendue [biens et services]"
+          computation: '[701:706] - [7091:7096]'
+        - title: "Production stockée"
+          computation: 713
+        - title: "Production immobilisée"
+          computation: 72
+        - title: "Subventions d'exploitation"
+          computation: 74
+        - title: "Autres produits"
+          computation: 75 + 781 + 791 + 708 - 7098
+        - padding: 6
+        - title: "Produits financiers"
+          computation: 76D + 786D + 796D
+          # ok
 - title: "Produits exceptionnels (II)"
-  computation: 77 + 787 + 797
+  computation: TP2 = 77D + 787D + 797D
+  # ok
 - padding: 1
 - title: "Total des produits (I + II)"
+  computation: Tproduid = TP1 + TP2
 - title: "Solde débiteur : perte"
+  computation: perte = max_zero(Tactif - Tpassif)
 - title: "Total général"
+  computation: Tproduid + perte
