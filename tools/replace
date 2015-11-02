@@ -42,7 +42,7 @@ default_excluded_extension = ','.join(('~',
                                        '.txt',
                                        ))
 
-default_exclusion_pattern = '\.git'
+default_exclusion_pattern = '(\.git|doc/sphinx/build)'
 
 ####################################################################################################
 #
