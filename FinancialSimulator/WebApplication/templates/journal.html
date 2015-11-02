@@ -30,21 +30,17 @@
 	      <td></td>
 	      <td></td>
 	    </tr>
-	    {% for imputation in transaction.debits %}
-	      <tr>
-		<th scope="row"></th>
-		<td>{{ imputation.account.number }}: {{ imputation.account.description }}</td>
-		<td class="text-right">{{ '%0.2f'| format(imputation.amount | round(2)) }} €</td>
-		<td></td>
-	      </tr>
-	    {% endfor %}
-	    {% for imputation in transaction.credits %}
-	      <tr>
-		<th scope="row"></th>
-		<td>{{ imputation.account.number }}: {{ imputation.account.description }}</td>
-		<td></td>
-		<td class="text-right">{{ '%0.2f'| format(imputation.amount | round(2)) }} €</td>
-	      </tr>
+	    {% for imputations in (transaction.debits, transaction.credits) %}
+	      {% for imputation in imputations %}
+		{% with account = imputation.account %}
+		  <tr>
+		    <th scope="row"></th>
+		    <td>{{ account.number }}: {{ account.description }}</td>
+		    <td class="text-right">{{ imputation.debit_str }}</td>
+		    <td class="text-right">{{ imputation.credit_str }}</td>
+		  </tr>
+		{% endwith %}
+	      {% endfor %}
 	    {% endfor %}
 	  {% endfor %}
 	</tbody>

@@ -26,13 +26,17 @@
 	</thead>
 	<tbody>
 	  {% for account in accounts %}
-	    <tr>
-	      <th scope="row">{{ account.number }}</th>
-	      <td>{{ account.description }}</td>
-	      <td class="text-right">{{ account.debit_str }}</td>
-	      <td class="text-right">{{ account.credit_str }}</td>
-	      <td class="text-right">{{ account.balance_str }}</td>
-	    </tr>
+	    {% if account.system == 'abrégé' or account.system == 'base' %}
+	      <tr>
+		{% with number = account.number %}
+		  <th scope="row"><a href="/main/account/{{ number }}">{{ number }}</a></th>
+		{% endwith %}
+		<td>{{ account.description }}</td>
+		<td class="text-right">{{ account.debit_str }}</td>
+		<td class="text-right">{{ account.credit_str }}</td>
+		<td class="text-right">{{ account.balance_str }}</td>
+	      </tr>
+	    {% endif %}
 	  {% endfor %}
 	</tbody>
       </table>

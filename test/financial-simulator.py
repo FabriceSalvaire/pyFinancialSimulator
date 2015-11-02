@@ -12,7 +12,7 @@ def date_iterator(start, stop, delta):
 
 ####################################################################################################
 
-class Transaction(object):
+class JournalEntry(object):
 
     ##############################################
 
@@ -35,13 +35,13 @@ class Transaction(object):
 
 ####################################################################################################
 
-class SimpleTransaction(Transaction):
+class SimpleJournalEntry(JournalEntry):
 
     ##############################################
 
     def __init__(self, source, destination, amount, description=''):
 
-        super(SimpleTransaction, self).__init__(source, description)
+        super(SimpleJournalEntry, self).__init__(source, description)
         self._destination = destination
         self._amount = amount
 
@@ -69,7 +69,7 @@ class SimpleTransaction(Transaction):
 
 ####################################################################################################
 
-class TransactionDistribution(object):
+class JournalEntryDistribution(object):
 
     ##############################################
 
@@ -92,13 +92,13 @@ class TransactionDistribution(object):
 
 ####################################################################################################
 
-class DistributedTransaction(Transaction):
+class DistributedJournalEntry(JournalEntry):
 
     ##############################################
 
     def __init__(self, source, description='', *args):
 
-        super(DistributedTransaction, self).__init__(source, description)
+        super(DistributedJournalEntry, self).__init__(source, description)
         self._distribution = args
 
     ##############################################
@@ -106,7 +106,7 @@ class DistributedTransaction(Transaction):
     def __iter__(self):
 
         for item in self._distribution:
-            yield SimpleTransaction(self._source, item.destination, item.amount, self._description)
+            yield SimpleJournalEntry(self._source, item.destination, item.amount, self._description)
 
     ##############################################
 
@@ -251,7 +251,7 @@ class Account(object):
     def _run_transaction(self, transaction):
 
         self._parent_is_dirty()
-        if isinstance(transaction, DistributedTransaction):
+        if isinstance(transaction, DistributedJournalEntry):
             for item in transaction:
                 self._run_simple_transaction(item)
         else:
@@ -268,7 +268,7 @@ class Account(object):
 
     def log_debit(self, destination, amount, description=''):
 
-        transaction = SimpleTransaction(self, destination, amount, description)
+        transaction = SimpleJournalEntry(self, destination, amount, description)
         self.log_transaction(transaction)
         destination.log_transaction(transaction)
 
@@ -276,7 +276,7 @@ class Account(object):
 
     def log_credit(self, source, amount, description=''):
 
-        transaction = SimpleTransaction(source, self, amount, description)
+        transaction = SimpleJournalEntry(source, self, amount, description)
         self.log_transaction(transaction)
         source.log_transaction(transaction)
 

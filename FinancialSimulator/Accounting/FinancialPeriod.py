@@ -27,6 +27,7 @@ import logging
 from .AccountChart import Account, AccountChart
 from .Journal import Journal
 from FinancialSimulator.Tools.Currency import format_currency
+from FinancialSimulator.Tools.DateIndexer import DateIndexer
 
 ####################################################################################################
 
@@ -34,23 +35,25 @@ _module_logger = logging.getLogger(__name__)
 
 ####################################################################################################
 
-class AccountSnapshot(Account):
+class AccountBalance(Account):
 
-    # Fixme: AccountSnapshot / AccountBalance ?
-
-    _logger = _module_logger.getChild('AccountSnapshot')
+    _logger = _module_logger.getChild('AccountBalance')
 
     ##############################################
 
     def __init__(self, account, parent=None):
 
-        super(AccountSnapshot, self). __init__(account.number,
-                                               account.description,
-                                               parent,
-                                               account.devise,
-                                               account.comment,
-                                               account.system)
-        
+        """ This class stores the account balance. """
+
+        # Fixme: inheritance ?
+        super(AccountBalance, self). __init__(account.number,
+                                              account.description,
+                                              parent,
+                                              account.devise,
+                                              account.comment,
+                                              account.system)
+
+        self._history = None
         self.reset()
 
     ##############################################
@@ -70,7 +73,7 @@ class AccountSnapshot(Account):
     def add_sibling(self, sibling):
 
         self.balance_is_dirty()
-        super(AccountSnapshot, self).add_sibling(sibling)
+        super(AccountBalance, self).add_sibling(sibling)
 
     ##############################################
 
@@ -84,13 +87,6 @@ class AccountSnapshot(Account):
 
         self._inner_balance = None
         self._balance = None
-
-    ##############################################
-
-    def _parent_is_dirty(self):
-
-        if self._parent is not None:
-            self._parent.balance_is_dirty()
 
     ##############################################
 
@@ -170,6 +166,7 @@ class AccountSnapshot(Account):
         if amount < 0:
             raise ValueError("Amount must be positive")
         self.inner_balance_is_dirty()
+        # return float()
 
     ##############################################
 
@@ -177,6 +174,8 @@ class AccountSnapshot(Account):
 
         self._apply_debit_credit(amount)
         self._inner_debit += amount
+        # Fixme: imputation ?
+        # self._history.save()
 
     ##############################################
 
@@ -195,15 +194,141 @@ class AccountSnapshot(Account):
         self._inner_debit = debit
         self._inner_credit = credit
 
+    ##############################################
+
+    @property
+    def history(self):
+
+        # Fixme: place here ???
+        if self._history is None:
+            # Lazy creation
+            self._history = AccountBalanceHistory(self)
+            # Fixme: self._start_date, self._stop_date are unknown here !
+        return self._history
+
 ####################################################################################################
 
-class AccountChartSnapshot(AccountChart):
+class AccountBalanceSnapshot:
+
+    ##############################################
+
+    def __init__(self, imputation, debit, credit):
+
+        self._imputation = imputation
+        self._debit = debit
+        self._credit = credit
+
+    ##############################################
+
+    @property
+    def imputation(self):
+        return self._imputation
+
+    ##############################################
+
+    @property
+    def date(self):
+        return self._imputation.date
+
+    ##############################################
+
+    @property
+    def debit(self):
+        return self._debit
+
+    ##############################################
+
+    @property
+    def credit(self):
+        return self._credit
+
+    ##############################################
+
+    @property
+    def debit_str(self):
+        return format_currency(self._debit)
+
+    ##############################################
+
+    @property
+    def credit_str(self):
+        return format_currency(self._credit)
+
+    ##############################################
+
+    @property
+    def balance(self):
+        return self._credit - self._debit
+
+    ##############################################
+
+    @property
+    def balance_str(self):
+        return format_currency(self.balance)
+
+####################################################################################################
+
+class AccountBalanceHistory(DateIndexer):
+
+    # purpose
+    #  - cache balance for each imputation
+
+    # use case:
+    # simulation: run transactions and update imputed accounts, but not the hierarchy to speedup the process (laziness)
+    # live: could update the hierarchy
+    # history: journal for account, balance cache
+
+    def __init__(self, account): # , start_date, stop_date):
+
+        super(). __init__() # start_date, stop_date)
+        self._account = account
+
+    ##############################################
+
+    @property
+    def account(self):
+        return self._account
+
+    ##############################################
+
+    def save(self, imputation):
+
+        # Fixme: pass debit, credit ???
+        snapshot = AccountBalanceSnapshot(imputation, self._account.debit, self._account.credit)
+        self.append(snapshot)
+
+####################################################################################################
+
+# class AccountChartHistory:
+# 
+#     ##############################################
+# 
+#     def __init__(self, start_date, stop_date):
+# 
+#         # Fixme: start/stop_date ???
+#         self._start_date = start_date
+#         self._stop_date = stop_date
+#         self._accounts = {}
+# 
+#     ##############################################
+# 
+#     def __getitem__(self, account):
+# 
+#         number = account.number
+#         if number in self._accounts:
+#             # Lazy creation
+#             self._accounts[number] = AccountBalanceHistory(account, self._start_date, self._stop_date)
+#         return self._accounts[number]
+
+####################################################################################################
+
+class AccountChartBalance(AccountChart):
 
     ##############################################
 
     def __init__(self, account_chart):
 
-        super(AccountChartSnapshot, self).__init__(account_chart.name)
+        super(AccountChartBalance, self).__init__(account_chart.name)
         
         for account in account_chart:
             parent = account.parent
@@ -211,7 +336,7 @@ class AccountChartSnapshot(AccountChart):
                 parent = self[parent.number]
             else:
                 parent = None
-            account_snapshot = AccountSnapshot(account, parent)
+            account_snapshot = AccountBalance(account, parent)
             self.add_node(account_snapshot)
 
     ##############################################
@@ -227,9 +352,9 @@ class Journals(object):
 
     ##############################################
 
-    def __init__(self, account_chart, analytic_account_chart, journals):
+    def __init__(self, financial_period, journals):
 
-        self._journals = {label:Journal(label, description, account_chart, analytic_account_chart)
+        self._journals = {label:Journal(label, description, financial_period)
                           for label, description in journals}
 
     ##############################################
@@ -258,15 +383,17 @@ class FinancialPeriod(object):
                  stop_date
     ):
 
-        self._account_chart = AccountChartSnapshot(account_chart)
-        if analytic_account_chart is not None:
-            self._analytic_account_chart = AccountChartSnapshot(analytic_account_chart)
-        else:
-            self._analytic_account_chart = None
-        self._journals = Journals(self._account_chart, self._analytic_account_chart, journals)
-        
         self._start_date = start_date
         self._stop_date = stop_date
+        
+        # self._history = AccountChartHistory(start_date, stop_date)
+        
+        self._account_chart = AccountChartBalance(account_chart)
+        if analytic_account_chart is not None:
+            self._analytic_account_chart = AccountChartBalance(analytic_account_chart)
+        else:
+            self._analytic_account_chart = None
+        self._journals = Journals(self, journals)
 
     ##############################################
 
@@ -297,6 +424,12 @@ class FinancialPeriod(object):
     @property
     def stop_date(self):
         return self._stop_date
+
+    ##############################################
+
+    # @property
+    # def history(self):
+    #     return self._history
 
 ####################################################################################################
 #

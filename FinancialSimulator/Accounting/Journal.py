@@ -25,8 +25,11 @@ import logging
 
 ####################################################################################################
 
-from FinancialSimulator.Units import round_currency
+from FinancialSimulator.Tools.Currency import format_currency
+from FinancialSimulator.Tools.DateIndexer import DateIndexer
 from FinancialSimulator.Tools.Hierarchy import NonExistingNodeError
+from FinancialSimulator.Tools.SequentialId import SequentialId
+from FinancialSimulator.Units import round_currency
 
 ####################################################################################################
 
@@ -112,6 +115,14 @@ class Imputation(object):
     ##############################################
 
     @property
+    def journal_entry(self):
+        return self._journal_entry
+
+    @property
+    def date(self):
+        return self._journal_entry.date
+
+    @property
     def description(self):
         return self._journal_entry.description
 
@@ -130,6 +141,33 @@ class Imputation(object):
     @property
     def analytic_account(self):
         return self._analytic_account
+
+    ##############################################
+
+    @property
+    def amount_str(self):
+
+        return format_currency(self._amount)
+
+    ##############################################
+
+    @property
+    def debit_str(self):
+
+        if self.is_debit():
+            return self.amount_str
+        else:
+            return ''
+
+    ##############################################
+
+    @property
+    def credit_str(self):
+
+        if self.is_credit():
+            return self.amount_str
+        else:
+            return ''
 
     ##############################################
 
@@ -186,6 +224,11 @@ class Imputation(object):
             self._account.apply_credit(self.amount)
             if self._analytic_account is not None:
                 self._analytic_account.apply_credit(self.amount)
+        
+        # Fixme: save balance
+        self._account.history.save(self)
+        if self._analytic_account is not None:
+            self._analytic_account.history.save(self)
 
 ####################################################################################################
 
@@ -402,17 +445,23 @@ class Journal(object):
     # update sequence number
     # update account chart snapshot / update date
 
+    # Fixme:
+    # journal -> period ?
+
     ##############################################
 
-    def __init__(self, label, description, account_chart, analytic_account_chart):
+    def __init__(self, label, description, financial_period):
 
         self._label = label
         self._description = description
-        self._account_chart = account_chart
-        self._analytic_account_chart = analytic_account_chart
         
-        self._next_id = 0
-        self._journal_entries = []
+        self._account_chart = financial_period.account_chart
+        self._analytic_account_chart = financial_period.analytic_account_chart
+        # self._history = financial_period.history
+        
+        self._next_id = SequentialId()
+        self._journal_entries = [] # Fixme: data provider
+        # self._date_indexer = DateIndexer(start, stop)
 
     ##############################################
 
@@ -428,12 +477,6 @@ class Journal(object):
 
     ##############################################
 
-    def __iter__(self):
-
-        return iter(self._journal_entries)
-
-    ##############################################
-
     def run(self):
 
         self._account_chart.reset()
@@ -442,17 +485,16 @@ class Journal(object):
 
     ##############################################
 
-    def _log_entry(self, date, description, imputations, document=None):
+    def _make_entry(self, date, description, imputations, document=None):
 
-        sequence_number = self._next_id
+        sequence_number = self._next_id.increment()
         journal_entry = JournalEntry(sequence_number,
                                      date,
                                      description,
                                      document,
                                      imputations
         )
-        self._journal_entries.append(journal_entry)
-        self._next_id += 1
+        self._append_entry(journal_entry)
         journal_entry.apply()
         
         return journal_entry
@@ -464,7 +506,7 @@ class Journal(object):
         try:
             resolved_imputations = [imputation.resolve(self._account_chart, self._analytic_account_chart)
                                     for imputation in imputations]
-            return self._log_entry(date, description, resolved_imputations, document)
+            return self._make_entry(date, description, resolved_imputations, document)
         except NonExistingNodeError:
             raise
 
@@ -472,11 +514,47 @@ class Journal(object):
 
     def log_template(self, date, template, document=None):
 
-        return self._log_entry(date,
+        return self._make_entry(date,
                                template.description,
                                template.imputations,
                                document,
         )
+
+    ##############################################
+
+    def _append_entry(self, journal_entry):
+
+        self._journal_entries.append(journal_entry)
+
+    ##############################################
+
+    def __getitem__(self, slice_):
+
+        return self._journal_entries[slice_]
+
+    ##############################################
+
+    def __iter__(self):
+
+        return iter(self._journal_entries)
+
+    ##############################################
+
+    def filter(self, account=None, start_date=None, stop_date=None):
+
+        # Fixme: use index
+
+        for journal_entry in self._journal_entries:
+            match = True
+            # nA + A.B
+            if account is not None and journal_entry.account != account:
+                match = False
+            if start_date is not None and start_date <= journal_entry.date:
+                match = False
+            if stop_date is not None and journal_entry.date <= stop_date:
+                match = False
+            if match:
+                yield journal_entry
 
 ####################################################################################################
 #

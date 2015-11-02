@@ -1,0 +1,46 @@
+{# -*- engine: jinja2 -*- #}
+{% extends "base.html" %}
+{% block body %}
+  <ul class="breadcrumb">
+    <li><a href="/main">Accueil</a></li>
+    <li class="active"></li>
+  </ul>
+
+  <div class="row">
+    <div class="col-xl-12">
+      <h1>{{ account.number }} {{ account.description }}</h1>
+      <table class="table table-hover">
+	<col style="width:5%">
+	<col style="width:5%">
+	<col style="width:55%">
+	<col style="width:10%">
+	<col style="width:10%">
+	<col style="width:10%">
+	<thead>
+	  <tr>
+	    <th>N°</th>
+	    <th>Date</th>
+	    <th>Description</th>
+	    <th>Débit</th>
+	    <th>Crédit</th>
+	    <th>Balance</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for snapshot in history %}
+	    {% with imputation = snapshot.imputation %}
+	      <tr>
+		<th scope="row">{{ imputation.journal_entry.sequence_number }}</th>
+		<th>{{ imputation.date }}</th>
+		<td>{{ imputation.description }}</td>
+		<td class="text-right">{{ imputation.debit_str }}</td>
+		<td class="text-right">{{ imputation.credit_str }}</td>
+		<td class="text-right">{{ snapshot.balance_str }}</td>
+	      </tr>
+	    {% endwith %}
+	  {% endfor %}
+	</tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}
