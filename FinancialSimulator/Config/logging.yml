@@ -30,8 +30,9 @@ handlers:
 
 root:
   #level: DEBUG
-  level: INFO
+  #level: INFO
   #level: WARNING
+  # Fixme:
   #handlers: [console]
 
 ####################################################################################################
