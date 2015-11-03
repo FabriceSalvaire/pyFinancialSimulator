@@ -46,7 +46,7 @@ class Node(Hierarchy.Node):
 
     def __init__(self, level=0):
 
-        super(Node, self).__init__()
+        super().__init__()
         self._level = level
 
     ##############################################
@@ -63,7 +63,7 @@ class EmptyRow(Node):
 
     def __init__(self, level, number_of_lines):
 
-        super(EmptyRow, self).__init__(level)
+        super().__init__(level)
         
         self._number_of_lines = number_of_lines
 
@@ -84,7 +84,7 @@ class Row(Node):
 
     def __init__(self, level, title, show=True):
 
-        super(Row, self).__init__(level)
+        super().__init__(level)
         
         self._title = title
         self._show = show
@@ -109,7 +109,7 @@ class ValueRow(Row):
 
     def __init__(self, level, title, computation=None):
 
-        super(ValueRow, self).__init__(level, title)
+        super().__init__(level, title)
         
         self._computation = computation
 
@@ -139,7 +139,7 @@ class SumRow(Row):
 
     def __init__(self, level, title, show, position, variable=None):
 
-        super(SumRow, self).__init__(level, title, show)
+        super().__init__(level, title, show)
         
         self._position = position
         self._variable = variable
@@ -173,7 +173,7 @@ class DependencyNode(Hierarchy.Node):
 
     def __init__(self, variable, row):
 
-        super(DependencyNode, self).__init__()
+        super().__init__()
         
         self._variable = variable
         self._row = row

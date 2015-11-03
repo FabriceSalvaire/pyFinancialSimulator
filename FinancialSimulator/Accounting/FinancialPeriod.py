@@ -46,12 +46,12 @@ class AccountBalance(Account):
         """ This class stores the account balance. """
 
         # Fixme: inheritance ?
-        super(AccountBalance, self). __init__(account.number,
-                                              account.description,
-                                              parent,
-                                              account.devise,
-                                              account.comment,
-                                              account.system)
+        super(). __init__(account.number,
+                          account.description,
+                          parent,
+                          account.devise,
+                          account.comment,
+                          account.system)
 
         self._history = None
         self.reset()
@@ -73,7 +73,7 @@ class AccountBalance(Account):
     def add_sibling(self, sibling):
 
         self.balance_is_dirty()
-        super(AccountBalance, self).add_sibling(sibling)
+        super().add_sibling(sibling)
 
     ##############################################
 
@@ -304,7 +304,7 @@ class AccountChartBalance(AccountChart):
 
     def __init__(self, account_chart):
 
-        super(AccountChartBalance, self).__init__(account_chart.name)
+        super().__init__(account_chart.name)
         
         for account in account_chart:
             parent = account.parent

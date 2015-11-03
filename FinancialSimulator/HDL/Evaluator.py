@@ -144,7 +144,7 @@ class AccountEvaluator(Evaluator):
 
     def __init__(self, account_chart):
 
-        super(AccountEvaluator, self).__init__()
+        super().__init__()
         
         self._account_chart = account_chart
 

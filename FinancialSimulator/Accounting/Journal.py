@@ -353,7 +353,7 @@ class JournalEntry(JournalEntryMixin):
 
     def __init__(self, journal, sequence_number, date, description, document, imputations):
 
-        super(JournalEntry, self).__init__(description, imputations)
+        super().__init__(description, imputations)
 
         self._journal = journal
         self._id = sequence_number

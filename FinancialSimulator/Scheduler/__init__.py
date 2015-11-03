@@ -72,7 +72,7 @@ class SingleAction(Action):
 
     def __init__(self, date, label=''):
 
-        super(SingleAction, self).__init__(label)
+        super().__init__(label)
         self._date = date
 
     ##############################################
@@ -100,7 +100,7 @@ class ReccurentAction(Action):
 
     def __init__(self, start_date, label=''):
 
-        super(ReccurentAction, self).__init__(label)
+        super().__init__(label)
         self._start_date = start_date
 
     ##############################################
@@ -127,7 +127,7 @@ class PeriodicAction(ReccurentAction):
 
     def __init__(self, start_date, period, label=''):
 
-        super(PeriodicAction, self).__init__(start_date, label)
+        super().__init__(start_date, label)
         self._period = period
 
     ##############################################
@@ -144,7 +144,7 @@ class WeeklyAction(PeriodicAction):
 
     def __init__(self, start_date, label=''):
 
-        super(WeeklyAction, self).__init__(start_date, datetime.timedelta(7), label)
+        super().__init__(start_date, datetime.timedelta(7), label)
 
 ####################################################################################################
 
@@ -217,7 +217,7 @@ class RandomAction(Action):
 
     def __init__(self, start_date, label=''):
 
-        super(RandomAction, self).__init__(label)
+        super().__init__(label)
         self._start_date = start_date
 
     ##############################################
@@ -289,7 +289,7 @@ class PlannedActions(dict):
 
     def __init__(self, start_date):
 
-        super(PlannedActions, self).__init__()
+        super().__init__()
 
         self._start_date = start_date
 

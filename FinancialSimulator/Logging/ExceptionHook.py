@@ -114,7 +114,7 @@ class StderrExceptionHook(ExceptionHook):
 
     def __init__(self, context=''):
 
-        super(StderrExceptionHook, self).__init__(context)
+        super().__init__(context)
 
     ##############################################
 

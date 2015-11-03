@@ -38,7 +38,7 @@ class StatementList(Node):
 
     def __init__(self, *statements):
 
-        super(StatementList, self).__init__(siblings=statements)
+        super().__init__(siblings=statements)
 
     ##############################################
 
@@ -68,7 +68,7 @@ class Variable(Leaf):
 
     def __init__(self, name):
 
-        super(Variable, self).__init__()
+        super().__init__()
         self._name = name
 
     ##############################################
@@ -84,7 +84,7 @@ class Account(Leaf):
 
     def __init__(self, number, dcb):
 
-        super(Account, self).__init__()
+        super().__init__()
         self._number = int(number)
         self._dcb = dcb
 
@@ -112,7 +112,7 @@ class AccountInterval(Leaf):
 
     def __init__(self, name_inf, name_sup, dcb):
 
-        super(AccountInterval, self).__init__()
+        super().__init__()
         self._name_inf = name_inf
         self._name_sup = name_sup
         self._dcb = dcb
@@ -143,7 +143,7 @@ class Constant(Leaf):
 
     def __init__(self, value):
 
-        super(Constant, self).__init__()
+        super().__init__()
         self._value = value
 
     ##############################################
@@ -170,7 +170,7 @@ class Expression(Node):
             and len(args) != self.__number_of_operands__):
             raise ValueError("Wrong number of operands")
         
-        super(Expression, self).__init__(siblings=args)
+        super().__init__(siblings=args)
 
     ##############################################
 
@@ -202,7 +202,7 @@ class Assignation(UnaryExpression):
 
     def __init__(self, destination, value):
 
-        super(Assignation, self).__init__(value)
+        super().__init__(value)
         self._destination = destination
 
     ##############################################
@@ -231,7 +231,7 @@ class Function(Expression):
 
     def __init__(self, name, *args):
 
-        super(Function, self).__init__(*args)
+        super().__init__(*args)
         self._name = name
 
     ##############################################

@@ -47,7 +47,7 @@ class Parameters(dict):
 
     def __init__(self, definitions):
 
-        super(Parameters, self).__init__()
+        super().__init__()
         
         for name, value_string in definitions.items():
             value = _value_parser.parse(value_string)
@@ -64,7 +64,7 @@ class Variables(dict):
 
     def __init__(self, definitions, parameters):
 
-        super(Variables, self).__init__(parameters)
+        super().__init__(parameters)
         
         for name, value_string in definitions.items():
             value = eval(value_string, self)

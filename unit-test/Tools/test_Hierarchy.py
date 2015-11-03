@@ -34,7 +34,7 @@ class MyNode(Node):
 
     def __init__(self, number, parent=None):
 
-        super(MyNode, self).__init__(parent)
+        super().__init__(parent)
         self._number = number
 
     ##############################################

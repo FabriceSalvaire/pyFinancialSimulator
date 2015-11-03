@@ -41,7 +41,7 @@ class SimpleJournalEntry(JournalEntry):
 
     def __init__(self, source, destination, amount, description=''):
 
-        super(SimpleJournalEntry, self).__init__(source, description)
+        super().__init__(source, description)
         self._destination = destination
         self._amount = amount
 
@@ -98,7 +98,7 @@ class DistributedJournalEntry(JournalEntry):
 
     def __init__(self, source, description='', *args):
 
-        super(DistributedJournalEntry, self).__init__(source, description)
+        super().__init__(source, description)
         self._distribution = args
 
     ##############################################

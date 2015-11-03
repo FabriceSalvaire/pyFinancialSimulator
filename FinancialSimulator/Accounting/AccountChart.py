@@ -45,7 +45,7 @@ class Account(Node):
                  system=''):
 
         self._number = number
-        super(Account, self).__init__(parent)
+        super().__init__(parent)
         self._description = description
         self._comment = comment
         self._system = system # PCG Fr: classe, base, abrégé, développé
@@ -119,7 +119,7 @@ class AccountChart(Hierarchy):
 
     def __init__(self, name):
 
-        super(AccountChart, self).__init__()
+        super().__init__()
         
         self._name = name
 

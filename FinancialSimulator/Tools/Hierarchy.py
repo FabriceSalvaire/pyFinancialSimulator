@@ -72,7 +72,7 @@ class Node(Leaf):
 
     def __init__(self, parent=None, siblings=None):
 
-        super(Node, self).__init__(parent)
+        super().__init__(parent)
         if siblings is not None:
             self._siblings = list(siblings)
         else:
