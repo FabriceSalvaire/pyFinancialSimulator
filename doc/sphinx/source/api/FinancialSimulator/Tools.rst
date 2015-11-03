@@ -7,6 +7,7 @@
   Tools/Date
   Tools/DateIndexer
   Tools/Hierarchy
+  Tools/Observer
   Tools/Path
   Tools/SequentialId
   Tools/Singleton
