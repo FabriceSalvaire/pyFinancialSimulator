@@ -63,6 +63,16 @@ def date_iterator_in_month(date):
         yield date.replace(day=day)
 
 ####################################################################################################
+
+def parse_date(date_str):
+    return datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+
+####################################################################################################
+
+def parse_datetime(date_str):
+    return datetime.datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S.%f")
+
+####################################################################################################
 #
 # End
 #

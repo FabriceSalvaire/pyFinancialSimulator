@@ -26,7 +26,9 @@ import logging
 ####################################################################################################
 
 from FinancialSimulator.Tools.Currency import format_currency
+from FinancialSimulator.Tools.Date import parse_date, parse_datetime
 from FinancialSimulator.Tools.Hierarchy import NonExistingNodeError
+from FinancialSimulator.Tools.Observer import Observer
 from FinancialSimulator.Tools.SequentialId import SequentialId
 from FinancialSimulator.Units import round_currency
 # from FinancialSimulator.Tools.DateIndexer import DateIndexer
@@ -224,6 +226,17 @@ class Imputation:
                 self._analytic_account.apply_credit(self.amount)
             self._analytic_account.history.save(self)
 
+    ##############################################
+
+    def to_json(self):
+
+        d = {'account':self._account.number, 'amount':self._amount}
+        if self._analytic_account is not None:
+            d['analytic_account'] = self._analytic_account.number
+        d['operation'] = 'D' if self.is_debit() else 'C'
+
+        return d
+
 ####################################################################################################
 
 class DebitImputation(DebitMixin, Imputation):
@@ -344,21 +357,31 @@ class JournalEntryTemplate(JournalEntryMixin):
 
 ####################################################################################################
 
-class JournalEntry(JournalEntryMixin):
+class JournalEntry(JournalEntryMixin, Observer):
 
     ##############################################
 
-    def __init__(self, journal, sequence_number, date, description, document, imputations):
+    def __init__(self,
+                 journal, sequence_number, date, description, document, imputations,
+                 _internal_data=None,
+    ):
 
-        super().__init__(description, imputations)
-
+        JournalEntryMixin.__init__(self, description, imputations)
+        Observer.__init__(self)
+        
         self._journal = journal
         self._id = sequence_number
         self._date = date
         self._document = document # accounting document
-        self._validation_date = None
-        self._reconciliation_id = None # clearing
-        self._reconciliation_date = None
+
+        if _internal_data is not None:
+            self._validation_date = _internal_data['validation_date']
+            self._reconciliation_id = _internal_data['reconciliation_id']
+            self._reconciliation_date = _internal_data['reconciliation_date']
+        else:
+            self._validation_date = None
+            self._reconciliation_id = None # clearing
+            self._reconciliation_date = None
 
     ##############################################
 
@@ -425,6 +448,7 @@ class JournalEntry(JournalEntryMixin):
 
         if self._validation_date is None:
             self._validation_date = datetime.datetime.utcnow()
+            self.changed()
         else:
             raise NameError('Journal entry is already validated')
 
@@ -435,8 +459,28 @@ class JournalEntry(JournalEntryMixin):
         if self._reconciliation_date is not None:
             self._reconciliation_id = reconciliation_id
             self._reconciliation_date = datetime.datetime.utcnow()
+            self.changed()
         else:
             raise NameError('Journal entry is already cleared')
+
+    ##############################################
+
+    def to_json(self):
+
+        d = {
+            'journal': self._journal.label,
+            'sequence_number': self._id,
+            'date': str(self._date), # datetime is handled by pymongo
+            'description': self._description,
+            # 'document': = self._document
+            'validation_date': str(self._validation_date),
+            'reconciliation_id': self._reconciliation_id,
+            'reconciliation_date': str(self._reconciliation_date),
+            'debits': [imputation.to_json() for imputation in self._debits],
+            'credits': [imputation.to_json() for imputation in self._credits],
+        }
+
+        return d
 
 ####################################################################################################
 
@@ -462,7 +506,7 @@ class Journal:
         self._analytic_account_chart = financial_period.analytic_account_chart
         # self._history = financial_period.history
         
-        self._next_id = SequentialId()
+        self._next_id = SequentialId() # Fixme: init from store
         self._journal_entries = [] # Fixme: data provider
         # self._date_indexer = DateIndexer(start, stop)
 
@@ -559,6 +603,48 @@ class Journal:
                 match = False
             if match:
                 yield journal_entry
+
+    ##############################################
+
+    def journal_entry_from_json(self, data):
+
+        date = parse_date(data['date'])
+        validation_date = parse_datetime(data['validation_date'])
+        reconciliation_date = data['reconciliation_date']
+        if reconciliation_date != 'None':
+            reconciliation_date = parse_datetime(reconciliation_date)
+        else:
+            reconciliation_date = None
+        
+        internal_data = {
+            'validation_date': validation_date,
+            'reconciliation_date': reconciliation_date,
+            'reconciliation_id': data['reconciliation_id'],
+        }
+        
+        imputations = []
+        for imputation_jsons in data['debits'], data['credits']:
+            for imputation_json in imputation_jsons:
+                if imputation_json['operation'] == 'D':
+                    imputation_data_class = DebitImputationData
+                else:
+                    imputation_data_class = CreditImputationData
+                del imputation_json['operation'] # Fixme
+                imputation_json.setdefault('analytic_account', None)
+                imputation = imputation_data_class(**imputation_json)
+                imputation.resolve(self._account_chart, self._analytic_account_chart)
+                imputations.append(imputation)
+        
+        journal_entry = JournalEntry(self,
+                                     data['sequence_number'],
+                                     date,
+                                     data['description'],
+                                     None, # data['document'],
+                                     imputations,
+                                     _internal_data=internal_data,
+        )
+        
+        return journal_entry
 
 ####################################################################################################
 #
