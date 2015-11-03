@@ -16,7 +16,7 @@ import FinancialSimulator.Tools.Path as PathTools # due to Path class
 
 _this_file = PathTools.to_absolute_path(__file__)
 
-class Path(object):
+class Path:
 
     FinancialSimulator_module_directory = PathTools.parent_directory_of(_this_file, step=2)
     config_directory = os.path.dirname(_this_file)
@@ -24,7 +24,7 @@ class Path(object):
 
 ####################################################################################################
 
-class Logging(object):
+class Logging:
 
     default_config_file = 'logging.yml'
     directories = (Path.config_directory,)

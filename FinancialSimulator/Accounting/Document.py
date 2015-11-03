@@ -28,7 +28,7 @@ _module_logger = logging.getLogger(__name__)
 
 ####################################################################################################
 
-class AccountingDocument(object):
+class AccountingDocument:
 
     ##############################################
 

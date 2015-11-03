@@ -29,7 +29,7 @@ from .Actions import (SingleJournalEntryAction,
 
 ####################################################################################################
 
-class JournalEntryActionFactory(object):
+class JournalEntryActionFactory:
 
     ##############################################
 

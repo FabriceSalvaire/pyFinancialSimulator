@@ -192,7 +192,7 @@ class DependencyNode(Hierarchy.Node):
 
 ####################################################################################################
 
-class ComputationVisitor(object):
+class ComputationVisitor:
 
     ##############################################
 
@@ -250,7 +250,7 @@ class ComputationVisitor(object):
 
 ####################################################################################################
 
-class Table(object):
+class Table:
 
     _logger = _module_logger.getChild('Table')
 
@@ -331,7 +331,7 @@ class Table(object):
 
 ####################################################################################################
 
-class Column(object):
+class Column:
 
     ##############################################
 
@@ -373,7 +373,7 @@ class Column(object):
 
 hdl_parser = HdlAccountParser()
 
-class YamlLoader(object):
+class YamlLoader:
 
     _logger = _module_logger.getChild('YamlLoader')
 

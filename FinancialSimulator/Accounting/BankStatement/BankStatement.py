@@ -34,7 +34,7 @@ _module_logger = logging.getLogger(__name__)
 
 ####################################################################################################
 
-class Transaction(object):
+class Transaction:
 
     # Fixme: check duplicated code in Journal
 
@@ -117,7 +117,7 @@ class CreditTransaction(CreditMixin, Transaction):
 
 ####################################################################################################
 
-class BankStatement(object):
+class BankStatement:
 
     ##############################################
 
@@ -212,7 +212,7 @@ class BankStatement(object):
 
 ####################################################################################################
 
-class AmountList(object):
+class AmountList:
 
     ##############################################
 
@@ -257,7 +257,7 @@ def _sort_amount_dict(amount_dict):
 
 ####################################################################################################
 
-class Reconciliator(object):
+class Reconciliator:
 
     ##############################################
 

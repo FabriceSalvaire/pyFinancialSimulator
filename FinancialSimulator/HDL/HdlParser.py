@@ -37,7 +37,7 @@ _module_logger = logging.getLogger(__name__)
 
 ####################################################################################################
 
-class HdlParser(object):
+class HdlParser:
 
     _logger = _module_logger.getChild('HdlParser')
 
@@ -250,7 +250,7 @@ class HdlParser(object):
 
 ####################################################################################################
 
-class HdlNumericalParser(object):
+class HdlNumericalParser:
 
     ##############################################
 

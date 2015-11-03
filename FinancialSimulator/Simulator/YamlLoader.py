@@ -73,7 +73,7 @@ class Variables(dict):
 
 ####################################################################################################
 
-class JournalEntryDefinition(object):
+class JournalEntryDefinition:
 
     _logger = _module_logger.getChild('JournalEntrys')
 
@@ -129,7 +129,7 @@ class JournalEntryDefinition(object):
 
 ####################################################################################################
 
-class YamlUnit(object):
+class YamlUnit:
 
     _logger = _module_logger.getChild('YamlUnit')
 
@@ -183,7 +183,7 @@ class YamlUnit(object):
 
 ####################################################################################################
 
-class YamlLoader(object):
+class YamlLoader:
 
     ##############################################
 

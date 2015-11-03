@@ -32,7 +32,7 @@ _module_logger = logging.getLogger(__name__)
 
 ####################################################################################################
 
-class Evaluator(object):
+class Evaluator:
 
     _logger = _module_logger.getChild('Evaluator')
 

@@ -49,13 +49,13 @@ class DuplicatedEntryError(NameError):
 
 ####################################################################################################
 
-class DebitMixin(object):
+class DebitMixin:
     def is_debit(self):
         return True
     def is_credit(self):
         return False
 
-class CreditMixin(object):
+class CreditMixin:
     def is_debit(self):
         return False
     def is_credit(self):
@@ -63,7 +63,7 @@ class CreditMixin(object):
 
 ####################################################################################################
 
-class ImputationData(object):
+class ImputationData:
 
     __imputation_class__ = None
 
@@ -96,7 +96,7 @@ class ImputationData(object):
 
 ####################################################################################################
 
-class Imputation(object):
+class Imputation:
 
     _logger = _module_logger.getChild('Imputation')
 
@@ -245,7 +245,7 @@ class CreditImputationData(CreditMixin, ImputationData):
 
 ####################################################################################################
 
-class JournalEntryMixin(object):
+class JournalEntryMixin:
 
     _logger = _module_logger.getChild('JournalEntryMixin')
 
@@ -443,7 +443,7 @@ class JournalEntry(JournalEntryMixin):
 
 ####################################################################################################
 
-class Journal(object):
+class Journal:
 
     # Fixme:
     # add/save entry = transaction

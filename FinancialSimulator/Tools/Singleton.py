@@ -67,7 +67,7 @@ class SingletonMetaClass(type):
 
 ####################################################################################################
 
-class singleton(object):
+class singleton:
 
     """ A singleton class decorator.
     

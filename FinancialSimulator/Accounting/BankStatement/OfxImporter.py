@@ -89,7 +89,7 @@ class OfxSgmlParserError(Exception):
 
 ####################################################################################################
 
-class OfxSgmlParser(object):
+class OfxSgmlParser:
 
     ##############################################
 

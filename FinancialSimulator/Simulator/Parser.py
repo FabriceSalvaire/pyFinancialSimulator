@@ -33,7 +33,7 @@ class ParseError(Exception):
 
 ####################################################################################################
 
-class AmountValueParser(object):
+class AmountValueParser:
 
     ##############################################
 
@@ -89,7 +89,7 @@ class AmountValueParser(object):
 
 ####################################################################################################
 
-class PercentValueParser(object):
+class PercentValueParser:
 
     ##############################################
 
@@ -105,7 +105,7 @@ class PercentValueParser(object):
 
 ####################################################################################################
 
-class ValueParser(object):
+class ValueParser:
 
     ##############################################
 

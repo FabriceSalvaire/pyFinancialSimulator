@@ -29,7 +29,7 @@ _module_logger = logging.getLogger(__name__)
 
 ####################################################################################################
 
-class Action(object):
+class Action:
 
     ##############################################
 
@@ -239,7 +239,7 @@ class RandomAction(Action):
 
 ####################################################################################################
 
-class PlannedAction(object):
+class PlannedAction:
 
     _logger = _module_logger.getChild('PlannedAction')
 
@@ -313,7 +313,7 @@ class PlannedActions(dict):
 
 ####################################################################################################
 
-class Scheduler(object):
+class Scheduler:
 
     _logger = _module_logger.getChild('Scheduler')
 

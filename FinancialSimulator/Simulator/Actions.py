@@ -27,7 +27,7 @@ from FinancialSimulator.Scheduler import (SingleAction,
 
 ####################################################################################################
 
-class JournalEntryActionMixin(object):
+class JournalEntryActionMixin:
 
     ##############################################
 
