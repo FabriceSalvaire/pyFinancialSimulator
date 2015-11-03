@@ -183,6 +183,7 @@ class Imputation:
 
         # Fixme: template -> 
         # called in JournalEntryMixin.__init__, overloaded
+        # == copy
         return self.__class__(journal_entry,
                               self.account, self.amount, self.analytic_account)
 
@@ -212,7 +213,7 @@ class Imputation:
         # Fixme: simulation vs accounting
 
         self._logger.info(str(self))
-        
+
         if self.is_debit():
             self._account.apply_debit(self.amount)
         else:
@@ -255,7 +256,7 @@ class CreditImputationData(CreditMixin, ImputationData):
 
 class JournalEntryMixin:
 
-    """This class defines a jounrnal entry template."""
+    """This class defines a journal entry template."""
 
     _logger = _module_logger.getChild('JournalEntryMixin')
 
@@ -526,7 +527,9 @@ class Journal:
 
     def run(self):
 
-        self._account_chart.reset()
+        # Fixme: not here
+        # self._account_chart.reset()
+        # self._analytic_account_chart.reset()
         for journal_entry in self._journal_entries:
             journal_entry.apply()
 
@@ -582,6 +585,18 @@ class Journal:
 
     ##############################################
 
+    def __bool__(self):
+
+        return bool(len(self._journal_entries))
+
+    ##############################################
+
+    def __len__(self):
+
+        return len(self._journal_entries)
+
+    ##############################################
+
     def __iter__(self):
 
         return iter(self._journal_entries)
@@ -632,8 +647,8 @@ class Journal:
                 del imputation_json['operation'] # Fixme
                 imputation_json.setdefault('analytic_account', None)
                 imputation = imputation_data_class(**imputation_json)
-                imputation.resolve(self._account_chart, self._analytic_account_chart)
-                imputations.append(imputation)
+                resolved_imputation = imputation.resolve(self._account_chart, self._analytic_account_chart)
+                imputations.append(resolved_imputation)
         
         journal_entry = JournalEntry(self,
                                      data['sequence_number'],
@@ -645,6 +660,21 @@ class Journal:
         )
         
         return journal_entry
+
+    ##############################################
+
+    def to_json(self):
+
+        return [journal_entry.to_json() for journal_entry in self]
+
+    ##############################################
+
+    def load_json(self, data):
+
+        for journal_entry_json in data:
+            journal_entry = self.journal_entry_from_json(journal_entry_json)
+            self._journal_entries.append(journal_entry)
+        self._next_id = SequentialId(self._journal_entries[-1].sequence_number)
 
 ####################################################################################################
 #

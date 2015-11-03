@@ -28,6 +28,7 @@ from .AccountChart import Account, AccountChart
 from .Journal import Journal
 from FinancialSimulator.Tools.Currency import format_currency
 from FinancialSimulator.Tools.DateIndexer import DateIndexer
+from FinancialSimulator.Tools.Observer import Observer
 
 ####################################################################################################
 
@@ -35,7 +36,7 @@ _module_logger = logging.getLogger(__name__)
 
 ####################################################################################################
 
-class AccountBalance(Account):
+class AccountBalance(Account, Observer):
 
     _logger = _module_logger.getChild('AccountBalance')
 
@@ -46,12 +47,14 @@ class AccountBalance(Account):
         """ This class stores the account balance. """
 
         # Fixme: inheritance ?
-        super(). __init__(account.number,
+        Account. __init__(self,
+                          account.number,
                           account.description,
                           parent,
                           account.devise,
                           account.comment,
                           account.system)
+        Observer.__init__(self)
 
         self._history = None
         self.reset()
@@ -68,6 +71,8 @@ class AccountBalance(Account):
         self._debit = None
         self._balance = None
 
+        self.reseted()
+
     ##############################################
 
     def add_sibling(self, sibling):
@@ -80,6 +85,7 @@ class AccountBalance(Account):
     def balance_is_dirty(self):
 
         self._balance = None
+        # self.changed()
 
     ##############################################
 
@@ -87,6 +93,7 @@ class AccountBalance(Account):
 
         self._inner_balance = None
         self._balance = None
+        self.changed()
 
     ##############################################
 
@@ -205,6 +212,18 @@ class AccountBalance(Account):
             self._history = AccountBalanceHistory(self)
         return self._history
 
+    ##############################################
+
+    def to_json(self):
+
+        d = {
+            'number': self._number,
+            'inner_debit': self._inner_debit,
+            'inner_credit': self._inner_credit,
+        }
+
+        return d
+
 ####################################################################################################
 
 class AccountBalanceSnapshot:
@@ -222,6 +241,18 @@ class AccountBalanceSnapshot:
     @property
     def imputation(self):
         return self._imputation
+
+    ##############################################
+
+    @property
+    def journal_label(self):
+        return self._imputation.journal_entry.journal.label
+
+    ##############################################
+
+    @property
+    def sequence_number(self):
+        return self._imputation.journal_entry.sequence_number
 
     ##############################################
 
@@ -264,6 +295,21 @@ class AccountBalanceSnapshot:
     @property
     def balance_str(self):
         return format_currency(self.balance)
+
+    ##############################################
+
+    def to_json(self, with_account=True):
+
+        d = {
+            'journal': self.journal_label,
+            'sequence_number': self.sequence_number,
+            'debit': self._debit,
+            'credit': self._credit,
+        }
+        if with_account:
+            d['account_number'] = self._imputation.account.number
+
+        return d
 
 ####################################################################################################
 
@@ -322,6 +368,20 @@ class AccountChartBalance(AccountChart):
         for account in self:
             account.reset()
 
+    ##############################################
+
+    def to_json(self):
+
+        return [account.to_json() for account in self if account.has_imputations()]
+
+    ##############################################
+
+    def force_balance_from_json(self, data):
+
+        for d in data:
+            account = self[d['number']]
+            account.force_balance(d['inner_debit'], d['inner_credit'])
+
 ####################################################################################################
 
 class Journals:
@@ -344,6 +404,22 @@ class Journals:
     def __iter__(self):
 
         return iter(self._journals.values())
+
+    ##############################################
+
+    def to_json(self):
+
+        return {journal.label: journal.to_json()
+                for journal in self
+                if journal}
+
+    ##############################################
+
+    def load_json(self, data):
+
+        for label, journal_entries in data.items():
+            journal = self[label]
+            journal.load_json(journal_entries)
 
 ####################################################################################################
 

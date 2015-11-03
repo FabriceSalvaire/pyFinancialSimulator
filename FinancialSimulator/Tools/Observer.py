@@ -60,14 +60,32 @@ class Observer:
 
     ##############################################
 
+    def _listener_iter(self):
+
+        for listeners in self._listeners, self.__global_listeners__:
+            for listener in listeners:
+                yield listener
+
+    ##############################################
+
     def changed(self):
+
+        """Signal to indicate a modification"""
 
         # thread safe
         self._changed = True
-        for listeners in self._listeners, self.__global_listeners__:
-            for listener in listeners:
-                # Fixme: self notify listener
-                listener.notify(self)
+        for listener in self._listener_iter():
+            listener.on_change(self)
+
+    ##############################################
+
+    def reseted(self):
+
+        """Signal to indicate a wipe"""
+
+        self._changed = True
+        for listener in self._listener_iter():
+            listener.on_reset(self)
 
 ####################################################################################################
 #
