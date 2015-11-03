@@ -26,6 +26,7 @@ import yaml
 ####################################################################################################
 
 from .AccountChart import Account, AccountChart
+import FinancialSimulator.Config.ConfigInstall as ConfigInstall
 
 ####################################################################################################
 
@@ -71,7 +72,8 @@ _account_charts = {
 
 def load_account_chart_for_country(country_code):
 
-    yaml_path = os.path.join(os.path.dirname(__file__), country_code, _account_charts[country_code])
+    yaml_path = os.path.join(ConfigInstall.Path.accounting_data_directory,
+                             country_code, _account_charts[country_code])
     return load_account_chart(yaml_path)
 
 ####################################################################################################

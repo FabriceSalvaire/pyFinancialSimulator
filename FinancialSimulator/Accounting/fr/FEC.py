@@ -27,6 +27,10 @@ from lxml import etree
 
 ####################################################################################################
 
+import FinancialSimulator.Config.ConfigInstall as ConfigInstall
+
+####################################################################################################
+
 _module_logger = logging.getLogger(__name__)
 
 ####################################################################################################
@@ -38,7 +42,8 @@ class FecWriter:
     def validate(self, path, schema):
 
         document = etree.parse(path)
-        schema_path = os.path.join(os.path.dirname(__file__), 'fec', schema + '.xsd')
+        schema_path = os.path.join(ConfigInstall.Path.accounting_data_directory,
+                                   'fr', 'fec', schema + '.xsd')
         xmlschema_document = etree.parse(schema_path)
         xmlschema = etree.XMLSchema(xmlschema_document)
         return xmlschema.validate(document)

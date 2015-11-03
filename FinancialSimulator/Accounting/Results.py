@@ -31,6 +31,7 @@ from FinancialSimulator.HDL.HdlParser import HdlAccountParser
 from FinancialSimulator.HDL.Evaluator import AccountEvaluator, AccountSetEvaluator
 from FinancialSimulator.Tools import Hierarchy
 from FinancialSimulator.Tools.Currency import format_currency
+import FinancialSimulator.Config.ConfigInstall as ConfigInstall
 
 ####################################################################################################
 
@@ -382,7 +383,8 @@ class YamlLoader:
     def __init__(self, yaml_file):
 
         country_code = 'fr'
-        yaml_path = os.path.join(os.path.dirname(__file__), country_code, yaml_file)
+        yaml_path = os.path.join(ConfigInstall.Path.accounting_data_directory,
+                                 country_code, yaml_file)
         with open(yaml_path, 'r') as f:
             data = yaml.load(f.read())
         
