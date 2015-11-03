@@ -26,7 +26,7 @@
 	</thead>
 	<tbody>
 	  {% for account in accounts %}
-	    {% if account.system == 'abrégé' or account.system == 'base' %}
+	    {# {% if account.system == 'abrégé' or account.system == 'base' %} #}
 	      <tr>
 		{% with number = account.number %}
 		  <th scope="row"><a href="/main/account/{{ number }}">{{ number }}</a></th>
@@ -36,7 +36,7 @@
 		<td class="text-right">{{ account.credit_str }}</td>
 		<td class="text-right">{{ account.balance_str }}</td>
 	      </tr>
-	    {% endif %}
+	    {# {% endif %} #}
 	  {% endfor %}
 	</tbody>
       </table>
