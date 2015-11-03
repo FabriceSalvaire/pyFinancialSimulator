@@ -26,10 +26,10 @@ import logging
 ####################################################################################################
 
 from FinancialSimulator.Tools.Currency import format_currency
-from FinancialSimulator.Tools.DateIndexer import DateIndexer
 from FinancialSimulator.Tools.Hierarchy import NonExistingNodeError
 from FinancialSimulator.Tools.SequentialId import SequentialId
 from FinancialSimulator.Units import round_currency
+# from FinancialSimulator.Tools.DateIndexer import DateIndexer
 
 ####################################################################################################
 
@@ -218,16 +218,15 @@ class Imputation(object):
         
         if self.is_debit():
             self._account.apply_debit(self.amount)
-            if self._analytic_account is not None:
-                self._analytic_account.apply_debit(self.amount)
         else:
             self._account.apply_credit(self.amount)
-            if self._analytic_account is not None:
-                self._analytic_account.apply_credit(self.amount)
-        
-        # Fixme: save balance
         self._account.history.save(self)
+        
         if self._analytic_account is not None:
+            if self.is_debit():
+                self._analytic_account.apply_debit(self.amount)
+            else:
+                self._analytic_account.apply_credit(self.amount)
             self._analytic_account.history.save(self)
 
 ####################################################################################################
@@ -352,16 +351,23 @@ class JournalEntry(JournalEntryMixin):
 
     ##############################################
 
-    def __init__(self, sequence_number, date, description, document, imputations):
+    def __init__(self, journal, sequence_number, date, description, document, imputations):
 
         super(JournalEntry, self).__init__(description, imputations)
 
+        self._journal = journal
         self._id = sequence_number
         self._date = date
         self._document = document # accounting document
         self._validation_date = None
         self._reconciliation_id = None # clearing
         self._reconciliation_date = None
+
+    ##############################################
+
+    @property
+    def journal(self):
+        return self._journal
 
     ##############################################
 
@@ -488,7 +494,8 @@ class Journal(object):
     def _make_entry(self, date, description, imputations, document=None):
 
         sequence_number = self._next_id.increment()
-        journal_entry = JournalEntry(sequence_number,
+        journal_entry = JournalEntry(self,
+                                     sequence_number,
                                      date,
                                      description,
                                      document,

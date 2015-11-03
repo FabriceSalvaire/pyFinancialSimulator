@@ -203,7 +203,6 @@ class AccountBalance(Account):
         if self._history is None:
             # Lazy creation
             self._history = AccountBalanceHistory(self)
-            # Fixme: self._start_date, self._stop_date are unknown here !
         return self._history
 
 ####################################################################################################
@@ -278,9 +277,9 @@ class AccountBalanceHistory(DateIndexer):
     # live: could update the hierarchy
     # history: journal for account, balance cache
 
-    def __init__(self, account): # , start_date, stop_date):
+    def __init__(self, account):
 
-        super(). __init__() # start_date, stop_date)
+        super(). __init__()
         self._account = account
 
     ##############################################
@@ -296,29 +295,6 @@ class AccountBalanceHistory(DateIndexer):
         # Fixme: pass debit, credit ???
         snapshot = AccountBalanceSnapshot(imputation, self._account.debit, self._account.credit)
         self.append(snapshot)
-
-####################################################################################################
-
-# class AccountChartHistory:
-# 
-#     ##############################################
-# 
-#     def __init__(self, start_date, stop_date):
-# 
-#         # Fixme: start/stop_date ???
-#         self._start_date = start_date
-#         self._stop_date = stop_date
-#         self._accounts = {}
-# 
-#     ##############################################
-# 
-#     def __getitem__(self, account):
-# 
-#         number = account.number
-#         if number in self._accounts:
-#             # Lazy creation
-#             self._accounts[number] = AccountBalanceHistory(account, self._start_date, self._stop_date)
-#         return self._accounts[number]
 
 ####################################################################################################
 
@@ -424,12 +400,6 @@ class FinancialPeriod(object):
     @property
     def stop_date(self):
         return self._stop_date
-
-    ##############################################
-
-    # @property
-    # def history(self):
-    #     return self._history
 
 ####################################################################################################
 #
