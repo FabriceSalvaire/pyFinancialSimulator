@@ -20,12 +20,18 @@
 
 ####################################################################################################
 
+import calendar
 import datetime
 
 ####################################################################################################
 
 def clone_date(date):
     return datetime.date(date.year, date.month, date.day)
+
+####################################################################################################
+
+def fist_month_day_of(date):
+    return date.replace(day=1)
 
 ####################################################################################################
 
@@ -36,6 +42,25 @@ def date_iterator(start, stop, step=datetime.timedelta(days=1)):
     while date <= stop:
         yield date
         date += step
+
+####################################################################################################
+
+def monthly_iterator(start, stop):
+    # cf. calendar Calendar.itermonthdates
+    start = fist_month_day_of(start)
+    for year in range(start.year, stop.year +1):
+        # can do more for first and last year
+        for month in range(1, 13):
+            date = datetime.date(year, month, 1)
+            if start <= date <= stop:
+                yield date
+
+####################################################################################################
+
+def date_iterator_in_month(date):
+    first_day, last_day = calendar.monthrange(date.year, date.month)
+    for day in range(first_day, last_day):
+        yield date.replace(day=day)
 
 ####################################################################################################
 #

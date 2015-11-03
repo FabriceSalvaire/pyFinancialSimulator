@@ -20,11 +20,7 @@
 
 ####################################################################################################
 
-import datetime
-
-####################################################################################################
-
-from .Date import clone_date, date_iterator
+from .Date import clone_date, date_iterator, monthly_iterator, date_iterator_in_month
 
 ####################################################################################################
 
@@ -40,7 +36,7 @@ class DateList(list):
     def __init__(self, date):
 
         super().__init__()
-        self._date = date
+        self._date = clone_date(date)
 
     ##############################################
 
@@ -50,77 +46,14 @@ class DateList(list):
 
 ####################################################################################################
 
-class DatePeriodIndexer:
-
-    # Fixme: month/year iterator
-
-    ##############################################
-
-    def __init__(self, start, stop):
-
-        self._start = clone_date(start)
-        self._stop = clone_date(stop)
-        # Fixme: cf. infra (list):
-        self._dates = [DateList(date) for date in date_iterator(self._start, self._stop)]
-
-    ##############################################
-
-    @property
-    def start(self):
-        return self._start
-
-    @property
-    def stop(self):
-        return self._stop
-
-    ##############################################
-
-    def __len__(self):
-        return len(self._dates)
-
-    ##############################################
-    
-    def __iter__(self):
-        return iter(self._dates)
-
-    ##############################################
-
-    def date_to_index(self, date):
-
-        return (date - self._start).days
-
-    ##############################################
-
-    def __getitem__(self, date):
-
-        if self._start <= date <= self._stop:
-            return self._dates[self.date_to_index(date)]
-        else:
-            raise OutOfDateError
-
-    ##############################################
-
-    def append(self, obj):
-
-        self[obj.date].append(obj)
-
-    ##############################################
-
-    def iter_on_date(self, date):
-
-        return iter(self[date])
-
-####################################################################################################
-
 class DateIndexer:
 
     # Fixme: month/year iterator
 
     ##############################################
 
-    def __init__(self, epoch=datetime.date(1900, 1, 1)):
+    def __init__(self):
 
-        self._epoch = epoch
         self._start = None
         self._stop = None
         self._dates = {}
@@ -137,32 +70,10 @@ class DateIndexer:
 
     ##############################################
 
-    def __len__(self):
-        return len(self._dates)
-
-    ##############################################
-    
-    def __iter__(self):
-
-        # return iter(self._dates)
-        for date in date_iterator(self._start, self._stop):
-            date_list = self[date]
-            if date_list is not None:
-                yield from iter(date_list)
-
-    ##############################################
-
-    def date_to_index(self, date):
-
-        # Fixme: fast ?
-        return (date - self._epoch).days
-
-    ##############################################
-
     def __getitem__(self, date):
 
         if self._start <= date <= self._stop:
-            key = self.date_to_index(date)
+            key = date.toordinal()
             if key in self._dates:
                 return self._dates[key]
             else:
@@ -174,24 +85,52 @@ class DateIndexer:
 
     def append(self, obj):
 
-        # Fixme: clone_date
-        date = obj.date
+        date = clone_date(obj.date) # costly but sure
         if self._start is None:
             self._start = self._stop = date
         else:
             self._start = min(self._start, date)
             self._stop = max(self._stop, date)
         
-        key = self.date_to_index(date)
+        key = date.toordinal()
         if key not in self._dates:
             self._dates[key] = DateList(date)
         self._dates[key].append(obj)
 
     ##############################################
 
+    def __len__(self):
+        return len(self._dates)
+
+    ##############################################
+
+    def __iter__(self):
+
+        for date in date_iterator(self._start, self._stop):
+            yield from self.iter_on_date(date)
+
+    ##############################################
+
     def iter_on_date(self, date):
 
-        return iter(self[date])
+        date_list = self[date]
+        if date_list is not None:
+            yield from iter(date_list)
+        else:
+            raise StopIteration
+
+    ##############################################
+
+    def monthly_iter(self):
+
+        for month_date in monthly_iterator(self._start, self._stop):
+            dates = []
+            for date in date_iterator_in_month(month_date):
+                date_list = self[date]
+                if date_list is not None:
+                    dates.append(date_list)
+            if dates:
+                yield month_date, dates
 
 ####################################################################################################
 #
