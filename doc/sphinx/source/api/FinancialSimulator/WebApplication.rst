@@ -8,6 +8,5 @@
   WebApplication/Views
   WebApplication/__init__
   WebApplication/config
-  WebApplication/test-server
 
 .. End

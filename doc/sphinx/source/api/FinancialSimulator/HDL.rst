@@ -8,6 +8,5 @@
   HDL/HdlParser
   HDL/__init__
   HDL/parsetab
-  HDL/test-parser
 
 .. End
