@@ -65,32 +65,37 @@ class CreditMixin:
 
 class ImputationData:
 
+    """This class defines an imputation template."""
+
     __imputation_class__ = None
 
     ##############################################
 
     def __init__(self, account, amount, analytic_account):
 
-        # Fixme: int
+        # Fixme: account is a number here
         self.account = account
-        self.amount = float(amount)
         self.analytic_account = analytic_account
+        self.amount = float(amount) # Fixme: float or class ?
 
     ##############################################
 
     def resolve(self, account_chart, analytic_account_chart):
 
+        # Fixme: pass a super/aggregation class
         account = account_chart[self.account]
         if self.analytic_account is not None:
             analytic_account = analytic_account_chart[self.analytic_account]
         else:
             analytic_account = None
+        # Fixme: account are resolved now !
         return self.__class__(account, self.amount, analytic_account)
 
     ##############################################
 
     def to_imputation(self, journal_entry):
 
+        # called in JournalEntryMixin.__init__
         return self.__imputation_class__(journal_entry,
                                          self.account, self.amount, self.analytic_account)
 
@@ -104,13 +109,14 @@ class Imputation:
 
     def __init__(self, journal_entry, account, amount, analytic_account):
 
+        # Fixme: float()
         if amount < 0:
             raise NegativeAmountError()
 
         self._journal_entry = journal_entry
         self._account = account
-        self._amount = amount
         self._analytic_account = analytic_account
+        self._amount = amount
 
     ##############################################
 
@@ -131,16 +137,16 @@ class Imputation:
         return self._account
 
     @property
-    def amount(self):
-        return self._amount
-
-    @property
     def devise(self):
         return self._account.devise
 
     @property
     def analytic_account(self):
         return self._analytic_account
+
+    @property
+    def amount(self):
+        return self._amount
 
     ##############################################
 
@@ -174,6 +180,7 @@ class Imputation:
     def to_imputation(self, journal_entry):
 
         # Fixme: template -> 
+        # called in JournalEntryMixin.__init__, overloaded
         return self.__class__(journal_entry,
                               self.account, self.amount, self.analytic_account)
 
@@ -193,9 +200,8 @@ class Imputation:
             letter = 'D'
         else:
             letter = 'C'
-        string_format = '{} {:>10}: {:>10} {}'
-        return string_format.format(letter, self._account.number,
-                                    self._amount, self._account.devise)
+        string_format = '{} {:>10}: {:>10}'
+        return string_format.format(letter, self._account.number, self.amount_str)
 
     ##############################################
 
@@ -203,18 +209,7 @@ class Imputation:
 
         # Fixme: simulation vs accounting
 
-        # Fixme: cf. infra
-        if self.is_debit():
-            operation = 'Debit'
-        else:
-            operation = 'Credit'
-        message = '{} on {}: {} {} ({})'.format(operation,
-                                                self._account.number,
-                                                self.amount,
-                                                self._account.devise,
-                                                self.description,
-        )
-        self._logger.info(message)
+        self._logger.info(str(self))
         
         if self.is_debit():
             self._account.apply_debit(self.amount)
@@ -246,6 +241,8 @@ class CreditImputationData(CreditMixin, ImputationData):
 ####################################################################################################
 
 class JournalEntryMixin:
+
+    """This class defines a jounrnal entry template."""
 
     _logger = _module_logger.getChild('JournalEntryMixin')
 
@@ -319,13 +316,13 @@ class JournalEntryMixin:
     ##############################################
 
     def __iter__(self):
-
         return iter(self._imputations)
 
     ##############################################
 
     @property
     def imputations(self):
+        # alias of __iter__
         return iter(self._imputations)
 
     ##############################################
