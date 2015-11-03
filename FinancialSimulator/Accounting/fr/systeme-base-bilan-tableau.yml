@@ -78,6 +78,7 @@ Actif:
           computation: 411D + 413D + 416D + 417D  + 418D
         - title: "Autres"
           computation: 4096C + 4097C + 4098C + 425C + 4287C + 4387C + 441C + 443D + 444D + 4452C + 4456C + 44581C + 44582C + 44583C + 44586C + 44587C + 451D + 455D + 456D - 4562D + 458D + 462C + 465C + 467C + 4687C + 478D
+          #!
         - title: "Capital souscrit - appelé, non versé"
           computation: 4562D
     - title: "Valeurs mobilières de placement"
@@ -90,6 +91,7 @@ Actif:
       computation: 52D
     - title: "Disponibilités"
       computation: 51D - 5186D - 519D + 53C + 54C
+      #!
     - title: "Charges constatées d’avance"
       computation: 486D
 - title: "Charges à répartir sur plusieurs exercices (III)"
@@ -121,6 +123,7 @@ PASSIF (avant répartition):
       childs:
         - title: "Réserve légale"
           computation: 1061C
+          #!
         - title: "Réserves statutaires ou contractuelles"
           computation: 1063C
         - title: "Réserves réglementées"
@@ -133,6 +136,7 @@ PASSIF (avant répartition):
     - title: "Résultat de l'exercice [bénéfice ou perte]"
       computation: 120C
       # 129
+      #!
     - title: "Subventions d'investissement"
       computation: 13C
     - title: "Provisions réglementées"
@@ -166,8 +170,10 @@ PASSIF (avant répartition):
     - title: "Dettes Fournisseurs et Comptes rattachés"
       computation: 401C + 403C + 4081C + 4088C
       # en partie
+      #!
     - title: "Dettes fiscales et sociales"
       computation: 421C + 422C + 424C + 427C + 4282C + 4284C + 4286C + 43C - 4387C + 442C + 443C + 444C + 4455C + 4457C + 44584C + 44587C + 446C + 447C + 4482C + 4486C + 457C
+      #!
     - title: "Dettes sur immobilisations et Comptes rattachés"
       computation: 269C + 279C + 404C + 405C + 4084C + 4088C
       # en partie
