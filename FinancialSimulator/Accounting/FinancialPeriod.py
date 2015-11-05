@@ -44,7 +44,7 @@ class AccountBalance(Account, Observer):
 
     def __init__(self, account, parent=None):
 
-        """ This class stores the account balance. """
+        """This class stores the account balance."""
 
         # Fixme: inheritance ?
         Account. __init__(self,
@@ -323,6 +323,8 @@ class AccountBalanceHistory(DateIndexer):
     # live: could update the hierarchy
     # history: journal for account, balance cache
 
+    ##############################################
+
     def __init__(self, account):
 
         super(). __init__()
@@ -339,6 +341,7 @@ class AccountBalanceHistory(DateIndexer):
     def save(self, imputation):
 
         # Fixme: pass debit, credit ???
+        # debit or inner_debit
         snapshot = AccountBalanceSnapshot(imputation, self._account.debit, self._account.credit)
         self.append(snapshot)
 
@@ -352,14 +355,25 @@ class AccountChartBalance(AccountChart):
 
         super().__init__(account_chart.name)
         
+        self._make(account_chart)
+
+    ##############################################
+
+    def _make(self, account_chart):
+
         for account in account_chart:
             parent = account.parent
             if parent is not None:
                 parent = self[parent.number]
             else:
                 parent = None
-            account_snapshot = AccountBalance(account, parent)
-            self.add_node(account_snapshot)
+            self.add_node(self.make_account(account, parent))
+
+    ##############################################
+
+    def make_account(self, account, parent):
+
+        return AccountBalance(account, parent)
 
     ##############################################
 
@@ -440,12 +454,18 @@ class FinancialPeriod:
         
         # self._history = AccountChartHistory(start_date, stop_date)
         
-        self._account_chart = AccountChartBalance(account_chart)
+        self._account_chart = self.make_account_chart(account_chart)
         if analytic_account_chart is not None:
             self._analytic_account_chart = AccountChartBalance(analytic_account_chart)
         else:
             self._analytic_account_chart = None
         self._journals = Journals(self, journals)
+
+    ##############################################
+
+    def make_account_chart(self, account_chart):
+
+        return AccountChartBalance(account_chart)
 
     ##############################################
 

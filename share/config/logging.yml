@@ -46,8 +46,8 @@ loggers:
 
   financial-simulator:
     #level: DEBUG
-    #level: INFO
-    level: WARNING
+    level: INFO
+    # level: WARNING
     handlers: [console]
     propagate: no
 

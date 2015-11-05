@@ -218,6 +218,9 @@ class Imputation:
             self._account.apply_debit(self.amount)
         else:
             self._account.apply_credit(self.amount)
+        # listener: must pass imputation
+        # imputation -> account -> emit changed
+        # self.imputed.emit(self)
         self._account.history.save(self)
         
         if self._analytic_account is not None:
