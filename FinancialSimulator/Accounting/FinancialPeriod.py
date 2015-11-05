@@ -28,7 +28,7 @@ from .AccountChart import Account, AccountChart
 from .Journal import Journal
 from FinancialSimulator.Tools.Currency import format_currency
 from FinancialSimulator.Tools.DateIndexer import DateIndexer
-from FinancialSimulator.Tools.Observer import Observer
+from FinancialSimulator.Tools.Observer import Signal
 
 ####################################################################################################
 
@@ -36,9 +36,11 @@ _module_logger = logging.getLogger(__name__)
 
 ####################################################################################################
 
-class AccountBalance(Account, Observer):
+class AccountBalance(Account):
 
     _logger = _module_logger.getChild('AccountBalance')
+
+    inner_balance_changed = Signal()
 
     ##############################################
 
@@ -54,9 +56,7 @@ class AccountBalance(Account, Observer):
                           account.devise,
                           account.comment,
                           account.system)
-        Observer.__init__(self)
 
-        self._history = None
         self.reset()
 
     ##############################################
@@ -71,8 +71,6 @@ class AccountBalance(Account, Observer):
         self._debit = None
         self._balance = None
 
-        self.reseted()
-
     ##############################################
 
     def add_sibling(self, sibling):
@@ -85,7 +83,6 @@ class AccountBalance(Account, Observer):
     def balance_is_dirty(self):
 
         self._balance = None
-        # self.changed()
 
     ##############################################
 
@@ -93,7 +90,7 @@ class AccountBalance(Account, Observer):
 
         self._inner_balance = None
         self._balance = None
-        self.changed()
+        self.inner_balance_changed.send(sender=self)
 
     ##############################################
 
@@ -109,6 +106,18 @@ class AccountBalance(Account, Observer):
                 self._credit += child.credit
                 self._debit += child.debit
             self._balance = self._credit - self._debit
+
+    ##############################################
+
+    @property
+    def inner_debit(self):
+        return self._inner_debit
+
+    ##############################################
+
+    @property
+    def inner_credit(self):
+        return self._inner_credit
 
     ##############################################
 
@@ -181,8 +190,6 @@ class AccountBalance(Account, Observer):
 
         self._apply_debit_credit(amount)
         self._inner_debit += amount
-        # Fixme: imputation ?
-        # self._history.save()
 
     ##############################################
 
@@ -203,17 +210,6 @@ class AccountBalance(Account, Observer):
 
     ##############################################
 
-    @property
-    def history(self):
-
-        # Fixme: place here ???
-        if self._history is None:
-            # Lazy creation
-            self._history = AccountBalanceHistory(self)
-        return self._history
-
-    ##############################################
-
     def to_json(self):
 
         d = {
@@ -230,11 +226,17 @@ class AccountBalanceSnapshot:
 
     ##############################################
 
-    def __init__(self, imputation, debit, credit):
+    def __init__(self, imputation, account):
+
+        # imputation holds account/analytic_account
+
+        # Fixme: pass debit, credit ???
+        # debit or inner_debit
 
         self._imputation = imputation
-        self._debit = debit
-        self._credit = credit
+        self._account = account
+        self._debit = account.inner_debit
+        self._credit = account.inner_credit
 
     ##############################################
 
@@ -259,6 +261,12 @@ class AccountBalanceSnapshot:
     @property
     def date(self):
         return self._imputation.date
+
+    ##############################################
+
+    @property
+    def account(self):
+        return self._account
 
     ##############################################
 
@@ -305,9 +313,10 @@ class AccountBalanceSnapshot:
             'sequence_number': self.sequence_number,
             'debit': self._debit,
             'credit': self._credit,
+            'date': str(self.date),
         }
         if with_account:
-            d['account_number'] = self._imputation.account.number
+            d['account_number'] = self._account.number
 
         return d
 
@@ -340,14 +349,36 @@ class AccountBalanceHistory(DateIndexer):
 
     def save(self, imputation):
 
-        # Fixme: pass debit, credit ???
-        # debit or inner_debit
-        snapshot = AccountBalanceSnapshot(imputation, self._account.debit, self._account.credit)
+        snapshot = AccountBalanceSnapshot(imputation, self._account)
         self.append(snapshot)
 
 ####################################################################################################
 
+class AccountBalanceWithHistory(AccountBalance):
+
+    ##############################################
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(self, *args, **kwargs)
+        
+        self._history = None
+
+    ##############################################
+
+    @property
+    def history(self):
+
+        if self._history is None:
+            # Lazy creation
+            self._history = AccountBalanceHistory(self)
+        return self._history
+
+####################################################################################################
+
 class AccountChartBalance(AccountChart):
+
+    __account_balance_factory__ = AccountBalance
 
     ##############################################
 
@@ -355,25 +386,13 @@ class AccountChartBalance(AccountChart):
 
         super().__init__(account_chart.name)
         
-        self._make(account_chart)
-
-    ##############################################
-
-    def _make(self, account_chart):
-
         for account in account_chart:
             parent = account.parent
             if parent is not None:
                 parent = self[parent.number]
             else:
                 parent = None
-            self.add_node(self.make_account(account, parent))
-
-    ##############################################
-
-    def make_account(self, account, parent):
-
-        return AccountBalance(account, parent)
+            self.add_node(self.__account_balance_factory__(account, parent))
 
     ##############################################
 
@@ -400,11 +419,13 @@ class AccountChartBalance(AccountChart):
 
 class Journals:
 
+    __journal_factory__ = Journal
+
     ##############################################
 
     def __init__(self, financial_period, journals):
 
-        self._journals = {label:Journal(label, description, financial_period)
+        self._journals = {label:self.__journal_factory__(label, description, financial_period)
                           for label, description in journals}
 
     ##############################################
@@ -439,6 +460,10 @@ class Journals:
 
 class FinancialPeriod:
 
+    __account_chart_factory__ = AccountChartBalance
+    __analytic_account_chart_factory__ = AccountChartBalance
+    __journals_factory__ = Journals
+
     ##############################################
 
     def __init__(self,
@@ -454,18 +479,12 @@ class FinancialPeriod:
         
         # self._history = AccountChartHistory(start_date, stop_date)
         
-        self._account_chart = self.make_account_chart(account_chart)
+        self._account_chart = self.__account_chart_factory__(account_chart)
         if analytic_account_chart is not None:
-            self._analytic_account_chart = AccountChartBalance(analytic_account_chart)
+            self._analytic_account_chart = self.__analytic_account_chart_factory__(analytic_account_chart)
         else:
             self._analytic_account_chart = None
-        self._journals = Journals(self, journals)
-
-    ##############################################
-
-    def make_account_chart(self, account_chart):
-
-        return AccountChartBalance(account_chart)
+        self._journals = self.__journals_factory__(self, journals)
 
     ##############################################
 

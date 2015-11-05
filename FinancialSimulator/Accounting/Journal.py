@@ -28,7 +28,7 @@ import logging
 from FinancialSimulator.Tools.Currency import format_currency
 from FinancialSimulator.Tools.Date import parse_date, parse_datetime
 from FinancialSimulator.Tools.Hierarchy import NonExistingNodeError
-from FinancialSimulator.Tools.Observer import Observer
+from FinancialSimulator.Tools.Observer import Signal
 from FinancialSimulator.Tools.SequentialId import SequentialId
 from FinancialSimulator.Units import round_currency
 # from FinancialSimulator.Tools.DateIndexer import DateIndexer
@@ -104,6 +104,8 @@ class ImputationData:
 ####################################################################################################
 
 class Imputation:
+
+    imputed = Signal()
 
     _logger = _module_logger.getChild('Imputation')
 
@@ -218,17 +220,14 @@ class Imputation:
             self._account.apply_debit(self.amount)
         else:
             self._account.apply_credit(self.amount)
-        # listener: must pass imputation
-        # imputation -> account -> emit changed
-        # self.imputed.emit(self)
-        self._account.history.save(self)
         
         if self._analytic_account is not None:
             if self.is_debit():
                 self._analytic_account.apply_debit(self.amount)
             else:
                 self._analytic_account.apply_credit(self.amount)
-            self._analytic_account.history.save(self)
+        
+        self.imputed.send(sender=self)
 
     ##############################################
 
@@ -361,7 +360,10 @@ class JournalEntryTemplate(JournalEntryMixin):
 
 ####################################################################################################
 
-class JournalEntry(JournalEntryMixin, Observer):
+class JournalEntry(JournalEntryMixin):
+
+    validated = Signal()
+    reconciled = Signal()
 
     ##############################################
 
@@ -371,7 +373,6 @@ class JournalEntry(JournalEntryMixin, Observer):
     ):
 
         JournalEntryMixin.__init__(self, description, imputations)
-        Observer.__init__(self)
         
         self._journal = journal
         self._id = sequence_number
@@ -452,7 +453,7 @@ class JournalEntry(JournalEntryMixin, Observer):
 
         if self._validation_date is None:
             self._validation_date = datetime.datetime.utcnow()
-            self.changed()
+            self.validated.send(sender=self)
         else:
             raise NameError('Journal entry is already validated')
 
@@ -463,7 +464,7 @@ class JournalEntry(JournalEntryMixin, Observer):
         if self._reconciliation_date is not None:
             self._reconciliation_id = reconciliation_id
             self._reconciliation_date = datetime.datetime.utcnow()
-            self.changed()
+            self.reconciled.send(sender=self)
         else:
             raise NameError('Journal entry is already cleared')
 
@@ -491,6 +492,10 @@ class JournalEntry(JournalEntryMixin, Observer):
 class Journal:
 
     # Fixme:
+    #   separate: journal definition / entries
+    #   separate: in-memory vs file vs db backend
+
+    # Fixme:
     # add/save entry = transaction
     # how to rollback ? backup/restore snapshot
     # update sequence number
@@ -498,6 +503,8 @@ class Journal:
 
     # Fixme:
     # journal -> period ?
+
+    logged_entry = Signal()
 
     ##############################################
 
@@ -557,6 +564,8 @@ class Journal:
 
     def log_entry(self, date, description, imputations, document=None):
 
+        """Log and apply a journal entry"""
+
         try:
             resolved_imputations = [imputation.resolve(self._account_chart, self._analytic_account_chart)
                                     for imputation in imputations]
@@ -567,6 +576,8 @@ class Journal:
     ##############################################
 
     def log_template(self, date, template, document=None):
+
+        """Log and apply a template journal entry"""
 
         return self._make_entry(date,
                                template.description,
@@ -579,6 +590,7 @@ class Journal:
     def _append_entry(self, journal_entry):
 
         self._journal_entries.append(journal_entry)
+        self.logged_entry.send(self, journal_entry=journal_entry)
 
     ##############################################
 
@@ -624,7 +636,17 @@ class Journal:
 
     ##############################################
 
+    def to_json(self):
+
+        """Save the online journal to JSON"""
+
+        return [journal_entry.to_json() for journal_entry in self]
+
+    ##############################################
+
     def journal_entry_from_json(self, data):
+
+        """Build a journal entry from JSON"""
 
         date = parse_date(data['date'])
         validation_date = parse_datetime(data['validation_date'])
@@ -666,17 +688,14 @@ class Journal:
 
     ##############################################
 
-    def to_json(self):
-
-        return [journal_entry.to_json() for journal_entry in self]
-
-    ##############################################
-
     def load_json(self, data):
+
+        """Load a journal entry from JSON""" # but not: and apply it
 
         for journal_entry_json in data:
             journal_entry = self.journal_entry_from_json(journal_entry_json)
-            self._journal_entries.append(journal_entry)
+            self._append_entry(journal_entry)
+        # Fixme: in-order !!!
         self._next_id = SequentialId(self._journal_entries[-1].sequence_number)
 
 ####################################################################################################
