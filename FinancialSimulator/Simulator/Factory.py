@@ -20,7 +20,6 @@
 
 ####################################################################################################
 
-from FinancialSimulator.Accounting.Journal import JournalEntryTemplate
 from .Actions import (SingleJournalEntryAction,
                       MonthlyJournalEntryAction,
                       QuaterlyJournalEntryAction,
@@ -68,8 +67,8 @@ class JournalEntryActionFactory:
         analytic_account_chart = journal._analytic_account_chart
         resolved_imputations = [imputation.resolve(account_chart, analytic_account_chart)
                                 for imputation in transaction_definition.imputations]
-        transaction = JournalEntryTemplate(transaction_definition.description,
-                                           resolved_imputations)
+        factory = journal.__journal_entry_template_factory__
+        transaction = factory(transaction_definition.description, resolved_imputations)
 
         return  class_action(journal, transaction_definition.date, transaction)
 

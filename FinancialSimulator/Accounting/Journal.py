@@ -25,13 +25,12 @@ import logging
 
 ####################################################################################################
 
+from .Error import *
 from FinancialSimulator.Tools.Currency import format_currency
 from FinancialSimulator.Tools.Date import parse_date, parse_datetime
 from FinancialSimulator.Tools.Hierarchy import NonExistingNodeError
 from FinancialSimulator.Tools.Observer import Signal
-from FinancialSimulator.Tools.SequentialId import SequentialId
 from FinancialSimulator.Units import round_currency
-# from FinancialSimulator.Tools.DateIndexer import DateIndexer
 
 ####################################################################################################
 
@@ -39,17 +38,11 @@ _module_logger = logging.getLogger(__name__)
 
 ####################################################################################################
 
-# Fixme: move
-class NegativeAmountError(ValueError):
-    pass
-
-class UnbalancedEntryError(NameError):
-    pass
-
-class DuplicatedEntryError(NameError):
-    pass
-
-####################################################################################################
+class DebitCreditInterface:
+    def is_debit(self):
+        raise NotImplementedError
+    def is_credit(self):
+        raise NotImplementedError
 
 class DebitMixin:
     def is_debit(self):
@@ -65,45 +58,57 @@ class CreditMixin:
 
 ####################################################################################################
 
-class ImputationData:
+class ImputationData(DebitCreditInterface):
 
     """This class defines an imputation template."""
 
-    __imputation_class__ = None
+    __imputation_factory__ = None
 
     ##############################################
 
-    def __init__(self, account, amount, analytic_account):
+    def __init__(self, account, amount, analytic_account, resolved=False):
 
         # Fixme: account is a number here
         self.account = account
         self.analytic_account = analytic_account
         self.amount = float(amount) # Fixme: float or class ?
+        self._resolved = resolved
 
     ##############################################
 
     def resolve(self, account_chart, analytic_account_chart):
 
-        # Fixme: pass a super/aggregation class
-        account = account_chart[self.account]
-        if self.analytic_account is not None:
-            analytic_account = analytic_account_chart[self.analytic_account]
+        if self._resolved:
+            return self
         else:
-            analytic_account = None
-        # Fixme: account are resolved now !
-        return self.__class__(account, self.amount, analytic_account)
+            # Fixme: pass a super/aggregation class
+            account = account_chart[self.account]
+            if self.analytic_account is not None:
+                analytic_account = analytic_account_chart[self.analytic_account]
+            else:
+                analytic_account = None
+            # Fixme: account are resolved now !
+            return self.__class__(account, self.amount, analytic_account, resolved=True)
 
     ##############################################
 
     def to_imputation(self, journal_entry):
 
         # called in JournalEntryMixin.__init__
-        return self.__imputation_class__(journal_entry,
-                                         self.account, self.amount, self.analytic_account)
+        if hasattr(journal_entry, 'journal'):
+            journal = journal_entry.journal
+            if self.is_debit():
+                factory = journal.__debit_imputation_factory__
+            else:
+                factory = journal.__credit_imputation_factory__
+        else:
+            # JournalEntryTemplate
+            factory = self.__imputation_factory__
+        return factory(journal_entry, self.account, self.amount, self.analytic_account)
 
 ####################################################################################################
 
-class Imputation:
+class Imputation(DebitCreditInterface):
 
     imputed = Signal()
 
@@ -183,19 +188,20 @@ class Imputation:
 
     def to_imputation(self, journal_entry):
 
-        # Fixme: template -> 
+        # Fixme: template ->
         # called in JournalEntryMixin.__init__, overloaded
         # == copy
-        return self.__class__(journal_entry,
-                              self.account, self.amount, self.analytic_account)
 
-    ##############################################
-
-    def is_debit(self):
-        raise NotImplementedError
-
-    def is_credit(self):
-        raise NotImplementedError
+        if hasattr(journal_entry, 'journal'):
+            journal = journal_entry.journal
+            if self.is_debit():
+                factory = journal.__debit_imputation_factory__
+            else:
+                factory = journal.__credit_imputation_factory__
+        else:
+            # JournalEntryTemplate
+            factory = self.__class__
+        return factory(journal_entry, self.account, self.amount, self.analytic_account)
 
     ##############################################
 
@@ -249,10 +255,10 @@ class CreditImputation(CreditMixin, Imputation):
     pass
 
 class DebitImputationData(DebitMixin, ImputationData):
-    __imputation_class__ = DebitImputation
+    __imputation_factory__ = DebitImputation
 
 class CreditImputationData(CreditMixin, ImputationData):
-    __imputation_class__ = CreditImputation
+    __imputation_factory__ = CreditImputation
 
 ####################################################################################################
 
@@ -506,6 +512,11 @@ class Journal:
 
     logged_entry = Signal()
 
+    __debit_imputation_data_factory__ = DebitImputationData
+    __credit_imputation_data_factory__ = CreditImputationData
+    __debit_imputation_factory__ = DebitImputation
+    __credit_imputation_factory__ = CreditImputation
+    __journal_entry_template_factory__ = JournalEntryTemplate
     __journal_entry_factory__ = JournalEntry
 
     ##############################################
@@ -517,11 +528,6 @@ class Journal:
         
         self._account_chart = financial_period.account_chart
         self._analytic_account_chart = financial_period.analytic_account_chart
-        # self._history = financial_period.history
-        
-        self._next_id = SequentialId() # Fixme: init from store
-        self._journal_entries = [] # Fixme: data provider
-        # self._date_indexer = DateIndexer(start, stop)
 
     ##############################################
 
@@ -537,19 +543,29 @@ class Journal:
 
     ##############################################
 
-    def run(self):
+    def generate_sequence_number(self):
 
-        # Fixme: not here
-        # self._account_chart.reset()
-        # self._analytic_account_chart.reset()
-        for journal_entry in self._journal_entries:
-            journal_entry.apply()
+        raise NotImplementedError
 
     ##############################################
 
-    def _make_entry(self, date, description, imputations, document=None):
+    def write_entry(self, journal_entry):
 
-        sequence_number = self._next_id.increment()
+        raise NotImplementedError
+
+    ##############################################
+
+    def write_and_apply_entry(self, journal_entry):
+
+        self.write_entry(journal_entry)
+        journal_entry.apply()
+        self.logged_entry.send(self, journal_entry=journal_entry)
+
+    ##############################################
+
+    def _log_entry(self, date, description, imputations, document=None):
+
+        sequence_number = self.generate_sequence_number()
         factory = self.__journal_entry_factory__
         journal_entry = factory(self,
                                 sequence_number,
@@ -558,8 +574,7 @@ class Journal:
                                 document,
                                 imputations
         )
-        self._append_entry(journal_entry)
-        journal_entry.apply()
+        self.write_and_apply_entry(journal_entry)
         
         return journal_entry
 
@@ -572,7 +587,7 @@ class Journal:
         try:
             resolved_imputations = [imputation.resolve(self._account_chart, self._analytic_account_chart)
                                     for imputation in imputations]
-            return self._make_entry(date, description, resolved_imputations, document)
+            return self._log_entry(date, description, resolved_imputations, document)
         except NonExistingNodeError:
             raise
 
@@ -582,68 +597,11 @@ class Journal:
 
         """Log and apply a template journal entry"""
 
-        return self._make_entry(date,
+        return self._log_entry(date,
                                template.description,
                                template.imputations,
                                document,
         )
-
-    ##############################################
-
-    def _append_entry(self, journal_entry):
-
-        self._journal_entries.append(journal_entry)
-        self.logged_entry.send(self, journal_entry=journal_entry)
-
-    ##############################################
-
-    def __getitem__(self, slice_):
-
-        return self._journal_entries[slice_]
-
-    ##############################################
-
-    def __bool__(self):
-
-        return bool(len(self._journal_entries))
-
-    ##############################################
-
-    def __len__(self):
-
-        return len(self._journal_entries)
-
-    ##############################################
-
-    def __iter__(self):
-
-        return iter(self._journal_entries)
-
-    ##############################################
-
-    def filter(self, account=None, start_date=None, stop_date=None):
-
-        # Fixme: use index
-
-        for journal_entry in self._journal_entries:
-            match = True
-            # nA + A.B
-            if account is not None and journal_entry.account != account:
-                match = False
-            if start_date is not None and start_date <= journal_entry.date:
-                match = False
-            if stop_date is not None and journal_entry.date <= stop_date:
-                match = False
-            if match:
-                yield journal_entry
-
-    ##############################################
-
-    def to_json(self):
-
-        """Save the online journal to JSON"""
-
-        return [journal_entry.to_json() for journal_entry in self]
 
     ##############################################
 
@@ -669,37 +627,26 @@ class Journal:
         for imputation_jsons in data['debits'], data['credits']:
             for imputation_json in imputation_jsons:
                 if imputation_json['operation'] == 'D':
-                    imputation_data_class = DebitImputationData
+                    imputation_data_class = self.__debit_imputation_data_factory__
                 else:
-                    imputation_data_class = CreditImputationData
+                    imputation_data_class = self.__credit_imputation_data_factory__
                 del imputation_json['operation'] # Fixme
                 imputation_json.setdefault('analytic_account', None)
                 imputation = imputation_data_class(**imputation_json)
                 resolved_imputation = imputation.resolve(self._account_chart, self._analytic_account_chart)
                 imputations.append(resolved_imputation)
-        
-        journal_entry = JournalEntry(self,
-                                     data['sequence_number'],
-                                     date,
-                                     data['description'],
-                                     None, # data['document'],
-                                     imputations,
-                                     _internal_data=internal_data,
+
+        factory = self.__journal_entry_factory__
+        journal_entry = factory(self,
+                                data['sequence_number'],
+                                date,
+                                data['description'],
+                                None, # data['document'],
+                                imputations,
+                                _internal_data=internal_data,
         )
         
         return journal_entry
-
-    ##############################################
-
-    def load_json(self, data):
-
-        """Load a journal entry from JSON""" # but not: and apply it
-
-        for journal_entry_json in data:
-            journal_entry = self.journal_entry_from_json(journal_entry_json)
-            self._append_entry(journal_entry)
-        # Fixme: in-order !!!
-        self._next_id = SequentialId(self._journal_entries[-1].sequence_number)
 
 ####################################################################################################
 #
