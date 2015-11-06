@@ -192,15 +192,11 @@ class Imputation(DebitCreditInterface):
         # called in JournalEntryMixin.__init__, overloaded
         # == copy
 
-        if hasattr(journal_entry, 'journal'):
-            journal = journal_entry.journal
-            if self.is_debit():
-                factory = journal.__debit_imputation_factory__
-            else:
-                factory = journal.__credit_imputation_factory__
+        journal = journal_entry.journal
+        if self.is_debit():
+            factory = journal.__debit_imputation_factory__
         else:
-            # JournalEntryTemplate
-            factory = self.__class__
+            factory = journal.__credit_imputation_factory__
         return factory(journal_entry, self.account, self.amount, self.analytic_account)
 
     ##############################################
@@ -378,9 +374,11 @@ class JournalEntry(JournalEntryMixin):
                  _internal_data=None,
     ):
 
-        JournalEntryMixin.__init__(self, description, imputations)
-        
+        # for Imputation.to_imputation
         self._journal = journal
+
+        JournalEntryMixin.__init__(self, description, imputations)
+
         self._id = sequence_number
         self._date = date
         self._document = document # accounting document
