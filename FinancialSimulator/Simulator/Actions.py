@@ -34,7 +34,7 @@ class JournalEntryActionMixin:
     def __init__(self, journal, transaction):
 
         self._journal = journal
-        self._transaction = transaction # unplanned
+        self._transaction = transaction # template
 
     ##############################################
 

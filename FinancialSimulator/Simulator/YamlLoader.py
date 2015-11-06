@@ -75,7 +75,7 @@ class Variables(dict):
 
 class JournalEntryDefinition:
 
-    _logger = _module_logger.getChild('JournalEntrys')
+    _logger = _module_logger.getChild('JournalEntryDefinition')
 
     _imputation_re = re.compile('(debit|credit) (\d+)( / (\d+))?')
 

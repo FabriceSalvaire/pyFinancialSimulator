@@ -360,7 +360,7 @@ class AccountBalanceWithHistory(AccountBalance):
 
     def __init__(self, *args, **kwargs):
 
-        super().__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         
         self._history = None
 
