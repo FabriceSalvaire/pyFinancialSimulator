@@ -38,7 +38,7 @@ def autoload_table(engine, table_name):
 
 ####################################################################################################
 
-class SqlRow(object):
+class SqlRow:
 
     __table__ = None
 
@@ -64,22 +64,6 @@ class SqlRow(object):
         # or mapper.columns.column
         return mapper.columns[column]
 
-    ###############################################
-
-    @classmethod
-    def field_title(cls, field):
-
-        info = cls.get_column(field).info
-        return info.get('title', '')
-
-    ###############################################
-
-    @classmethod
-    def field_width(cls, field):
-
-        info = cls.get_column(field).info
-        return info.get('width', None)
-
     ##############################################
 
     def to_dict(self, only_known=False):
@@ -103,7 +87,7 @@ class SqlRow(object):
 
 ####################################################################################################
 
-class SqlTable(object):
+class SqlTable:
 
     ROW_CLASS = None
 

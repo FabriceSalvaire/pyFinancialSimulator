@@ -22,9 +22,7 @@
 
 import logging
 
-from sqlalchemy import Column
 from sqlalchemy import create_engine
-from sqlalchemy.engine.reflection import Inspector
 from sqlalchemy.orm import sessionmaker
 
 ####################################################################################################
@@ -33,7 +31,7 @@ from .SqlAlchemyBase import autoload_table
 
 ####################################################################################################
 
-class DataBase(object):
+class DataBase:
 
     _logger = logging.getLogger(__name__)
 
@@ -44,13 +42,6 @@ class DataBase(object):
         self._engine = create_engine(connection_string, echo=echo)
         self.session = sessionmaker(bind=self._engine)()
         self._declarative_base_class = None
-
-    ###############################################
-
-    @property
-    def inspector(self):
-
-        return Inspector.from_engine(self._engine)
 
     ###############################################
 
@@ -82,22 +73,6 @@ class DataBase(object):
     def close_session(self):
 
         self.session.close()
-
-    ###############################################
-
-    def reflect_unknown_columns(self, table_class):
-
-        unknown_columns = {}
-        for column_dict in self.inspector.get_columns(table_class.__tablename__):
-            #? column_dict = dict(column_dict)
-            column_name = column_dict['name']
-            if column_name not in table_class.__dict__:
-                column_type = column_dict['type'].__class__
-                del column_dict['type']
-                column_dict['info'] = {'title':column_name, 'unknown':True}
-                unknown_columns[column_name] = Column(column_type, **column_dict)
-
-        return unknown_columns
 
 ####################################################################################################
 #

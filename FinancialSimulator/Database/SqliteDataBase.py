@@ -43,10 +43,8 @@ class SqliteDataBase(DataBase):
         self._filename = filename
         
         self._created = not os.path.exists(self._filename)
-        self._before_alter_backuped = False
         
-        super(SqliteDataBase, self).__init__(connection_string="sqlite:///" + self._filename,
-                                             echo=echo)
+        super().__init__(connection_string="sqlite:///" + self._filename, echo=echo)
 
     ###############################################
 
@@ -74,7 +72,7 @@ class SqliteDataBase(DataBase):
         return self._created
 
     ###############################################
-    
+
     def journal_exists(self):
 
         # Fixme: New extension?
