@@ -506,6 +506,8 @@ class Journal:
 
     logged_entry = Signal()
 
+    __journal_entry_factory__ = JournalEntry
+
     ##############################################
 
     def __init__(self, label, description, financial_period):
@@ -548,12 +550,13 @@ class Journal:
     def _make_entry(self, date, description, imputations, document=None):
 
         sequence_number = self._next_id.increment()
-        journal_entry = JournalEntry(self,
-                                     sequence_number,
-                                     date,
-                                     description,
-                                     document,
-                                     imputations
+        factory = self.__journal_entry_factory__
+        journal_entry = factory(self,
+                                sequence_number,
+                                date,
+                                description,
+                                document,
+                                imputations
         )
         self._append_entry(journal_entry)
         journal_entry.apply()
