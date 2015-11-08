@@ -5,8 +5,10 @@
 .. toctree::
   FinancialSimulator/Accounting
   FinancialSimulator/Config
+  FinancialSimulator/DataBase
   FinancialSimulator/HDL
   FinancialSimulator/IdentificationNumber
+  FinancialSimulator/Importer
   FinancialSimulator/Logging
   FinancialSimulator/Scheduler
   FinancialSimulator/Simulator
