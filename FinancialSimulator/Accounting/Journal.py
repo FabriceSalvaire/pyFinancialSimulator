@@ -66,7 +66,7 @@ class ImputationData(DebitCreditInterface):
 
     ##############################################
 
-    def __init__(self, account, amount, analytic_account, resolved=False):
+    def __init__(self, account, amount, analytic_account=None, resolved=False):
 
         # Fixme: account is a number here
         self.account = account
@@ -376,11 +376,12 @@ class JournalEntry(JournalEntryMixin):
 
         # for Imputation.to_imputation
         self._journal = journal
+        # for message
+        self._date = date
 
         JournalEntryMixin.__init__(self, description, imputations)
 
         self._id = sequence_number
-        self._date = date
         self._document = document # accounting document
 
         if _internal_data is not None:

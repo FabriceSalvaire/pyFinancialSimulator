@@ -33,7 +33,8 @@ class MysqlDataBase(DataBase, metaclass=SingletonMetaClass):
 
     _logger = logging.getLogger(__name__)
 
-    CONNECTION_STR = "mysql+oursql://{user_name}:{password}@{hostname}/{database}"
+    # oursql
+    CONNECTION_STR = "mysql://{user_name}:{password}@{hostname}/{database}"
 
     ###############################################
 
@@ -47,7 +48,7 @@ class MysqlDataBase(DataBase, metaclass=SingletonMetaClass):
                             'user_name':database_config.user_name,
                             'password':database_config.password,
                             }
-        connection_str = self.CONNECTION_STR.format(connection_keys)
+        connection_str = self.CONNECTION_STR.format(**connection_keys)
         
         if echo is None:
             echo = database_config.echo

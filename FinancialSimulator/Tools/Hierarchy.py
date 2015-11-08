@@ -22,19 +22,47 @@
 
 class Leaf:
 
+    # Fixme: purpose ?
+
     ##############################################
 
     def __init__(self, parent=None):
 
-        self._parent = parent
-        if parent is not None:
-            parent.add_sibling(self)
+        # self._parent = None
+        self.parent = parent
+
+    ##############################################
+
+    def __hash__(self):
+        raise NotImplementedError
+
+    ##############################################
+
+    def __lt__(self, other):
+        raise NotImplementedError
 
     ##############################################
 
     @property
     def parent(self):
         return self._parent
+
+    @parent.setter
+    def parent(self, node):
+
+        if node is not None:
+            node._add_sibling(self)
+        self._parent = node
+
+    ##############################################
+
+    def is_root(self):
+        return self._parent is None
+
+    ##############################################
+
+    def has_parent(self):
+        return self._parent is not None
 
     ##############################################
 
@@ -73,10 +101,11 @@ class Node(Leaf):
     def __init__(self, parent=None, siblings=None):
 
         super().__init__(parent)
+        
+        self._siblings = []
         if siblings is not None:
-            self._siblings = list(siblings)
-        else:
-            self._siblings = []
+            for sibling in siblings:
+                sibling.parent = self
 
     ##############################################
 
@@ -88,12 +117,14 @@ class Node(Leaf):
     ##############################################
 
     def is_leaf(self):
-        return False
+        # return False
+        return not bool(self._siblings)
 
     ##############################################
 
     def has_siblings(self):
-        return True
+        # return True
+        return bool(self._siblings)
 
     ##############################################
 
@@ -102,12 +133,18 @@ class Node(Leaf):
 
     ##############################################
 
-    def add_sibling(self, sibling):
+    def _add_sibling(self, sibling):
 
         if sibling not in self._siblings:
             self._siblings.append(sibling)
         else:
             raise NameError("Sibling {} is already registered".format(sibling))
+
+    ##############################################
+
+    def add_sibling(self, sibling):
+
+        sibling.parent = self
 
     ##############################################
 
@@ -130,6 +167,18 @@ class Node(Leaf):
         for sibling in self._siblings:
             yield from sibling.depth_first_search_sibling()
         yield self
+
+    ##############################################
+
+    def level(self):
+
+        level = 0
+        node = self
+        while node.has_parent():
+            node = node.parent
+            level += 1
+        
+        return level
 
 ####################################################################################################
 
