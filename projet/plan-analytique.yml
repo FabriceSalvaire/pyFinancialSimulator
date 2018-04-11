@@ -1,0 +1,13 @@
+metadata:
+  name: "Plan Analytique"
+plan:
+- code: 1
+  description: "Dépenses"
+- code: 11
+  description: "Dépenses Bancaires"
+- code: 12
+  description: "Dépenses IT"
+- code: 13
+  description: "Dépenses R&D"
+- code: 2
+  description: "Frais de constitution"
