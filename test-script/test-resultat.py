@@ -1,5 +1,6 @@
 ####################################################################################################
 
+from pathlib import Path
 import datetime
 import os
 
@@ -39,6 +40,8 @@ stop_date = datetime.date(year, 12, 31)
 financial_period = FinancialPeriod(account_chart, None, journal_definitions, start_date, stop_date)
 account_chart = financial_period.account_chart
 journals = financial_period.journals
+
+####################################################################################################
 
 def to_float(x):
     if '+' in x:
@@ -113,10 +116,13 @@ if False:
                 delta -= account_set
     print('Delta:', sorted(delta))
 
+####################################################################################################
+
 if True:
     from FinancialSimulator.WebApplication.Application import create_application
 
     # Fixme: if DEBUG = True then reload ...
-    config_path = os.path.join(os.path.dirname(__file__), 'config.py')
+    root_path = Path(__file__).absolute().parents[1]
+    config_path = root_path.joinpath('FinancialSimulator', 'WebApplication', 'config.py')
     application = create_application(config_path, account_chart, None, journals)
     application.run()

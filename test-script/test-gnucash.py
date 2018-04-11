@@ -1,7 +1,7 @@
 ####################################################################################################
 
+from pathlib import Path
 import datetime
-import os
 
 ####################################################################################################
 
@@ -15,9 +15,11 @@ _module_logger = logger
 from FinancialSimulator.Accounting.AccountChart import AccountChart, Account
 from FinancialSimulator.Accounting.AccountBalanceHistory import AccountBalanceWithHistory
 from FinancialSimulator.Accounting.Error import UnbalancedEntryError, DuplicatedEntryError
-from FinancialSimulator.Accounting.FinancialPeriod import (FinancialPeriod,
-                                                           AccountChartBalance,
-                                                           Journals)
+from FinancialSimulator.Accounting.FinancialPeriod import (
+    FinancialPeriod,
+    AccountChartBalance,
+    Journals,
+)
 from FinancialSimulator.Accounting.Journal import Imputation, DebitImputationData, CreditImputationData
 
 from FinancialSimulator.Accounting.JournalInMemory import JournalInMemory
@@ -26,7 +28,6 @@ from FinancialSimulator.Importer.Gnucash import GnucashDataBase
 ####################################################################################################
 
 class DatabaseConfig:
-
     hostname = 'localhost'
     database = 'gnucash'
     user_name = 'gnucash'
@@ -119,10 +120,12 @@ class MyFinancialPeriod(FinancialPeriod):
 analytic_account_chart = None
 
 financial_period_class = MyFinancialPeriod
-financial_period = financial_period_class(account_chart,
-                                          analytic_account_chart,
-                                          journal_definitions,
-                                          start_date, stop_date)
+financial_period = financial_period_class(
+    account_chart,
+    analytic_account_chart,
+    journal_definitions,
+    start_date, stop_date,
+)
 account_chart = financial_period.account_chart
 analytic_account_chart = financial_period.analytic_account_chart
 journals = financial_period.journals
@@ -179,6 +182,9 @@ if True:
     from FinancialSimulator.WebApplication.Application import create_application
 
     # Fixme: if DEBUG = True then reload ...
-    config_path = os.path.join(os.path.dirname(__file__), 'config.py')
+    root_path = Path(__file__).absolute().parents[1]
+    config_path = root_path.joinpath('FinancialSimulator', 'WebApplication', 'config.py')
     application = create_application(config_path, account_chart, analytic_account_chart, journals)
     application.run()
+
+    # open http://127.0.0.1:5000/main/

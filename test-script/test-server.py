@@ -27,44 +27,60 @@ _module_logger = logger
 
 ####################################################################################################
 
+from pathlib import Path
 import datetime
-import os
 
 ####################################################################################################
 
-from FinancialSimulator.Accounting import Journal
-from FinancialSimulator.Accounting.AccountChart import load_account_chart
+from FinancialSimulator.Accounting.FinancialPeriod import FinancialPeriod
+from FinancialSimulator.Accounting.AccountChartLoader import load_account_chart_for_country
+from FinancialSimulator.Accounting.Journal import DebitImputationData, CreditImputationData
+
 from FinancialSimulator.WebApplication.Application import create_application
 
 ####################################################################################################
 
-account_chart = load_account_chart('fr')
+account_chart = load_account_chart_for_country('fr')
 
-journals = {}
-for code, label in (
-        ('JSOC', "Journal d'ouverture"), # Journal de situation ouverture/clôture
-        ('Liq', 'Liquidités'), # Liquidités
-        ('Ban', 'Banque'), # Banques et chèques
-        ('JAA', "Journal des avoirs d'achats"), # Avoir fournisseur
-        ('JA', 'Journal des achats'), # Achat
-        ('JOD', 'Journal des opérations diverses'), # Général
-        ('JV', 'Journal des ventes'), # Vente
-        ('JAV', 'Journal des avoirs de ventes'), # Avoir de vente
-        ):
-    journals[code] = Journal(label, account_chart)
+journal_definitions = (
+    ('JSOC', "Journal d'ouverture"), # Journal de situation ouverture/clôture
+    ('Liq', 'Liquidités'), # Liquidités
+    ('Ban', 'Banque'), # Banques et chèques
+    ('JAA', "Journal des avoirs d'achats"), # Avoir fournisseur
+    ('JA', 'Journal des achats'), # Achat
+    ('JOD', 'Journal des opérations diverses'), # Général
+    ('JV', 'Journal des ventes'), # Vente
+    ('JAV', 'Journal des avoirs de ventes'), # Avoir de vente
+)
+
+year = 2016
+start_date = datetime.date(year, 1, 1)
+stop_date = datetime.date(year, 12, 31)
+
+financial_period = FinancialPeriod(account_chart, None, journal_definitions, start_date, stop_date)
+account_chart = financial_period.account_chart
+journals = financial_period.journals
 
 ####################################################################################################
 
-journals['JV'].log_transaction(date=datetime.date(2016, 1, 1),
-                               debit={'706':80, '44571':20},
-                               credit={'512':100},
-                               description='vente'
+# Fixme:
+# File "/home/fabrice/home/developpement/python/financial-simulator/FinancialSimulator/Accounting/Journal.py", line 547, in generate_sequence_number
+#    raise NotImplementedError
+journals['JV'].log_entry(
+    date=datetime.date(2016, 1, 1),
+    description='vente',
+    imputations=(
+        DebitImputationData(706, 80, None, resolved=False),
+        DebitImputationData(44571, 20, None, resolved=False),
+        CreditImputationData(512, 100, None, resolved=False),
+    )
 )
 
 ####################################################################################################
 
 # Fixme: if DEBUG = True then reload ...
 
-config_path = os.path.join(os.path.dirname(__file__), 'config.py')
-application = create_application(config_path, account_chart, journals)
+root_path = Path(__file__).absolute().parents[1]
+config_path = root_path.joinpath('FinancialSimulator', 'WebApplication', 'config.py')
+application = create_application(config_path, account_chart, None, journals)
 application.run()

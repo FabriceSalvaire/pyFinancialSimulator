@@ -30,7 +30,7 @@ from pymongo import MongoClient
 
 ####################################################################################################
 
-from FinancialSimulator.Accounting.FinancialPeriod import AccountBalanceSnapshot
+from FinancialSimulator.Accounting.AccountBalanceHistory import AccountBalanceSnapshot
 
 ####################################################################################################
 
