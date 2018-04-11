@@ -1,0 +1,19 @@
+#! /usr/bin/bash
+
+PROJECT=FinancialSimulator
+
+find ${PROJECT} -name "flycheck*.py" -exec rm {} \;
+find ${PROJECT} -name "parsetab.py" -exec rm {} \;
+
+api=doc/sphinx/source/api
+rm -rf ${api}
+
+echo
+echo Generate RST API files
+pyterate-rst-api ${PROJECT}
+
+echo
+echo Run Sphinx
+pushd doc/sphinx/
+./make-html #--clean
+popd

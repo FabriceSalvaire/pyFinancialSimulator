@@ -1,7 +1,5 @@
 .. -*- Mode: rst -*-
 
-.. -*- Mode: rst -*-
-
 ..
    |FinancialSimulatorUrl|
    |FinancialSimulatorHomePage|_
@@ -50,72 +48,3 @@
 ..  coverage test
 ..  https://img.shields.io/pypi/status/Django.svg
 ..  https://img.shields.io/github/stars/badges/shields.svg?style=social&label=Star
-.. -*- Mode: rst -*-
-
-.. |Python| replace:: Python
-.. _Python: http://python.org
-
-.. |PyPI| replace:: PyPI
-.. _PyPI: https://pypi.python.org/pypi
-
-.. |Numpy| replace:: Numpy
-.. _Numpy: http://www.numpy.org
-
-.. |IPython| replace:: IPython
-.. _IPython: http://ipython.org
-
-.. |Sphinx| replace:: Sphinx
-.. _Sphinx: http://sphinx-doc.org
-
-============
- FinancialSimulator
-============
-
-|Pypi License|
-|Pypi Python Version|
-
-|Pypi Version|
-
-* Quick Link to `Production Branch <https://github.com/FabriceSalvaire/FinancialSimulator/tree/master>`_
-* Quick Link to `Devel Branch <https://github.com/FabriceSalvaire/FinancialSimulator/tree/devel>`_
-
-Overview
-========
-
-What is FinancialSimulator ?
----------------------
-
-FinancialSimulator is a Python module which implements ...
-
-Where is the Documentation ?
-----------------------------
-
-The documentation is available on the |FinancialSimulatorHomePage|_.
-
-What are the main features ?
-----------------------------
-
-* to be completed
-
-How to install it ?
--------------------
-
-Look at the `installation <@project_url@/installation.html>`_ section in the documentation.
-
-Credits
-=======
-
-Authors: `Fabrice Salvaire <http://fabrice-salvaire.fr>`_
-
-News
-====
-
-.. -*- Mode: rst -*-
-
-
-.. no title here
-
-V0 2018-10-01
--------------
-
-Started project
