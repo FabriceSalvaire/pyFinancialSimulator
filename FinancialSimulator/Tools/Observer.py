@@ -168,7 +168,7 @@ class Signal:
             receiver = receiver_ref()
             response = receiver(signal=self, sender=sender, **kwargs)
             responses.append((receiver, response))
-        
+
         return responses
 
     ##############################################
@@ -220,11 +220,5 @@ def receiver_decorator(signal, **kwargs):
         else:
             signal.connect(func, **kwargs)
         return func
-    
-    return _decorator
 
-####################################################################################################
-#
-# End
-#
-####################################################################################################
+    return _decorator

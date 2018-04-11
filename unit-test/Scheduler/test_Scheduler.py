@@ -50,7 +50,7 @@ class TestAccounting(unittest.TestCase):
         start_day = datetime.date(year, 3, 1)
         stop_day = datetime.date(year +1, 6, 1)
         day_timedelta = datetime.timedelta(1)
-        
+
         scheduler = Scheduler()
         # scheduler.add_action(SingleAction(datetime.date(year, 2, 1), label='action 1'))
         # scheduler.add_action(SingleAction(datetime.date(year, 2, 10), label='action 2'))
@@ -66,9 +66,3 @@ class TestAccounting(unittest.TestCase):
 if __name__ == '__main__':
 
     unittest.main()
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

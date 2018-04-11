@@ -71,9 +71,3 @@ class JournalEntryActionFactory:
         transaction = factory(transaction_definition.description, resolved_imputations)
 
         return  class_action(journal, transaction_definition.date, transaction)
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

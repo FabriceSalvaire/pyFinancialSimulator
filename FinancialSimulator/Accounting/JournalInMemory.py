@@ -40,7 +40,7 @@ class JournalInMemory(Journal):
     def __init__(self, label, description, financial_period):
 
         super().__init__(label, description, financial_period)
-        
+
         self._next_id = SequentialId() # Fixme: init from store
         self._journal_entries = [] # Fixme: data provider
         # self._date_indexer = DateIndexer(start, stop)
@@ -128,9 +128,3 @@ class JournalInMemory(Journal):
             self.write_entry(journal_entry)
         # Fixme: in-order !!!
         self._next_id = SequentialId(self._journal_entries[-1].sequence_number)
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

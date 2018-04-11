@@ -33,7 +33,7 @@ _module_logger = logging.getLogger(__name__)
 def autoload_table(engine, table_name):
 
     metadata = sqlalchemy.MetaData()
-    
+
     return sqlalchemy.Table(table_name, metadata, autoload=True, autoload_with=engine)
 
 ####################################################################################################
@@ -165,9 +165,3 @@ class SqlTable:
     def filter_by(self, **kwargs):
 
         return self.query().filter_by(**kwargs)
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

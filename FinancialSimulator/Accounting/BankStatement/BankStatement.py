@@ -104,7 +104,7 @@ class Transaction:
     ##############################################
 
     def cleared(self):
-        
+
         return self._reconciliation_id is not None
 
 ####################################################################################################
@@ -129,7 +129,7 @@ class BankStatement:
         self._date = date
         self._previous_balance = previous_balance
         self._balance = balance
-        
+
         self._transactions_balance = 0
         self._debit_transactions = []
         self._credit_transactions = []
@@ -192,7 +192,7 @@ class BankStatement:
         else:
             transaction_class = CreditTransaction
         transaction = transaction_class(date, description, abs(amount), type_)
-        
+
         self._transactions.append(transaction)
         if transaction.is_debit():
             self._transactions_balance -= transaction.amount
@@ -315,9 +315,3 @@ class Reconciliator:
                     for my_transaction in my_amounts[amount]:
                         print (bank_transaction.date - my_transaction.date)
                         # ...
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

@@ -101,7 +101,7 @@ class Node(Leaf):
     def __init__(self, parent=None, siblings=None):
 
         super().__init__(parent)
-        
+
         self._siblings = []
         if siblings is not None:
             for sibling in siblings:
@@ -177,7 +177,7 @@ class Node(Leaf):
         while node.has_parent():
             node = node.parent
             level += 1
-        
+
         return level
 
 ####################################################################################################
@@ -205,7 +205,7 @@ class Hierarchy:
             self._nodes[node_hash] = node
         else:
             raise NameError("Node {} is already registered".format(node_hash))
-        
+
         if node.parent is None:
             self._root_nodes.append(node)
 
@@ -238,9 +238,3 @@ class Hierarchy:
 
         for root_node in self._root_nodes:
             yield from root_node.depth_first_search()
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

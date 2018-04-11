@@ -169,7 +169,7 @@ class Expression(Node):
         if (self.__number_of_operands__ is not None
             and len(args) != self.__number_of_operands__):
             raise ValueError("Wrong number of operands")
-        
+
         super().__init__(siblings=args)
 
     ##############################################
@@ -278,9 +278,3 @@ class Multiplication(BinaryOperator):
 
 class Division(BinaryOperator):
     __operator__ = '/'
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

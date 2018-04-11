@@ -49,25 +49,25 @@ class TestAccounting(unittest.TestCase):
         #  703 Ventes de produits résiduels
         #  706 Prestations de services
         #  707 Ventes de marchandises
-        
+
         # Enregistrement d'une vente
         #  débit 512 Banques
         #  crédit 7 Ventes
         #  crédit 44571 TVA collectée
-        
+
         account_chart = AccountChart('Plan Comptable Général Français')
         account_chart.add_account(Account('512', 'Banques'))
         account_chart.add_account(Account('706', 'Ventes de marchandises'))
         account_chart.add_account(Account('44571', 'TVA collectée'))
-        
+
         journal_ventes = Journal('Ventes', account_chart)
-        
+
         journal_ventes.log_transaction(date=datetime.date(2016, 1, 1),
                                        debit={'706':80, '44571':20},
                                        credit={'512':100},
                                        description='vente'
         )
-        
+
         for account in account_chart:
             # print('{.code} {.name} {.balance}'.format(account))
             print('{}-{} : {} €'.format(account.code, account.name, account.balance))
@@ -77,9 +77,3 @@ class TestAccounting(unittest.TestCase):
 if __name__ == '__main__':
 
     unittest.main()
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

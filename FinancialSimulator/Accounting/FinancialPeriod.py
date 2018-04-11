@@ -65,7 +65,7 @@ class AccountBalance(Account):
         self._inner_credit = 0
         self._inner_debit = 0
         self._inner_balance = None
-        
+
         self._credit = None
         self._debit = None
         self._balance = None
@@ -97,7 +97,7 @@ class AccountBalance(Account):
 
         if self._inner_balance is None:
             self._inner_balance = self._inner_credit - self._inner_debit
-        
+
         if self._balance is None:
             self._credit = self._inner_credit
             self._debit = self._inner_debit
@@ -230,7 +230,7 @@ class AccountChartBalance(AccountChart):
     def __init__(self, account_chart):
 
         super().__init__(account_chart.name)
-        
+
         for account in account_chart:
             parent = account.parent
             if parent is not None:
@@ -321,9 +321,9 @@ class FinancialPeriod:
 
         self._start_date = start_date
         self._stop_date = stop_date
-        
+
         # self._history = AccountChartHistory(start_date, stop_date)
-        
+
         self._account_chart = self.__account_chart_factory__(account_chart)
         if analytic_account_chart is not None:
             self._analytic_account_chart = self.__analytic_account_chart_factory__(analytic_account_chart)
@@ -360,9 +360,3 @@ class FinancialPeriod:
     @property
     def stop_date(self):
         return self._stop_date
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

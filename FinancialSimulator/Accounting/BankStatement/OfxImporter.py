@@ -112,14 +112,14 @@ class OfxSgmlParser:
         account_id = self._get_xpath_text(bank_account, 'ACCTID')
         key = self._get_xpath_int(bank_account, 'ACCTKEY')
         bank_account_number = BankAccountNumber(bank_id, branch_id, account_id, key)
-        
+
         # or AVAILBAL
         balance_element = self._get_xpath_element(statement_ressource, 'LEDGERBAL')
         balance = self._get_xpath_float(balance_element, 'BALAMT')
         balance_date = self._get_xpath_date(balance_element, 'DTASOF')
-        
+
         bank_statement = BankStatement(bank_account_number, balance_date, balance)
-        
+
         transaction_list = self._get_xpath_element(statement_ressource, 'BANKTRANLIST')
         transactions = transaction_list.xpath('STMTTRN')
         for transaction in transactions:
@@ -139,7 +139,7 @@ class OfxSgmlParser:
                 elif tag == 'NAME':
                     description = text
             bank_statement.add_transaction(date, description, amount, type_)
-        
+
         return bank_statement
 
     ##############################################
@@ -150,7 +150,7 @@ class OfxSgmlParser:
         if not location:
             raise OfxSgmlParserError
         header_source = source[:location]
-        
+
         header_data = {}
         for line in header_source.split():
             line = line.strip()
@@ -159,7 +159,7 @@ class OfxSgmlParser:
             else:
                 key, value = line.split(':')
                 header_data[key] = value
-        
+
         return header_data, location
 
     ##############################################
@@ -237,9 +237,3 @@ class OfxSgmlParser:
     def _get_xpath_date(self, root, path):
 
         return self._parse_date(self._get_xpath_text(root, path))
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

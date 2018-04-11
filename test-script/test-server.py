@@ -68,9 +68,3 @@ journals['JV'].log_transaction(date=datetime.date(2016, 1, 1),
 config_path = os.path.join(os.path.dirname(__file__), 'config.py')
 application = create_application(config_path, account_chart, journals)
 application.run()
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

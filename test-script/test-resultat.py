@@ -70,7 +70,7 @@ if False:
                                                                         account.credit))
 if False:
     from FinancialSimulator.Accounting import Results
-    
+
     # yaml_file = 'systeme-abrege-resultat-tableau.yml'
     yaml_file = 'systeme-base-bilan-tableau.yml'
     # yaml_file = 'systeme-base-resultat-tableau.yml'
@@ -94,13 +94,13 @@ if False:
 
 if False:
     from FinancialSimulator.Accounting import Results
-    
+
     # yaml_file = 'systeme-abrege-resultat-tableau.yml'
     # yaml_file = 'systeme-base-bilan-tableau.yml'
     yaml_file = 'systeme-base-resultat-tableau.yml'
     yaml_loader = Results.YamlLoader(yaml_file)
     table = yaml_loader.table
-    
+
     computation_visitor = table.compute(account_chart, set_evaluator=True)
     evaluator = computation_visitor.evaluator
     used = evaluator['Tactif'] | evaluator['Tpassif']
@@ -115,14 +115,8 @@ if False:
 
 if True:
     from FinancialSimulator.WebApplication.Application import create_application
-    
+
     # Fixme: if DEBUG = True then reload ...
     config_path = os.path.join(os.path.dirname(__file__), 'config.py')
     application = create_application(config_path, account_chart, None, journals)
     application.run()
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

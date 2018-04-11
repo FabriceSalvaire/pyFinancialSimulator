@@ -72,17 +72,17 @@ class TestSignal(unittest.TestCase):
         receiver2 = Receiver()
         emitter.signal.connect(receiver1.slot)
         emitter.signal.connect(receiver2.slot)
-        
+
         self.assertTrue(emitter.signal.has_listeners())
-        
+
         self.assertListEqual(emitter.emit('a message'),
                              [(receiver1.slot, receiver1),
                               (receiver2.slot, receiver2),
                              ])
-        
+
         del receiver1
         self.assertTrue(emitter.signal.has_listeners())
-        
+
         del receiver2
         self.assertFalse(emitter.signal.has_listeners())
 
@@ -91,9 +91,3 @@ class TestSignal(unittest.TestCase):
 if __name__ == '__main__':
 
     unittest.main()
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

@@ -39,11 +39,11 @@ class SqliteDataBase(DataBase):
     def __init__(self, filename, echo=False):
 
         self._logger.debug("Open SQLite Database %s" % (filename))
-        
+
         self._filename = filename
-        
+
         self._created = not os.path.exists(self._filename)
-        
+
         super().__init__(connection_string="sqlite:///" + self._filename, echo=echo)
 
     ###############################################
@@ -94,9 +94,3 @@ class SqliteDataBase(DataBase):
                 sql_statement = 'ALTER TABLE %s ADD COLUMN ' % table_name + column + ' ' + alter_table_statement
                 self._logger.info(sql_statement)
                 self.session.execute(sql_statement)
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

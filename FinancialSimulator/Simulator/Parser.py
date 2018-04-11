@@ -113,7 +113,7 @@ class ValueParser:
 
         self._percent_parser = PercentValueParser()
         self._amount_parser = AmountValueParser()
-        
+
         self._parsers = [
             self._percent_parser,
             self._amount_parser,
@@ -129,9 +129,3 @@ class ValueParser:
             except ParseError:
                 pass
         raise NameError('Cannot parse {}'.format(value))
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

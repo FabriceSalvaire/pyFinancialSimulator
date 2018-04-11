@@ -41,9 +41,3 @@ def create_application(config_path, account_chart, analytic_account_chart, journ
     application.register_blueprint(main)
 
     return application
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

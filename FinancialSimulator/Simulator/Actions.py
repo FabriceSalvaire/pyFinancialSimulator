@@ -88,9 +88,3 @@ class AnnualJournalEntryAction(JournalEntryActionMixin, AnnualAction):
 
         AnnualAction.__init__(self, date, transaction.description)
         JournalEntryActionMixin.__init__(self, journal, transaction)
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

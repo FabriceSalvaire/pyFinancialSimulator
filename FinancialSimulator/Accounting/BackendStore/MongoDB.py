@@ -87,7 +87,7 @@ class AccountingStore:
 
         document = journal_entry.to_json()
         key = {'sequence_number': document['sequence_number']}
-        
+
         return key, document
 
     ##############################################
@@ -127,7 +127,7 @@ class AccountingStore:
         cursor = cursor.sort([
             ('sequence_number', pymongo.ASCENDING),
         ])
-        
+
         for journal_entry in cursor:
             yield journal_entry
 
@@ -143,7 +143,7 @@ class AccountingStore:
 
     #     document = imputation.to_json()
     #     key = {'sequence_number': document['sequence_number']}
-        
+
     #     return key, document
 
     ##############################################
@@ -171,12 +171,6 @@ class AccountingStore:
         cursor = cursor.sort([
             ('sequence_number', pymongo.ASCENDING),
         ])
-        
+
         for account_snapshot in cursor:
             yield account_snapshot
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

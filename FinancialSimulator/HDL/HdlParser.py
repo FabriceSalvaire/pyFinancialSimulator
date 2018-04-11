@@ -280,9 +280,3 @@ class HdlAccountParser(HdlParser):
         '''expression : LEFT_BRACKET DECIMAL_NUMBER COLON DECIMAL_NUMBER RIGHT_BRACKET NAME
         '''
         p[0] = AccountInterval(p[2], p[4], p[6])
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

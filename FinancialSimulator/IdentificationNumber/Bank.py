@@ -70,7 +70,7 @@ def check_iban(iban):
 
     iban_ = _remove_space(iban)
     n = int(''.join([_iban_letter_to_number[d] for d in iban_[4:] + iban_[:4]]))
-    
+
     return n % 97 == 1
 
 ####################################################################################################
@@ -85,7 +85,7 @@ class BankAccountNumber:
         self._branch_id = branch_id
         self._account_id = account_id
         self._country_code = country_code
-        
+
         computed_key = self._make_checksum()
         if key is not None and key != computed_key:
             raise NameError("Wrong key")
@@ -142,18 +142,12 @@ class BankAccountNumber:
         # Note: le BBAN correspond au RIB. Si ce dernier ne comporte que des chiffres, l'IBAN commence
         # par FR76 suivi du RIB scindé en groupes de quatre caractères (voir la section Exemples
         # ci-dessous).
-        
+
         country_code = self._country_code.upper()
         # bban = bban.upper()
         bban_ = _remove_space(self.bban)
         n = int(''.join([_iban_letter_to_number[d] for d in bban_ + country_code + '00']))
         checksum = 98 - n % 97
         iban = country_code + str(checksum) + bban_
-        
-        return ' '.join([iban[i:i+4] for i in range(0, len(iban), 4)])
 
-####################################################################################################
-#
-# End
-#
-####################################################################################################
+        return ' '.join([iban[i:i+4] for i in range(0, len(iban), 4)])

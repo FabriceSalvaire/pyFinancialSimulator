@@ -177,14 +177,8 @@ del gnucash_database
 
 if True:
     from FinancialSimulator.WebApplication.Application import create_application
-    
+
     # Fixme: if DEBUG = True then reload ...
     config_path = os.path.join(os.path.dirname(__file__), 'config.py')
     application = create_application(config_path, account_chart, analytic_account_chart, journals)
     application.run()
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

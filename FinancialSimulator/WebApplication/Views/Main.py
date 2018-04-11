@@ -84,9 +84,3 @@ def bilan():
     table = yaml_loader_bilan.table
     computation_visitor = table.compute(account_chart)
     return render_template('result.html', table=table, computation_visitor=computation_visitor)
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

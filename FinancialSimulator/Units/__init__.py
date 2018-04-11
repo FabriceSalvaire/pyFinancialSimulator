@@ -34,7 +34,7 @@ class AmountValue:
         self._currency = currency
         self._vat_rate = vat_rate
         self._is_inclusive = is_inclusive
-        
+
         if is_inclusive:
             value = value / (1 + vat_rate / 100)
         self._value = round_currency(value)
@@ -49,7 +49,7 @@ class AmountValue:
             vat_suffix = 'TTC'
         else:
             vat_suffix = 'HT'
-        
+
         return '{:.2f} {} {}'.format(float(self), self._currency, vat_suffix)
 
     ##############################################
@@ -147,9 +147,3 @@ class PercentValue:
     def __rsub__(self, x):
 
         return PercentValue((float(x) - self._value) * 100)
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

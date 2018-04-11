@@ -41,7 +41,7 @@ class MysqlDataBase(DataBase, metaclass=SingletonMetaClass):
     def __init__(self, database_config, echo=None):
 
         self._logger.debug("Open MySql Database %s", self.CONNECTION_STR)
-        
+
         # Fixme: _ only used for one
         connection_keys =  {'hostname':database_config.hostname,
                             'database':database_config.database,
@@ -49,14 +49,8 @@ class MysqlDataBase(DataBase, metaclass=SingletonMetaClass):
                             'password':database_config.password,
                             }
         connection_str = self.CONNECTION_STR.format(**connection_keys)
-        
+
         if echo is None:
             echo = database_config.echo
-        
-        super().__init__(connection_str, echo=echo)
 
-####################################################################################################
-#
-# End
-#
-####################################################################################################
+        super().__init__(connection_str, echo=echo)

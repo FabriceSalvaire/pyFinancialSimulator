@@ -48,7 +48,7 @@ class Parameters(dict):
     def __init__(self, definitions):
 
         super().__init__()
-        
+
         for name, value_string in definitions.items():
             value = _value_parser.parse(value_string)
             self[name] = value
@@ -65,7 +65,7 @@ class Variables(dict):
     def __init__(self, definitions, parameters):
 
         super().__init__(parameters)
-        
+
         for name, value_string in definitions.items():
             value = eval(value_string, self)
             self[name] = value
@@ -138,7 +138,7 @@ class YamlUnit:
     def __init__(self, path):
 
         self._path = path
-        
+
         self._logger.info('load {}'.format(path))
         with open(path, 'r') as f:
             data = yaml.load(f.read())
@@ -165,14 +165,14 @@ class YamlUnit:
                 value = _value_parser.parse(value_string)
                 local_variables[name] = value
                 self._logger.info('{} = {}'.format(name, value))
-        
+
         for key, value_string in transaction.items():
             if key.startswith('debit ') or key.startswith('credit '):
                 name = key[key.find(' ')+1:]
                 value = eval(value_string, local_variables)
                 transaction[key] = value
                 self._logger.info('{} = {}'.format(key, value))
-        
+
         return JournalEntryDefinition(transaction)
 
     ##############################################
@@ -202,9 +202,3 @@ class YamlLoader:
     def __iter__(self):
 
         return iter(self._yaml_units)
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

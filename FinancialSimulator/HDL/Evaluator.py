@@ -71,7 +71,7 @@ class Evaluator:
             value = evaluator(level, statement, *args)
         else:
             value = evaluator(level, statement)
-        
+
         return value
 
     ##############################################
@@ -145,7 +145,7 @@ class AccountEvaluator(Evaluator):
     def __init__(self, account_chart):
 
         super().__init__()
-        
+
         self._account_chart = account_chart
 
     ##############################################
@@ -270,9 +270,3 @@ class AccountSetEvaluator(AccountEvaluator):
 
         # Fixme
         return value
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

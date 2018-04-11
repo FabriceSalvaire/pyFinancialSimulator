@@ -91,7 +91,7 @@ class DateIndexer:
         else:
             self._start = min(self._start, date)
             self._stop = max(self._stop, date)
-        
+
         key = date.toordinal()
         if key not in self._dates:
             self._dates[key] = DateList(date)
@@ -131,9 +131,3 @@ class DateIndexer:
                     dates.append(date_list)
             if dates:
                 yield month_date, dates
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

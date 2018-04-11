@@ -65,7 +65,7 @@ class EmptyRow(Node):
     def __init__(self, level, number_of_lines):
 
         super().__init__(level)
-        
+
         self._number_of_lines = number_of_lines
 
     ##############################################
@@ -86,7 +86,7 @@ class Row(Node):
     def __init__(self, level, title, show=True):
 
         super().__init__(level)
-        
+
         self._title = title
         self._show = show
 
@@ -111,7 +111,7 @@ class ValueRow(Row):
     def __init__(self, level, title, computation=None):
 
         super().__init__(level, title)
-        
+
         self._computation = computation
 
     ##############################################
@@ -141,7 +141,7 @@ class SumRow(Row):
     def __init__(self, level, title, show, position, variable=None):
 
         super().__init__(level, title, show)
-        
+
         self._position = position
         self._variable = variable
 
@@ -175,7 +175,7 @@ class DependencyNode(Hierarchy.Node):
     def __init__(self, variable, row):
 
         super().__init__()
-        
+
         self._variable = variable
         self._row = row
 
@@ -261,7 +261,7 @@ class Table:
 
         self._title = title
         self._columns = []
-        
+
         self._variable_to_row = None
         self._assignation_to_row = None
         self._variable_to_dependency_node = None
@@ -289,7 +289,7 @@ class Table:
                     self._process_sum_row(row)
                 elif isinstance(row, ValueRow):
                     self._process_value_row(row)
-        
+
         variables = dict(self._variable_to_row)
         variables.update(self._assignation_to_row)
         variable_to_dependency_node = {variable:DependencyNode(variable, node)
@@ -387,7 +387,7 @@ class YamlLoader:
                                  country_code, yaml_file)
         with open(yaml_path, 'r') as f:
             data = yaml.load(f.read())
-        
+
         self._table = Table('')
         # for title, items in data.items():
         for title in sorted(data.keys()):
@@ -399,7 +399,7 @@ class YamlLoader:
                 if sibling is not None:
                     node.add_sibling(sibling)
             self._table.append_column(self._column)
-        
+
         self._table.make_dependency_graph()
 
     ##############################################
@@ -422,10 +422,10 @@ class YamlLoader:
         variable = node_data.get('assign', None)
         position = node_data.get('position', 'before')
         show = node_data.get('show', False)
-        
+
         self._logger.info('Node ' + title)
         row = SumRow(level, title, show, position, variable)
-        
+
         if position == 'before':
             self._column.append_row(row)
         for child_data in node_data['childs']:
@@ -434,7 +434,7 @@ class YamlLoader:
                 row.add_sibling(sibling)
         if position == 'after':
             self._column.append_row(row)
-        
+
         return row
 
     ##############################################
@@ -444,7 +444,7 @@ class YamlLoader:
         number_of_lines = int(node_data['padding'])
         for i in range(number_of_lines):
             self._column.append_empty_row()
-        
+
         return EmptyRow(level, number_of_lines)
 
     ##############################################
@@ -457,11 +457,11 @@ class YamlLoader:
             computation = hdl_parser.parse(computation)
         else:
             computation = None
-        
+
         self._logger.info('Row ' + title)
         row = ValueRow(level, title, computation)
         self._column.append_row(row)
-        
+
         return row
 
     ##############################################
@@ -469,9 +469,3 @@ class YamlLoader:
     @property
     def table(self):
         return self._table
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

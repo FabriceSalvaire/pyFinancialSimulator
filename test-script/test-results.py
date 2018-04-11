@@ -16,9 +16,3 @@ from FinancialSimulator.Accounting import Results
 yaml_file = 'test.yml'
 yaml_loader = Results.YamlLoader(yaml_file)
 table = yaml_loader.table
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

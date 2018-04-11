@@ -37,7 +37,7 @@ def load_account_chart(yaml_path):
 
     metadata = data['metadata']
     account_chart = AccountChart(name=metadata['name'])
-    
+
     previous = None
     parent = [None]
     current_level = 1
@@ -57,11 +57,11 @@ def load_account_chart(yaml_path):
         account = Account(number, description, parent=parent[-1], comment=comment, system=system)
         account_chart.add_node(account)
         previous = account
-    
+
     # PCG is not sorted: e.g. 603
     for account in account_chart:
         account.sort_siblings()
-    
+
     return account_chart
 
 ####################################################################################################
@@ -75,9 +75,3 @@ def load_account_chart_for_country(country_code):
     yaml_path = os.path.join(ConfigInstall.Path.accounting_data_directory,
                              country_code, _account_charts[country_code])
     return load_account_chart(yaml_path)
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

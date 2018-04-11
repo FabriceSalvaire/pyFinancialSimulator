@@ -125,18 +125,18 @@ class Account:
 
         self._name = name
         self._code = code
-        
+
         self._parent = parent
         self._childs = set()
         parent.add_child(self)
-        
+
         self._journal = []
         self._initial_balance = initial_balance
-        
+
         self._inner_credit = None
         self._inner_debit = None
         self._inner_balance = None
-        
+
         self._credit = None
         self._debit = None
         self._balance = None
@@ -199,7 +199,7 @@ class Account:
             for transaction in self._journal:
                 self._run_transaction(transaction)
             self._inner_balance = self._inner_credit - self._inner_debit
-        
+
         if self._balance is None:
             self._credit = self._inner_credit
             self._debit = self._inner_debit
@@ -323,9 +323,3 @@ class Journal:
 #  crédit 44571 TVA collectée
 
 bank_account = Account(512, 'Compte Bancaire')
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

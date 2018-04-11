@@ -52,14 +52,14 @@ class TestDateIndexer(unittest.TestCase):
 
         start = datetime.date(2016, 1, 1)
         stop = datetime.date(2116, 12, 31) # 245 MB
-        
+
         date_indexer = DateIndexer(start, stop)
         for date in date_iterator(start, stop):
             for i in range(date.day):
                 date_indexer.append(DateObj(date))
         for date_list in date_indexer:
             self.assertEqual(len(date_list), date_list.date.day)
-        
+
         # import time
         # for i in range(1000000):
         #     time.sleep(.001)
@@ -69,9 +69,3 @@ class TestDateIndexer(unittest.TestCase):
 if __name__ == '__main__':
 
     unittest.main()
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

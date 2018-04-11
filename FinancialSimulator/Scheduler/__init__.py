@@ -230,7 +230,7 @@ class RandomAction(Action):
         #   decreasing
         #   increasing -> decreasing
         # Gaussian noise
-        
+
         pass
         # date = datetime.date(start_date.year, start_date.month, self._day_number)
         # while date <= stop_date:
@@ -338,7 +338,7 @@ class Scheduler:
             for next_date in action.next_dates(start_date, stop_date):
                 planned_actions.add_action(action, next_date)
         planned_actions.sort()
-        
+
         number_of_days = (stop_date - start_date).days +1
         for delta_day in range(number_of_days):
             if delta_day in planned_actions:
@@ -352,9 +352,3 @@ class Scheduler:
 
         for planned_action in self.iter(start_date, stop_date):
             planned_action.run()
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

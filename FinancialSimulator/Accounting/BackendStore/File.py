@@ -36,7 +36,7 @@ class AccountingStore:
             'accounts': financial_period.account_chart.to_json(),
             'analytic_accounts': financial_period.analytic_account_chart.to_json(),
         }
-        
+
         with open(path, 'w') as f:
             json.dump(data, f, indent=2)
 
@@ -49,15 +49,9 @@ class AccountingStore:
             data = json.load(f)
 
         financial_period.journals.load_json(data['journals'])
-        
+
         for journal in financial_period.journals:
             journal.run()
-        
+
         # financial_period.account_chart.force_balance_from_json(data['accounts'])
         # financial_period.analytic_account_chart.force_balance_from_json(data['analytic_accounts'])
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

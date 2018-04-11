@@ -98,7 +98,7 @@ class FecWriter:
                 xf.write('2016-01-01') # entry.reconciliation_date.isoformat()
             with xf.element('ValidDate'):
                 xf.write(entry.validation_date.isoformat())
-            
+
             for iterator, name in ((entry.debits, 'Debit'),
                                    (entry.credits, 'Credit'),
             ):
@@ -137,9 +137,3 @@ class FecWriter:
     #         xf.flush()
     # except GeneratorExit:
     #     pass
-
-####################################################################################################
-#
-# End
-#
-####################################################################################################

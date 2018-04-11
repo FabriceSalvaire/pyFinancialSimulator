@@ -222,13 +222,13 @@ class Imputation(DebitCreditInterface):
             self._account.apply_debit(self.amount)
         else:
             self._account.apply_credit(self.amount)
-        
+
         if self._analytic_account is not None:
             if self.is_debit():
                 self._analytic_account.apply_debit(self.amount)
             else:
                 self._analytic_account.apply_credit(self.amount)
-        
+
         self.imputed.send(sender=self)
 
     ##############################################
@@ -274,7 +274,7 @@ class JournalEntryMixin:
         self._imputations.sort(key=lambda x: x.account)
         self._debits = [imputation for imputation in self._imputations if imputation.is_debit()]
         self._credits = [imputation for imputation in self._imputations if imputation.is_credit()]
-        
+
         self._check()
 
     ##############################################
@@ -289,7 +289,7 @@ class JournalEntryMixin:
                 raise DuplicatedEntryError(account_number)
             else:
                 account_counter[account_number] = 1
-        
+
         sum_of_debits = self.sum_of_debits()
         sum_of_credits = self.sum_of_credits()
         if sum_of_debits != sum_of_credits:
@@ -524,7 +524,7 @@ class Journal:
 
         self._label = label
         self._description = description
-        
+
         self._account_chart = financial_period.account_chart
         self._analytic_account_chart = financial_period.analytic_account_chart
 
@@ -574,7 +574,7 @@ class Journal:
                                 imputations
         )
         self.write_and_apply_entry(journal_entry)
-        
+
         return journal_entry
 
     ##############################################
@@ -615,13 +615,13 @@ class Journal:
             reconciliation_date = parse_datetime(reconciliation_date)
         else:
             reconciliation_date = None
-        
+
         internal_data = {
             'validation_date': validation_date,
             'reconciliation_date': reconciliation_date,
             'reconciliation_id': data['reconciliation_id'],
         }
-        
+
         imputations = []
         for imputation_jsons in data['debits'], data['credits']:
             for imputation_json in imputation_jsons:
@@ -644,11 +644,5 @@ class Journal:
                                 imputations,
                                 _internal_data=internal_data,
         )
-        
-        return journal_entry
 
-####################################################################################################
-#
-# End
-#
-####################################################################################################
+        return journal_entry
